@@ -12,14 +12,20 @@ import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.FrameLayout
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.Crop
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
+import me.rhunk.snapenhance.common.ui.createComposeView
 import me.rhunk.snapenhance.common.util.ktx.getLongOrNull
 import me.rhunk.snapenhance.common.util.ktx.getTypeArguments
 import me.rhunk.snapenhance.core.event.events.impl.ActivityResultEvent
@@ -159,7 +165,6 @@ class MediaFilePicker : Feature("Media File Picker", loadParams = FeatureLoadPar
 
                     runCatching {
                         mediaInputStream = ParcelFileDescriptor.AutoCloseInputStream(pfd)
-                        context.log.verbose("Media duration: $lastMediaDuration")
                         sendMedia()
                     }.onFailure {
                         mediaInputStream = null
@@ -191,33 +196,41 @@ class MediaFilePicker : Feature("Media File Picker", loadParams = FeatureLoadPar
 
             event.view.addOnAttachStateChangeListener(object: View.OnAttachStateChangeListener {
                 override fun onViewAttachedToWindow(v: View) {
+                    if (event.parent.findViewWithTag<View>(buttonTag)?.run {
+                        visibility = View.VISIBLE
+                        bringToFront()
+                    } != null) return
                     event.parent.addView(
-                        Button(event.parent.context).apply {
-                            text = "Upload"
+                        createComposeView(context.mainActivity!!) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                FilledIconButton(onClick = {
+                                    requestCode = Random.nextInt(0, 65535)
+                                    this@MediaFilePicker.context.mainActivity!!.startActivityForResult(
+                                        Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                            addCategory(Intent.CATEGORY_OPENABLE)
+                                            type = "video/*"
+                                            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("video/*", "audio/*"))
+                                        },
+                                        requestCode!!
+                                    )
+                                }) {
+                                    Icon(Icons.Default.Upload, "Upload media")
+                                }
+                            }
+                        }.apply {
                             tag = buttonTag
                             layoutParams = FrameLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT
                             )
-                            setOnClickListener {
-                                requestCode = Random.nextInt(0, 65535)
-                                this@MediaFilePicker.context.mainActivity!!.startActivityForResult(
-                                    Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                                        addCategory(Intent.CATEGORY_OPENABLE)
-                                        type = "video/*"
-                                        putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("video/*", "audio/*"))
-                                    },
-                                    requestCode!!
-                                )
-                            }
                         }
                     )
                 }
-
                 override fun onViewDetachedFromWindow(v: View) {
-                    event.parent.findViewWithTag<View>(buttonTag)?.let {
-                        event.parent.removeView(it)
-                    }
+                    event.parent.findViewWithTag<View>(buttonTag)?.visibility = View.GONE
                 }
             })
         }
