@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,7 +41,6 @@ import me.rhunk.snapenhance.messaging.MessagingTaskConstraint
 import me.rhunk.snapenhance.messaging.MessagingTaskType
 import me.rhunk.snapenhance.ui.manager.Routes
 import me.rhunk.snapenhance.ui.util.Dialog
-import java.util.SortedMap
 
 class MessagingPreview: Routes.Route() {
     private lateinit var coroutineScope: CoroutineScope
@@ -50,8 +50,7 @@ class MessagingPreview: Routes.Route() {
     private val myUserId by lazy { messagingBridge.myUserId }
     private val contentTypeTranslation by lazy { context.translation.getCategory("content_type") }
 
-    private var messages = sortedMapOf<Long, Message>()
-    private var messageSize by mutableIntStateOf(0)
+    private var messages = mutableStateListOf<Message>()
     private var conversationId by mutableStateOf<String?>(null)
     private val selectedMessages = mutableStateListOf<Long>() // client message id
 
@@ -310,8 +309,7 @@ class MessagingPreview: Routes.Route() {
                 ActionButton(text = if (hasSelection) "Delete selected" else "Delete all", icon = Icons.Rounded.DeleteForever) {
                     launchMessagingTask(MessagingTaskType.DELETE, listOf(MessagingConstraints.USER_ID(myUserId))) { message ->
                         coroutineScope.launch {
-                            messages.remove(message.serverMessageId)
-                            messageSize = messages.size
+                            message.contentType = ContentType.STATUS.id
                         }
                     }
                     if (hasSelection) runCurrentTask()
@@ -323,8 +321,7 @@ class MessagingPreview: Routes.Route() {
 
     @Composable
     private fun ConversationPreview(
-        messages: SortedMap<Long, Message>,
-        messageSize: Int,
+        messages: List<Message>,
         fetchNewMessages: () -> Unit
     ) {
         DisposableEffect(Unit) {
@@ -334,10 +331,44 @@ class MessagingPreview: Routes.Route() {
         }
 
         LazyColumn(
+            reverseLayout = true,
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth(),
             state = previewScrollState,
         ) {
+            items(messages, key = { it.serverMessageId }) {message ->
+                val messageReader = remember(message.contentType) { ProtoReader(message.content) }
+                val contentType = ContentType.fromMessageContainer(messageReader)
+
+                Card(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .pointerInput(Unit) {
+                            if (contentType == ContentType.STATUS) return@pointerInput
+                            detectTapGestures(
+                                onLongPress = {
+                                    toggleSelectedMessage(message.clientMessageId)
+                                },
+                                onTap = {
+                                    if (selectedMessages.isNotEmpty()) {
+                                        toggleSelectedMessage(message.clientMessageId)
+                                    }
+                                }
+                            )
+                        },
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (selectedMessages.contains(message.clientMessageId)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                ) {
+                    val contentMessage = remember(message.contentType) { "[${contentType?.let { contentTypeTranslation.getOrNull(it.name) ?: it.name } }] ${messageReader.getString(2, 1) ?: "" }" }
+                    Row(
+                        modifier = Modifier
+                            .padding(5.dp)
+                    ) {
+                        Text(contentMessage)
+                    }
+                }
+            }
             item {
                 if (messages.isEmpty()) {
                     Row(
@@ -352,42 +383,8 @@ class MessagingPreview: Routes.Route() {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 LaunchedEffect(Unit) {
-                    if (messages.size > 0) {
+                    if (messages.isNotEmpty()) {
                         fetchNewMessages()
-                    }
-                }
-            }
-            items(messageSize) {index ->
-                val elementKey = remember(index) { messages.entries.elementAt(index).value.clientMessageId }
-                val messageReader = ProtoReader(messages.entries.elementAt(index).value.content)
-                val contentType = ContentType.fromMessageContainer(messageReader)
-
-                Card(
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .pointerInput(Unit) {
-                            if (contentType == ContentType.STATUS) return@pointerInput
-                            detectTapGestures(
-                                onLongPress = {
-                                    toggleSelectedMessage(elementKey)
-                                },
-                                onTap = {
-                                    if (selectedMessages.isNotEmpty()) {
-                                        toggleSelectedMessage(elementKey)
-                                    }
-                                }
-                            )
-                        },
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (selectedMessages.contains(elementKey)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
-                    ),
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(5.dp)
-                    ) {
-
-                        Text("[${contentType?.let { contentTypeTranslation.getOrNull(it.name) ?: it.name } }] ${messageReader.getString(2, 1) ?: ""}")
                     }
                 }
             }
@@ -431,7 +428,7 @@ class MessagingPreview: Routes.Route() {
                         conversationId!!,
                         20,
                         lastMessageId
-                    )
+                    )?.reversed()
 
                     if (queriedMessages == null) {
                         context.shortToast("Failed to fetch messages")
@@ -439,19 +436,13 @@ class MessagingPreview: Routes.Route() {
                     }
 
                     withContext(Dispatchers.Main) {
-                        messages.putAll(queriedMessages.map { it.serverMessageId to it })
-                        messageSize = messages.size
-                        if (queriedMessages.isNotEmpty()) {
-                            lastMessageId = queriedMessages.first().clientMessageId
-                            delay(20)
-                            previewScrollState.scrollToItem(queriedMessages.size - 1)
-                        }
+                        messages.addAll(queriedMessages)
+                        lastMessageId = queriedMessages.lastOrNull()?.clientMessageId ?: lastMessageId
                     }
                 }.onFailure {
                     context.log.error("Failed to fetch messages", it)
                     context.shortToast("Failed to fetch messages: ${it.message}")
                 }
-                context.log.verbose("fetched ${messages.size} messages")
             }
         }
 
@@ -490,7 +481,6 @@ class MessagingPreview: Routes.Route() {
 
         LaunchedEffect(Unit) {
             messages.clear()
-            messageSize = 0
             conversationId = null
 
             isBridgeConnected = context.hasMessagingBridge()
@@ -529,7 +519,7 @@ class MessagingPreview: Routes.Route() {
             }
 
             if (isBridgeConnected && !hasBridgeError) {
-                ConversationPreview(messages, messageSize, ::fetchNewMessages)
+                ConversationPreview(messages, ::fetchNewMessages)
             }
         }
     }
