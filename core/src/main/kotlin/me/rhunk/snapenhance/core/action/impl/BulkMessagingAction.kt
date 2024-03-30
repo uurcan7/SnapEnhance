@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ProgressBar
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -14,9 +16,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -85,7 +89,7 @@ class BulkMessagingAction : AbstractAction() {
                         translation.format("progress_status", "index" to index.toString(), "total" to ids.size.toString())
                     )
                 }
-                delay(500)
+                delay(100)
             }
             withContext(Dispatchers.Main) {
                 dialog.dismiss()
@@ -115,10 +119,34 @@ class BulkMessagingAction : AbstractAction() {
         )
     }
 
+    private fun filterFriends(friends: List<FriendInfo>, filter: Filter, nameFilter: String): List<FriendInfo> {
+        val userIdBlacklist = arrayOf(
+            context.database.myUserId,
+            "b42f1f70-5a8b-4c53-8c25-34e7ec9e6781", // myai
+            "84ee8839-3911-492d-8b94-72dd80f3713a", // teamsnapchat
+        )
+        return friends.filter { friend ->
+            friend.userId !in userIdBlacklist && when (filter) {
+                Filter.ALL -> true
+                Filter.MY_FRIENDS -> friend.friendLinkType == FriendLinkType.MUTUAL.value && friend.addedTimestamp > 0
+                Filter.BLOCKED -> friend.friendLinkType == FriendLinkType.BLOCKED.value
+                Filter.REMOVED_ME -> friend.friendLinkType == FriendLinkType.OUTGOING.value && friend.addedTimestamp > 0 && friend.businessCategory == 0 // ignore followed accounts
+                Filter.SUGGESTED -> friend.friendLinkType == FriendLinkType.SUGGESTED.value
+                Filter.DELETED -> friend.friendLinkType == FriendLinkType.DELETED.value
+                Filter.BUSINESS_ACCOUNTS -> friend.businessCategory > 0
+            } && nameFilter.takeIf { it.isNotBlank() }?.let { name ->
+                friend.mutableUsername?.contains(
+                    name,
+                    ignoreCase = true
+                ) == true || friend.displayName?.contains(name, ignoreCase = true) == true
+            } ?: true
+        }
+    }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     @Composable
     private fun BulkMessagingDialog() {
+        val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
         var sortBy by remember { mutableStateOf(SortBy.USERNAME) }
         var filter by remember { mutableStateOf(Filter.REMOVED_ME) }
         var sortReverseOrder by remember { mutableStateOf(false) }
@@ -127,27 +155,13 @@ class BulkMessagingAction : AbstractAction() {
         val bitmojiCache = remember { EvictingMap<String, Bitmap>(50) }
         val noBitmojiBitmap = remember { BitmapFactory.decodeResource(context.resources, android.R.drawable.ic_menu_report_image).asImageBitmap() }
 
-        suspend fun refreshList() {
-            withContext(Dispatchers.Main) {
-                selectedFriends.clear()
-                friends.clear()
-            }
+        val focusManager = LocalFocusManager.current
+        var nameFilter by remember { mutableStateOf("") }
+
+        suspend fun refreshList(clearSelected: Boolean = true) {
             withContext(Dispatchers.IO) {
-                val userIdBlacklist = arrayOf(
-                    context.database.myUserId,
-                    "b42f1f70-5a8b-4c53-8c25-34e7ec9e6781", // myai
-                    "84ee8839-3911-492d-8b94-72dd80f3713a", // teamsnapchat
-                )
-                val newFriends = context.database.getAllFriends().filter {
-                    it.userId !in userIdBlacklist && when (filter) {
-                        Filter.ALL -> true
-                        Filter.MY_FRIENDS -> it.friendLinkType == FriendLinkType.MUTUAL.value && it.addedTimestamp > 0
-                        Filter.BLOCKED -> it.friendLinkType == FriendLinkType.BLOCKED.value
-                        Filter.REMOVED_ME -> it.friendLinkType == FriendLinkType.OUTGOING.value && it.addedTimestamp > 0 && it.businessCategory == 0 // ignore followed accounts
-                        Filter.SUGGESTED -> it.friendLinkType == FriendLinkType.SUGGESTED.value
-                        Filter.DELETED -> it.friendLinkType == FriendLinkType.DELETED.value
-                        Filter.BUSINESS_ACCOUNTS -> it.businessCategory > 0
-                    }
+                val newFriends = context.database.getAllFriends().let { friends ->
+                    filterFriends(friends, filter, nameFilter)
                 }.toMutableList()
                 when (sortBy) {
                     SortBy.NONE -> {}
@@ -158,6 +172,8 @@ class BulkMessagingAction : AbstractAction() {
                 }
                 if (sortReverseOrder) newFriends.reverse()
                 withContext(Dispatchers.Main) {
+                    if (clearSelected) selectedFriends.clear()
+                    friends.clear()
                     friends.addAll(newFriends)
                 }
             }
@@ -245,32 +261,59 @@ class BulkMessagingAction : AbstractAction() {
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                item {
-                    if (friends.isNotEmpty()) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 2.dp),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(text = "Selected " + selectedFriends.size + " friends", fontSize = 12.sp, fontWeight = FontWeight.Light)
-                            Checkbox(
-                                checked = selectedFriends.size == friends.size,
-                                onCheckedChange = { state ->
-                                    if (state) {
-                                        friends.mapNotNull { it.userId }.forEach { userId ->
-                                            if (!selectedFriends.contains(userId)) {
-                                                selectedFriends.add(userId)
-                                            }
+                stickyHeader {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surface)
+                            .padding(bottom = 2.dp),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        TextField(
+                            value = nameFilter,
+                            onValueChange = {
+                                nameFilter = it
+                                coroutineScope.launch { refreshList(clearSelected = false) }
+                            },
+                            placeholder = { Text(text = "Search by name") },
+                            singleLine = true,
+                            modifier = Modifier
+                                .padding(end = 5.dp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent
+                            ),
+                        )
+
+                        Checkbox(
+                            checked = if (friends.isEmpty() || selectedFriends.size < friends.size) false else friends.all { friend -> selectedFriends.contains(friend.userId) },
+                            onCheckedChange = { state ->
+                                if (state) {
+                                    friends.mapNotNull { it.userId }.forEach { userId ->
+                                        if (!selectedFriends.contains(userId)) {
+                                            selectedFriends.add(userId)
                                         }
-                                    } else selectedFriends.clear()
+                                    }
+                                } else {
+                                    if (nameFilter.isNotBlank()) {
+                                        filterFriends(friends, filter, nameFilter).mapNotNull { it.userId }.forEach { userId ->
+                                            selectedFriends.remove(userId)
+                                        }
+                                    } else {
+                                        selectedFriends.clear()
+                                    }
                                 }
-                            )
-                        }
-                    } else {
+                            }
+                        )
+                    }
+                }
+                item {
+                    if (friends.isEmpty()) {
                         Text(text = "No friends found", fontSize = 12.sp, fontWeight = FontWeight.Light, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
                     }
                 }
-                items(friends) { friendInfo ->
+                items(friends, key = { it.userId!! }) { friendInfo ->
                     var bitmojiBitmap by remember(friendInfo) { mutableStateOf(bitmojiCache[friendInfo.bitmojiAvatarId]) }
 
                     fun selectFriend(state: Boolean) {
@@ -393,7 +436,7 @@ class BulkMessagingAction : AbstractAction() {
                                                 context.shortToast("Failed to clear conversation: $error")
                                             })
                                         }.invokeOnCompletion {
-                                            context.coroutineScope.launch { refreshList() }
+                                            coroutineScope.launch { refreshList() }
                                         }
                                     }
                                 })
@@ -415,7 +458,7 @@ class BulkMessagingAction : AbstractAction() {
                             removeAction(ctx, selectedFriends.toList().also {
                                 selectedFriends.clear()
                             }) { removeFriend(it) }.invokeOnCompletion {
-                                context.coroutineScope.launch { refreshList() }
+                                coroutineScope.launch { refreshList() }
                             }
                         }
                     },
@@ -426,8 +469,18 @@ class BulkMessagingAction : AbstractAction() {
             }
         }
 
-        LaunchedEffect(filter, sortBy, sortReverseOrder) {
-            refreshList()
+        LaunchedEffect(sortBy, sortReverseOrder) {
+            coroutineScope.launch {
+                refreshList(clearSelected = false)
+            }
+            focusManager.clearFocus()
+        }
+
+        LaunchedEffect(filter) {
+            coroutineScope.launch {
+                refreshList()
+            }
+            focusManager.clearFocus()
         }
     }
 
