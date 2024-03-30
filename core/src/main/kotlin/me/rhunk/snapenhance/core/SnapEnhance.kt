@@ -23,11 +23,11 @@ import me.rhunk.snapenhance.core.bridge.loadFromBridge
 import me.rhunk.snapenhance.core.data.SnapClassCache
 import me.rhunk.snapenhance.core.event.events.impl.NativeUnaryCallEvent
 import me.rhunk.snapenhance.core.event.events.impl.SnapWidgetBroadcastReceiveEvent
+import me.rhunk.snapenhance.core.ui.InAppOverlay
 import me.rhunk.snapenhance.core.util.LSPatchUpdater
 import me.rhunk.snapenhance.core.util.hook.HookAdapter
 import me.rhunk.snapenhance.core.util.hook.HookStage
 import me.rhunk.snapenhance.core.util.hook.hook
-import java.lang.reflect.Modifier
 import kotlin.system.measureTimeMillis
 
 
@@ -60,18 +60,23 @@ class SnapEnhance {
                 bridgeClient.apply {
                     connect(
                         onFailure = {
-                            crash("Snapchat can't connect to the SnapEnhance app. Please download stable version from https://github.com/rhunk/SnapEnhance/releases", it)
+                            InAppOverlay.showCrashOverlay(
+                                "Snapchat can't connect to the SnapEnhance app. Make sure you have the latest version installed on your device. You can download the latest stable version on github.com/rhunk/SnapEnhance",
+                                throwable = it
+                            )
                         }
                     ) { bridgeResult ->
                         if (!bridgeResult) {
+                            InAppOverlay.showCrashOverlay(
+                                "Snapchat timed out while trying to connect to the SnapEnhance app. Make sure you have disabled any battery optimizations for SnapEnhance."
+                            )
                             logCritical("Cannot connect to the SnapEnhance app")
-                            softRestartApp()
                             return@connect
                         }
                         runCatching {
                             LSPatchUpdater.onBridgeConnected(appContext, bridgeClient)
                         }.onFailure {
-                            logCritical("Failed to init LSPatchUpdater", it)
+                            log.error("Failed to init LSPatchUpdater", it)
                         }
                         runCatching {
                             measureTimeMillis {
@@ -85,6 +90,7 @@ class SnapEnhance {
                             isBridgeInitialized = true
                         }.onFailure {
                             logCritical("Failed to initialize bridge", it)
+                            InAppOverlay.showCrashOverlay("SnapEnhance failed to initialize. Please check logs for more details.")
                         }
                     }
                 }
@@ -315,7 +321,7 @@ class SnapEnhance {
         }
 
         val stringResources = material3RString.fields.filter {
-            Modifier.isStatic(it.modifiers) && it.type == Int::class.javaPrimitiveType
+            java.lang.reflect.Modifier.isStatic(it.modifiers) && it.type == Int::class.javaPrimitiveType
         }.associate { it.getInt(null) to it.name }
 
         Resources::class.java.getMethod("getString", Int::class.javaPrimitiveType).hook(HookStage.BEFORE) { param ->

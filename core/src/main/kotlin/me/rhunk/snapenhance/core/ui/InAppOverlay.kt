@@ -1,6 +1,7 @@
 package me.rhunk.snapenhance.core.ui
 
 import android.app.Activity
+import android.view.View
 import android.widget.FrameLayout
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -15,10 +16,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +28,78 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import me.rhunk.snapenhance.common.ui.AppMaterialTheme
 import me.rhunk.snapenhance.common.ui.createComposeView
+import me.rhunk.snapenhance.common.util.ktx.copyToClipboard
+import me.rhunk.snapenhance.core.util.hook.HookStage
+import me.rhunk.snapenhance.core.util.hook.Hooker
 import me.rhunk.snapenhance.core.util.ktx.isDarkTheme
 import kotlin.math.roundToInt
 
 class InAppOverlay {
+    companion object {
+        fun showCrashOverlay(content: String, throwable: Throwable? = null) {
+            Hooker.ephemeralHook(Activity::class.java, "onPostCreate", HookStage.AFTER) { param ->
+                val contentView = param.thisObject<Activity>().findViewById<FrameLayout>(android.R.id.content)
+                contentView.children().forEach { it.visibility = View.GONE }
+                lateinit var screenView: View
+                screenView = createComposeView(param.thisObject()) {
+                    AppMaterialTheme(isDarkTheme = true) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.surface
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "SnapEnhance",
+                                        fontSize = 28.sp
+                                    )
+                                    Spacer(modifier = Modifier.height(40.dp))
+                                    Text(
+                                        text = content,
+                                        fontSize = 16.sp
+                                    )
+                                    Spacer(modifier = Modifier.height(40.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly
+                                    ) {
+                                        throwable?.let {
+                                            Button(onClick = {
+                                                contentView.context.copyToClipboard(it.stackTraceToString())
+                                            }) {
+                                                Text("Copy error to clipboard")
+                                            }
+                                        }
+                                        Button(onClick = {
+                                            contentView.children().forEach { it.visibility = View.VISIBLE }
+                                            contentView.removeView(screenView)
+                                        }) {
+                                            Text("Ignore")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }.apply {
+                    layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+                }
+                contentView.addView(screenView)
+            }
+        }
+    }
+
     inner class Toast(
         val composable: @Composable Toast.() -> Unit,
         val durationMs: Int
