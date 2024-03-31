@@ -42,11 +42,11 @@ dependencies {
     implementation(project(":mapper"))
     implementation(project(":native"))
 
-    compileOnly(libs.androidx.activity.ktx)
-    compileOnly(platform(libs.androidx.compose.bom))
-    compileOnly(libs.androidx.navigation.compose)
-    compileOnly(libs.androidx.material.icons.core)
-    compileOnly(libs.androidx.material.ripple)
-    compileOnly(libs.androidx.material.icons.extended)
-    compileOnly(libs.androidx.material3)
+    implementation(libs.androidx.activity.ktx)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.ripple)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.material3)
 }
