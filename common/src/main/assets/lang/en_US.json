@@ -923,7 +923,8 @@
             },
             "hide_story_suggestions": {
                 "hide_friend_suggestions": "Hide friend suggestions",
-                "hide_suggested_friend_stories": "Hide suggested friend stories"
+                "hide_suggested_friend_stories": "Hide suggested friend stories",
+                "hide_my_stories": "Hide My Stories"
             },
             "home_tab": {
                 "map": "Map",

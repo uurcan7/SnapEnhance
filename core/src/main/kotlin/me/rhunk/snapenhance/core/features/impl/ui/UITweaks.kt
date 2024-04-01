@@ -1,9 +1,6 @@
 package me.rhunk.snapenhance.core.features.impl.ui
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Resources
-import android.text.SpannableString
 import android.util.Size
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
@@ -73,13 +70,24 @@ class UITweaks : Feature("UITweaks", loadParams = FeatureLoadParams.ACTIVITY_CRE
 
         var friendCardFrameSize: Size? = null
 
+        val fourDp by lazy {
+            (4 * context.androidContext.resources.displayMetrics.density).toInt()
+        }
+
         context.event.subscribe(BindViewEvent::class, { hideStorySuggestions.isNotEmpty() }) { event ->
-            if (event.view is FrameLayout &&
-                hideStorySuggestions.contains("hide_friend_suggestions") &&
-                event.prevModel.toString().startsWith("DFFriendSuggestionCardViewModel")
-            ) {
-                event.view.layoutParams.apply { width = 0; height = 0 }
-                return@subscribe
+            if (event.view is FrameLayout) {
+                val viewModelString = event.prevModel.toString()
+                val isSuggestedFriend by lazy { viewModelString.startsWith("DFFriendSuggestionCardViewModel") }
+                val isMyStory by lazy { viewModelString.let { it.startsWith("CircularItemViewModel") && it.contains("storyId=")} }
+
+                if ((hideStorySuggestions.contains("hide_friend_suggestions") && isSuggestedFriend) ||
+                    (hideStorySuggestions.contains("hide_my_stories") && isMyStory)) {
+                    event.view.layoutParams.apply {
+                        width = 0; height = 0
+                        if (this is MarginLayoutParams) setMargins(-fourDp, 0, -fourDp, 0)
+                    }
+                    return@subscribe
+                }
             }
 
             if (event.view.id == friendCardFrame && hideStorySuggestions.contains("hide_suggested_friend_stories")) {
