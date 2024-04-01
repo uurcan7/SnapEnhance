@@ -186,20 +186,16 @@ class DownloadProcessor (
             fun handleInputStream(inputStream: InputStream, estimatedSize: Long = 0L) {
                 createMediaTempFile().apply {
                     val decryptedInputStream = (inputMedia.encryption?.decryptInputStream(inputStream) ?: inputStream).buffered()
-                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                    val buffer = ByteArray(1024 * 1024 * 2) // 2MB
                     var read: Int
                     var totalRead = 0L
-                    var lastTotalRead = 0L
 
                     outputStream().use { outputStream ->
                         while (decryptedInputStream.read(buffer).also { read = it } != -1) {
                             outputStream.write(buffer, 0, read)
                             totalRead += read
                             inputMediaDownloadedBytes[inputMedia] = totalRead
-                            if (totalRead - lastTotalRead > 1024 * 1024) {
-                                setProgress("${totalRead / 1024}KB/${estimatedSize / 1024}KB")
-                                lastTotalRead = totalRead
-                            }
+                            setProgress("${totalRead / 1024}KB/${estimatedSize / 1024}KB")
                         }
                     }
                 }.also { downloadedMedias[inputMedia] = it }
@@ -228,12 +224,14 @@ class DownloadProcessor (
                     }
                     DownloadMediaType.DIRECT_MEDIA -> {
                         val decoded = Base64.UrlSafe.decode(inputMedia.content)
-                        createMediaTempFile().apply {
-                            writeBytes(decoded)
-                        }.also { downloadedMedias[inputMedia] = it }
+                        totalSize += decoded.size.toLong()
+                        handleInputStream(decoded.inputStream(), estimatedSize = decoded.size.toLong())
                     }
                     else -> {
-                        downloadedMedias[inputMedia] = File(inputMedia.content)
+                        File(inputMedia.content).inputStream().use {
+                            totalSize += it.available().toLong()
+                            handleInputStream(it, estimatedSize = it.available().toLong())
+                        }
                     }
                 }
             }.also { jobs.add(it) }

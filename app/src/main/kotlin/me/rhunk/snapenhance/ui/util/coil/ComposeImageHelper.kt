@@ -1,6 +1,7 @@
-package me.rhunk.snapenhance.ui.util
+package me.rhunk.snapenhance.ui.util.coil
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.requiredWidthIn
@@ -15,6 +16,7 @@ import coil.request.ImageRequest
 import coil.size.Precision
 import me.rhunk.snapenhance.R
 import me.rhunk.snapenhance.RemoteSideContext
+import me.rhunk.snapenhance.common.data.download.MediaEncryptionKeyPair
 
 @Composable
 fun BitmojiImage(context: RemoteSideContext, modifier: Modifier = Modifier, size: Int = 48, url: String?) {
@@ -50,11 +52,20 @@ object ImageRequestHelper {
         .cacheKey(url)
         .build()
 
-    fun newDownloadPreviewImageRequest(context: Context, filePath: String?) = ImageRequest.Builder(context)
-        .data(filePath)
-        .cacheKey(filePath)
-        .memoryCacheKey(filePath)
+    fun newPreviewImageRequest(context: Context, url: String, mediaEncryptionKeyPair: MediaEncryptionKeyPair? = null) = ImageRequest.Builder(context)
+        .cacheKey(url)
+        .precision(Precision.INEXACT)
         .crossfade(true)
+        .placeholder(ColorDrawable(0x1EFFFFFF))
         .crossfade(200)
+        .data(url)
+        .decoderFactory { result, _, _ ->
+            CoilPreviewDecoder(
+                context.resources,
+                result,
+                mediaEncryptionKeyPair,
+                mergeOverlay = true
+            )
+        }
         .build()
 }

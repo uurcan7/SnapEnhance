@@ -4,6 +4,7 @@ import android.database.Cursor
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import me.rhunk.snapenhance.common.config.FeatureNotice
+import me.rhunk.snapenhance.common.data.download.toKeyPair
 import me.rhunk.snapenhance.common.util.ktx.getIntOrNull
 import me.rhunk.snapenhance.common.util.ktx.getInteger
 import me.rhunk.snapenhance.common.util.ktx.getLongOrNull
@@ -125,4 +126,6 @@ class StoryData(
     val createdAt: Long,
     val key: ByteArray?,
     val iv: ByteArray?
-)
+) {
+    fun getEncryptionKeyPair() = key?.let { (it to (iv ?: return@let null)) }?.toKeyPair()
+}

@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalEncodingApi::class)
 
 package me.rhunk.snapenhance.common.data.download
 
@@ -15,6 +14,7 @@ data class MediaEncryptionKeyPair(
     val key: String,
     val iv: String
 ) {
+    @OptIn(ExperimentalEncodingApi::class)
     fun decryptInputStream(inputStream: InputStream): InputStream {
         val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
         cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(Base64.UrlSafe.decode(key), "AES"), IvParameterSpec(Base64.UrlSafe.decode(iv)))
@@ -22,5 +22,6 @@ data class MediaEncryptionKeyPair(
     }
 }
 
+@OptIn(ExperimentalEncodingApi::class)
 fun Pair<ByteArray, ByteArray>.toKeyPair()
     = MediaEncryptionKeyPair(Base64.UrlSafe.encode(this.first), Base64.UrlSafe.encode(this.second))

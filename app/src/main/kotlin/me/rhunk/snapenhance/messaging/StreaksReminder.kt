@@ -15,7 +15,7 @@ import me.rhunk.snapenhance.RemoteSideContext
 import me.rhunk.snapenhance.SharedContextHolder
 import me.rhunk.snapenhance.bridge.ForceStartActivity
 import me.rhunk.snapenhance.common.util.snap.BitmojiSelfie
-import me.rhunk.snapenhance.ui.util.ImageRequestHelper
+import me.rhunk.snapenhance.ui.util.coil.ImageRequestHelper
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
