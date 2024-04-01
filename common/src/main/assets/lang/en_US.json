@@ -1036,7 +1036,8 @@
         "FAMILY_CENTER_LEAVE": "Family Center Leave",
         "STATUS_PLUS_GIFT": "Status Plus Gift",
         "TINY_SNAP": "Tiny Snap",
-        "STATUS_COUNTDOWN": "Countdown"
+        "STATUS_COUNTDOWN": "Countdown",
+        "MAP_REACTION": "Map Reaction"
     },
 
     "media_download_source": {

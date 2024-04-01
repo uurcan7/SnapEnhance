@@ -17,7 +17,7 @@ abstract class AbstractLogger(
 
         fun directError(message: Any?, throwable: Throwable, tag: String = TAG) {
             Log.println(Log.ERROR, tag, message.toString())
-            Log.println(Log.ERROR, tag, throwable.toString())
+            Log.println(Log.ERROR, tag, throwable.stackTraceToString())
         }
 
     }

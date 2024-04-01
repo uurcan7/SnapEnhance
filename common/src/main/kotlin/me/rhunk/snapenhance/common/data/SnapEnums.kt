@@ -79,7 +79,8 @@ enum class ContentType(val id: Int) {
     EEL_UPGRADE_PROMPT(24),
     PROMPT_LENS_RESPONSE(25),
     TINY_SNAP(26),
-    STATUS_COUNTDOWN(27);
+    STATUS_COUNTDOWN(27),
+    MAP_REACTION(28);
 
     companion object {
         fun fromId(i: Int): ContentType {
@@ -98,6 +99,7 @@ enum class ContentType(val id: Int) {
                     contains(4) -> STICKER
                     contains(5) -> SHARE
                     contains(7) -> EXTERNAL_MEDIA // story replies
+                    contains(20) -> MAP_REACTION
                     else -> null
                 }
             }

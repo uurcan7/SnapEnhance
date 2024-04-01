@@ -100,7 +100,7 @@ object MessageDecoder {
         customMediaReferences?.let { mediaReferences.addAll(it) }
         var mediaKeyIndex = 0
 
-        fun decodeMedia(type: AttachmentType, protoReader: ProtoReader) {
+        fun decodeSnapDocMediaPlayback(type: AttachmentType, protoReader: ProtoReader) {
             decodedAttachment.add(
                 DecodedAttachment(
                     mediaUrlKey = mediaReferences.getOrNull(mediaKeyIndex++),
@@ -110,9 +110,8 @@ object MessageDecoder {
             )
         }
 
-        // for snaps, external media, and original story replies
-        fun decodeDirectMedia(type: AttachmentType, protoReader: ProtoReader) {
-            protoReader.followPath(5) { decodeMedia(type,this) }
+        fun decodeSnapDocMedia(type: AttachmentType, protoReader: ProtoReader) {
+            protoReader.followPath(5) { decodeSnapDocMediaPlayback(type,this) }
         }
 
         fun decodeSticker(protoReader: ProtoReader) {
@@ -141,7 +140,7 @@ object MessageDecoder {
         mediaReader.apply {
             // external media
             eachBuffer(3, 3) {
-                decodeDirectMedia(AttachmentType.EXTERNAL_MEDIA, this)
+                decodeSnapDocMedia(AttachmentType.EXTERNAL_MEDIA, this)
             }
 
             // stickers
@@ -149,7 +148,7 @@ object MessageDecoder {
 
             // shares
             followPath(5, 24, 2) {
-                decodeDirectMedia(AttachmentType.EXTERNAL_MEDIA, this)
+                decodeSnapDocMedia(AttachmentType.EXTERNAL_MEDIA, this)
             }
 
             // audio notes
@@ -169,24 +168,29 @@ object MessageDecoder {
             followPath(7) {
                 // original story reply
                 followPath(3) {
-                    decodeDirectMedia(AttachmentType.ORIGINAL_STORY, this)
+                    decodeSnapDocMedia(AttachmentType.ORIGINAL_STORY, this)
                 }
 
                 // external medias
                 followPath(12) {
-                    eachBuffer(3) { decodeDirectMedia(AttachmentType.EXTERNAL_MEDIA, this) }
+                    eachBuffer(3) { decodeSnapDocMedia(AttachmentType.EXTERNAL_MEDIA, this) }
                 }
 
                 // attached sticker
                 followPath(13) { decodeSticker(this) }
 
                 // attached audio note
-                followPath(15) { decodeMedia(AttachmentType.NOTE, this) }
+                followPath(15) { decodeSnapDocMediaPlayback(AttachmentType.NOTE, this) }
             }
 
             // snaps
             followPath(11) {
-                decodeDirectMedia(AttachmentType.SNAP, this)
+                decodeSnapDocMedia(AttachmentType.SNAP, this)
+            }
+
+            // map reaction
+            followPath(20, 2) {
+                decodeSnapDocMedia(AttachmentType.EXTERNAL_MEDIA, this)
             }
         }
 
