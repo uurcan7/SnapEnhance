@@ -3,6 +3,7 @@ package me.rhunk.snapenhance.core.ui.menu.impl
 import android.content.Context
 import android.text.format.Formatter
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.compose.foundation.border
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.rounded.BookmarkRemove
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -27,10 +29,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import me.rhunk.snapenhance.common.data.ContentType
 import me.rhunk.snapenhance.common.ui.createComposeView
 import me.rhunk.snapenhance.common.util.ktx.copyToClipboard
 import me.rhunk.snapenhance.common.util.protobuf.ProtoReader
+import me.rhunk.snapenhance.common.util.protobuf.ProtoWriter
 import me.rhunk.snapenhance.common.util.snap.RemoteMediaResolver
 import me.rhunk.snapenhance.core.event.events.impl.AddViewEvent
 import me.rhunk.snapenhance.core.features.impl.downloader.MediaDownloader
@@ -63,6 +68,71 @@ class NewChatActionMenu : AbstractMenu() {
                 }
             }.show()
         }
+    }
+
+    fun editCurrentMessage(
+        localContext: Context,
+        dismissActionMenu: () -> Unit,
+    ) {
+        val messaging = context.feature(Messaging::class)
+        messaging.conversationManager?.fetchMessage(
+            messaging.openedConversationUUID.toString(),
+            messaging.lastFocusedMessageId,
+            onSuccess = onSuccess@{ message ->
+                dismissActionMenu()
+                if (message.senderId.toString() != context.database.myUserId) {
+                    context.shortToast("You can only edit your own messages")
+                    return@onSuccess
+                }
+
+                val editText = EditText(localContext).apply {
+                    setText(ProtoReader(message.messageContent?.content ?: return@apply).getString(2, 1) ?: run {
+                        this@NewChatActionMenu.context.shortToast("You can only edit text messages")
+                        return@onSuccess
+                    })
+                    setTextColor(resources.getColor(android.R.color.white, context.theme))
+                    postDelayed({
+                        requestFocus()
+                        setSelection(text.length)
+                        context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+                            .let { it as android.view.inputmethod.InputMethodManager }
+                            .showSoftInput(this, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+                    }, 200)
+                }
+
+                context.runOnUiThread {
+                    ViewAppearanceHelper.newAlertDialogBuilder(context.mainActivity!!)
+                        .setPositiveButton("Save") { _, _ ->
+                            val newMessageContent = ProtoWriter().apply {
+                                from(2) { addString(1, editText.text.toString()) }
+                            }.toByteArray()
+                            message.messageContent?.content = newMessageContent
+                            messaging.conversationManager?.editMessage(
+                                message.messageDescriptor?.conversationId.toString(),
+                                message.messageDescriptor?.messageId ?: return@setPositiveButton,
+                                newMessageContent,
+                                onSuccess = {
+                                    context.coroutineScope.launch(Dispatchers.Main) {
+                                        message.messageMetadata?.isEdited = true
+                                        messaging.localUpdateMessage(
+                                            message.messageDescriptor?.conversationId.toString(),
+                                            message,
+                                            forceUpdate = true
+                                        )
+                                    }
+                                },
+                                onError = {
+                                    context.shortToast("Failed to edit message: $it")
+                                }
+                            )
+                        }
+                        .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                        .setView(editText)
+                        .setTitle("Edit message content")
+                        .show()
+                }
+            }
+        )
     }
 
     private val lastFocusedMessage
@@ -240,6 +310,16 @@ class NewChatActionMenu : AbstractMenu() {
                                 mediaDownloader.onMessageActionMenu(isPreviewMode = false, forceAllowDuplicate = true)
                             }
                         )
+                    })
+                }
+
+                if (context.config.experimental.editMessage.get() && messaging.conversationManager?.isEditMessageSupported() == true) {
+                    ListButton(icon = Icons.Rounded.Edit, text = context.translation["chat_action_menu.edit_message"], modifier = Modifier.clickable {
+                        editCurrentMessage(event.view.context) {
+                            context.runOnUiThread {
+                                closeActionMenu()
+                            }
+                        }
                     })
                 }
 

@@ -1059,7 +1059,8 @@
         "preview_button": "Preview",
         "download_button": "Download",
         "delete_logged_message_button": "Delete Logged Message",
-        "convert_message": "Convert Message"
+        "convert_message": "Convert Message",
+        "edit_message": "Edit Message"
     },
 
     "opera_context_menu": {

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import me.rhunk.snapenhance.core.ModContext
 
 abstract class AbstractMenu {
+    lateinit var menuViewInjector: MenuViewInjector
     lateinit var context: ModContext
 
     open fun inject(parent: ViewGroup, view: View, viewConsumer: (View) -> Unit) {}

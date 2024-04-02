@@ -13,11 +13,12 @@ import me.rhunk.snapenhance.core.features.FeatureLoadParams
 import me.rhunk.snapenhance.core.features.impl.messaging.Messaging
 import me.rhunk.snapenhance.core.ui.menu.impl.*
 import me.rhunk.snapenhance.core.util.ktx.getIdentifier
+import kotlin.reflect.KClass
 
 @SuppressLint("DiscouragedApi")
 class MenuViewInjector : Feature("MenuViewInjector", loadParams = FeatureLoadParams.ACTIVITY_CREATE_ASYNC) {
-    override fun asyncOnActivityCreate() {
-        val menuMap = arrayOf(
+    private val menuMap by lazy {
+        arrayOf(
             NewChatActionMenu(),
             OperaContextActionMenu(),
             OperaDownloadIconMenu(),
@@ -27,9 +28,18 @@ class MenuViewInjector : Feature("MenuViewInjector", loadParams = FeatureLoadPar
             SettingsMenu()
         ).associateBy {
             it.context = context
-            it.init()
+            it.menuViewInjector = this
             it::class
         }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T: AbstractMenu> menu(menuClass: KClass<T>): T? {
+        return menuMap[menuClass] as? T
+    }
+
+    override fun asyncOnActivityCreate() {
+        menuMap.forEach { it.value.init() }
 
         val messaging = context.feature(Messaging::class)
 
