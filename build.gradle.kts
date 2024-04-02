@@ -6,7 +6,7 @@ plugins {
 }
 
 var versionName = "2.0.0"
-var versionCode = 1 //"1" for now until stable release
+var versionCode = 200
 
 rootProject.ext.set("appVersionName", versionName)
 rootProject.ext.set("appVersionCode", versionCode)
