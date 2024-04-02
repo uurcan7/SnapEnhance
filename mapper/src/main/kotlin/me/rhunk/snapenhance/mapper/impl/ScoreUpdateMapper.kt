@@ -10,15 +10,15 @@ class ScoreUpdateMapper : AbstractClassMapper("ScoreUpdate") {
     init {
         mapper {
             for (classDef in classes) {
-                classDef.methods.firstOrNull {
-                    it.name == "<init>" &&
-                            it.parameterTypes.size > 4 &&
-                            it.parameterTypes[1] == "Ljava/lang/Long;" &&
-                            it.parameterTypes[3] == "Ljava/util/Collection;"
+                val toStringMethod = classDef.methods.firstOrNull {
+                    it.name == "toString"
                 } ?: continue
-                if (classDef.methods.firstOrNull {
-                        it.name == "toString"
-                    }?.implementation?.findConstString("Friend.sq:selectFriendUserScoresNeedToUpdate") != true) continue
+                if (classDef.methods.none {
+                    it.name == "<init>" &&
+                    it.parameterTypes.size > 4
+                }) continue
+
+                if (toStringMethod.implementation?.findConstString("selectFriendUserScoresNeedToUpdate", contains = true) != true) continue
 
                 classReference.set(classDef.getClassName())
                 return@mapper

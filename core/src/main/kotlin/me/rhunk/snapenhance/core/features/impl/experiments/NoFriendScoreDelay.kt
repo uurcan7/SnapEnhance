@@ -5,7 +5,8 @@ import me.rhunk.snapenhance.core.features.FeatureLoadParams
 import me.rhunk.snapenhance.core.util.hook.HookStage
 import me.rhunk.snapenhance.core.util.hook.hookConstructor
 import me.rhunk.snapenhance.mapper.impl.ScoreUpdateMapper
-import java.lang.reflect.Constructor
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 
 class NoFriendScoreDelay : Feature("NoFriendScoreDelay", loadParams = FeatureLoadParams.ACTIVITY_CREATE_SYNC) {
     override fun onActivityCreate() {
@@ -13,9 +14,12 @@ class NoFriendScoreDelay : Feature("NoFriendScoreDelay", loadParams = FeatureLoa
 
         context.mappings.useMapper(ScoreUpdateMapper::class) {
             classReference.get()?.hookConstructor(HookStage.BEFORE) { param ->
-                val constructor = param.method() as Constructor<*>
-                if (constructor.parameterTypes.size < 3 || constructor.parameterTypes[3] != java.util.Collection::class.java) return@hookConstructor
-                param.setArg(2, 0L)
+                param.args().indexOfFirst {
+                    val longValue = it.toString().toLongOrNull() ?: return@indexOfFirst false
+                    longValue > 30.minutes.inWholeMilliseconds && longValue < 10.days.inWholeMilliseconds
+                }.takeIf { it != -1 }?.let { index ->
+                    param.setArg(index, 0)
+                }
             }
         }
     }
