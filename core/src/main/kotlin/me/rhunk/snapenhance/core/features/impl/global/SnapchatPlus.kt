@@ -5,6 +5,8 @@ import me.rhunk.snapenhance.core.features.FeatureLoadParams
 import me.rhunk.snapenhance.core.util.hook.HookStage
 import me.rhunk.snapenhance.core.util.hook.hook
 import me.rhunk.snapenhance.core.util.hook.hookConstructor
+import me.rhunk.snapenhance.core.util.ktx.getObjectField
+import me.rhunk.snapenhance.core.util.ktx.setObjectField
 import me.rhunk.snapenhance.mapper.impl.PlusSubscriptionMapper
 
 class SnapchatPlus: Feature("SnapchatPlus", loadParams = FeatureLoadParams.INIT_SYNC) {
@@ -15,15 +17,17 @@ class SnapchatPlus: Feature("SnapchatPlus", loadParams = FeatureLoadParams.INIT_
         if (!context.config.global.snapchatPlus.get()) return
 
         context.mappings.useMapper(PlusSubscriptionMapper::class) {
-            classReference.get()?.hookConstructor(HookStage.BEFORE) { param ->
-                if (param.arg<Int>(0) == 2) return@hookConstructor
+            classReference.get()?.hookConstructor(HookStage.AFTER) { param ->
+                val instance = param.thisObject<Any>()
+                val tier = instance.getObjectField(tierField.getAsString()!!)
+                if (tier == 2) return@hookConstructor
                 //subscription tier
-                param.setArg(0, 2)
+                instance.setObjectField(tierField.getAsString()!!, 2)
                 //subscription status
-                param.setArg(1, 2)
+                instance.setObjectField(statusField.getAsString()!!, 2)
 
-                param.setArg(2, originalSubscriptionTime)
-                param.setArg(3, expirationTimeMillis)
+                instance.setObjectField(originalSubscriptionTimeMillisField.getAsString()!!, originalSubscriptionTime)
+                instance.setObjectField(expirationTimeMillisField.getAsString()!!, expirationTimeMillis)
             }
         }
 
