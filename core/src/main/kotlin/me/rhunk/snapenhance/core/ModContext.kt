@@ -156,7 +156,6 @@ class ModContext(
                 disableBitmoji = config.experimental.nativeHooks.disableBitmoji.get(),
                 disableMetrics = config.global.disableMetrics.get(),
                 hookAssetOpen = config.experimental.disableComposerModules.get().isNotEmpty(),
-                remapApk = config.experimental.nativeHooks.remapApk.get(),
             )
         )
     }

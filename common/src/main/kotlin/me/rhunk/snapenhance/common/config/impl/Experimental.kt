@@ -11,7 +11,6 @@ class Experimental : ConfigContainer() {
 
     class NativeHooks : ConfigContainer(hasGlobalState = true) {
         val disableBitmoji = boolean("disable_bitmoji")
-        val remapApk = boolean("remap_apk") { addNotices(FeatureNotice.UNSTABLE) }
     }
 
     class E2EEConfig : ConfigContainer(hasGlobalState = true) {

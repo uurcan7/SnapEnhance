@@ -16,14 +16,18 @@ void JNICALL init(JNIEnv *env, jobject clazz) {
     using namespace common;
 
     native_lib_object = env->NewGlobalRef(clazz);
-    client_module = util::get_module("libclient.so");
+    client_module = util::get_module(("split_config." + std::string(ARM64 ? "arm64_v8a" : "armeabi-v7a") + ".apk").c_str());
 
     if (client_module.base == 0) {
-        LOGE("libclient not loaded!");
-        return;
+        LOGD("split_config not found, trying libclient.so");
+        client_module = util::get_module("libclient.so");
+        if (client_module.base == 0) {
+            LOGE("can't find libclient.so");
+            return;
+        }
     }
 
-    LOGD("libclient.so base=0x%lx, size=0x%zx", client_module.base, client_module.size);
+    LOGD("client_module offset=0x%lx, size=0x%zx", client_module.base, client_module.size);
 
     AssetHook::init(env);
     UnaryCallHook::init(env);
@@ -31,9 +35,7 @@ void JNICALL init(JNIEnv *env, jobject clazz) {
     SqliteMutexHook::init();
     DuplexHook::init(env);
 
-    if (native_config->remap_apk) {
-        util::remap_sections(BUILD_PACKAGE);
-    }
+    util::remap_sections(BUILD_PACKAGE);
 
     LOGD("Native initialized");
 }
@@ -46,7 +48,6 @@ void JNICALL load_config(JNIEnv *env, jobject _, jobject config_object) {
     native_config->disable_bitmoji = GET_CONFIG_BOOL("disableBitmoji");
     native_config->disable_metrics = GET_CONFIG_BOOL("disableMetrics");
     native_config->hook_asset_open = GET_CONFIG_BOOL("hookAssetOpen");
-    native_config->remap_apk = GET_CONFIG_BOOL("remapApk");
 }
 
 void JNICALL lock_database(JNIEnv *env, jobject _, jstring database_name, jobject runnable) {
