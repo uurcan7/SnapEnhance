@@ -93,6 +93,18 @@ fun View.iterateParent(predicate: (View) -> Boolean) {
     }
 }
 
+fun View.findParent(maxIteration: Int = Int.MAX_VALUE, predicate: (View) -> Boolean): View? {
+    var parent = this.parent as? View ?: return null
+    var iteration = 0
+    while (iteration < maxIteration) {
+        if (predicate(parent)) return parent
+        parent = parent.parent as? View ?: return null
+        iteration++
+    }
+    return null
+}
+
+
 fun View.getComposerViewNode(): ComposerViewNode? {
     if (!this::class.java.isAssignableFrom(SnapEnhance.classCache.composerView)) return null
     val composerViewNode = this::class.java.methods.firstOrNull {

@@ -11,6 +11,7 @@ import me.rhunk.snapenhance.core.event.events.impl.AddViewEvent
 import me.rhunk.snapenhance.core.features.Feature
 import me.rhunk.snapenhance.core.features.FeatureLoadParams
 import me.rhunk.snapenhance.core.features.impl.messaging.Messaging
+import me.rhunk.snapenhance.core.ui.findParent
 import me.rhunk.snapenhance.core.ui.menu.impl.*
 import me.rhunk.snapenhance.core.util.ktx.getIdentifier
 import kotlin.reflect.KClass
@@ -45,7 +46,7 @@ class MenuViewInjector : Feature("MenuViewInjector", loadParams = FeatureLoadPar
 
         val actionSheetItemsContainerLayoutId = context.resources.getIdentifier("action_sheet_items_container", "id")
         val actionSheetContainer = context.resources.getIdentifier("action_sheet_container", "id")
-        val actionMenuHeaderId = context.resources.getIdentifier("action_menu_header", "id")
+        val actionMenuTitle = context.resources.getIdentifier("action_menu_title", "id")
         val actionMenu = context.resources.getIdentifier("action_menu", "id")
         val componentsHolder = context.resources.getIdentifier("components_holder", "id")
         val feedNewChat = context.resources.getIdentifier("feed_new_chat", "id")
@@ -66,14 +67,17 @@ class MenuViewInjector : Feature("MenuViewInjector", loadParams = FeatureLoadPar
             val childView: View = event.view
             menuMap[OperaContextActionMenu::class]!!.inject(viewGroup, childView, originalAddView)
 
-            if (event.view.id == actionMenuHeaderId) {
-                event.parent.post {
-                    val actionSheetItemsContainer = event.parent.findViewById<ViewGroup>(actionSheetItemsContainerLayoutId) ?: return@post
+            if (event.view.id == actionSheetItemsContainerLayoutId) {
+                event.view.post {
+                    if (event.parent.findParent(4) {
+                        it.findViewById<View>(actionMenuTitle) != null
+                    } == null) return@post
+
                     val views = mutableListOf<View>()
-                    menuMap[FriendFeedInfoMenu::class]?.inject(event.parent, actionSheetItemsContainer) {
+                    menuMap[FriendFeedInfoMenu::class]?.inject(event.parent, event.view) {
                         views.add(it)
                     }
-                    views.reversed().forEach { actionSheetItemsContainer.addView(it, 0) }
+                    views.reversed().forEach { (event.view as ViewGroup).addView(it, 0) }
                 }
             }
 
