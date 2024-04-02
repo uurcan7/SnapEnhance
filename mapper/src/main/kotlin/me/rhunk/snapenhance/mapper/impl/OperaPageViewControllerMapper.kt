@@ -17,7 +17,6 @@ class OperaPageViewControllerMapper : AbstractClassMapper("OperaPageViewControll
     init {
         mapper {
             for (clazz in classes) {
-                if (!clazz.isAbstract()) continue
                 if (!clazz.hasConstructorString("OperaPageViewController") || !clazz.hasStaticConstructorString("ad_product_type")) {
                     continue
                 }
