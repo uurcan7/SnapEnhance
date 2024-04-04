@@ -81,10 +81,9 @@ class FriendFeedMessagePreview : Feature("FriendFeedMessagePreview", loadParams 
         val secondaryTextSize = context.resources.getDimens("ff_feed_cell_secondary_text_size").toFloat()
         val ffSdlAvatarMargin = context.resources.getDimens("ff_sdl_avatar_margin")
         val ffSdlAvatarSize = context.resources.getDimens("ff_sdl_avatar_size")
-        val ffSdlAvatarStartMargin = context.resources.getDimens("ff_sdl_avatar_start_margin")
         val ffSdlPrimaryTextStartMargin = context.resources.getDimens("ff_sdl_primary_text_start_margin").toFloat()
 
-        val feedEntryHeight = ffSdlAvatarSize + ffSdlAvatarMargin * 2 + ffSdlAvatarStartMargin
+        val feedEntryHeight = ffSdlAvatarSize + ffSdlAvatarMargin * 2 + (4 * context.resources.displayMetrics.density).toInt()
         val separatorHeight = (context.resources.displayMetrics.density * 2).toInt()
         val textPaint = TextPaint().apply {
             textSize = secondaryTextSize
