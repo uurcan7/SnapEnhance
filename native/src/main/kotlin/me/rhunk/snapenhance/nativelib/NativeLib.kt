@@ -17,10 +17,12 @@ class NativeLib {
             System.loadLibrary(BuildConfig.NATIVE_NAME)
             initialized = true
             callback(this)
-            init()
+            if (!init()) {
+                throw IllegalStateException("NativeLib init failed. Check logcat for more info")
+            }
         }.onFailure {
             initialized = false
-            Log.e("SnapEnhance", "NativeLib init failed")
+            Log.e("SnapEnhance", "NativeLib init failed", it)
         }
     }
 
@@ -57,7 +59,7 @@ class NativeLib {
         }
     }
 
-    private external fun init()
+    private external fun init(): Boolean
     private external fun loadConfig(config: NativeConfig)
     private external fun lockDatabase(name: String, callback: Runnable)
 }

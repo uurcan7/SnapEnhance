@@ -11,19 +11,19 @@
 #include "hooks/sqlite_mutex.h"
 #include "hooks/duplex_hook.h"
 
-void JNICALL init(JNIEnv *env, jobject clazz) {
+bool JNICALL init(JNIEnv *env, jobject clazz) {
     LOGD("Initializing native");
     using namespace common;
 
     native_lib_object = env->NewGlobalRef(clazz);
-    client_module = util::get_module(("split_config." + std::string(ARM64 ? "arm64_v8a" : "armeabi-v7a") + ".apk").c_str());
+    client_module = util::get_module("libclient.so");
 
     if (client_module.base == 0) {
-        LOGD("split_config not found, trying libclient.so");
-        client_module = util::get_module("libclient.so");
+        LOGD("libclient.so not found, trying split_config");
+        client_module = util::get_module(("split_config." + std::string(ARM64 ? "arm64_v8a" : "armeabi-v7a") + ".apk").c_str());
         if (client_module.base == 0) {
-            LOGE("can't find libclient.so");
-            return;
+            LOGE("can't find split_config!");
+            return false;
         }
     }
 
@@ -38,9 +38,10 @@ void JNICALL init(JNIEnv *env, jobject clazz) {
     util::remap_sections(BUILD_PACKAGE);
 
     LOGD("Native initialized");
+    return true;
 }
 
-void JNICALL load_config(JNIEnv *env, jobject _, jobject config_object) {
+void JNICALL load_config(JNIEnv *env, jobject, jobject config_object) {
     auto native_config_clazz = env->GetObjectClass(config_object);
 #define GET_CONFIG_BOOL(name) env->GetBooleanField(config_object, env->GetFieldID(native_config_clazz, name, "Z"))
     auto native_config = common::native_config;
@@ -50,7 +51,7 @@ void JNICALL load_config(JNIEnv *env, jobject _, jobject config_object) {
     native_config->hook_asset_open = GET_CONFIG_BOOL("hookAssetOpen");
 }
 
-void JNICALL lock_database(JNIEnv *env, jobject _, jstring database_name, jobject runnable) {
+void JNICALL lock_database(JNIEnv *env, jobject, jstring database_name, jobject runnable) {
     auto database_name_str = env->GetStringUTFChars(database_name, nullptr);
     auto mutex = SqliteMutexHook::mutex_map[database_name_str];
     env->ReleaseStringUTFChars(database_name, database_name_str);
@@ -76,7 +77,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *_) {
     vm->GetEnv((void **)&env, JNI_VERSION_1_6);
 
     auto methods = std::vector<JNINativeMethod>();
-    methods.push_back({"init", "()V", (void *)init});
+    methods.push_back({"init", "()Z", (void *)init});
     methods.push_back({"loadConfig", "(L" BUILD_NAMESPACE "/NativeConfig;)V", (void *)load_config});
     methods.push_back({"lockDatabase", "(Ljava/lang/String;Ljava/lang/Runnable;)V", (void *)lock_database});
 
