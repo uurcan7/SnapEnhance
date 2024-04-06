@@ -148,7 +148,7 @@ class LoggedStories : Routes.Route() {
                                     }
                                 }
                             }) {
-                                Text(text = "Open")
+                                Text(text = context.translation["button.open"])
                             }
 
                             Button(onClick = {
@@ -160,7 +160,7 @@ class LoggedStories : Routes.Route() {
                                     )
                                 )
                             }) {
-                                Text(text = "Download")
+                                Text(text = context.translation["button.download"])
                             }
 
                             if (remember {
@@ -180,7 +180,7 @@ class LoggedStories : Routes.Route() {
                                         )
                                     )
                                 }) {
-                                    Text(text = "Save from cache")
+                                    Text(text = translation["save_from_cache_button"])
                                 }
                             }
                         }
@@ -190,7 +190,7 @@ class LoggedStories : Routes.Route() {
         }
 
         if (stories.isEmpty()) {
-            Text(text = "No stories found", Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            Text(text = translation["no_stories"], Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         }
 
         LazyVerticalGrid(
@@ -212,7 +212,7 @@ class LoggedStories : Routes.Route() {
                     verticalArrangement = Arrangement.Center,
                 ) {
                     if (hasFailed) {
-                        Text(text = "Failed to load", Modifier.padding(8.dp), fontSize = 10.sp)
+                        Text(text = translation["story_failed_to_load"], Modifier.padding(8.dp), fontSize = 10.sp)
                     } else {
                         Image(
                             painter = rememberAsyncImagePainter(

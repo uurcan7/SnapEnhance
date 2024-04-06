@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,11 +29,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,7 +54,6 @@ class FeaturesRoot : Routes.Route() {
     }
 
     private var activityLauncherHelper: ActivityLauncherHelper? = null
-    private lateinit var rememberScaffoldState: BottomSheetScaffoldState
 
     private val allContainers by lazy {
         val containers = mutableMapOf<String, PropertyPair<*>>()
@@ -444,48 +444,62 @@ class FeaturesRoot : Routes.Route() {
         var showResetConfirmationDialog by remember { mutableStateOf(false) }
 
         if (showResetConfirmationDialog) {
-            Dialog(onDismissRequest = { showResetConfirmationDialog = false }) {
-                alertDialogs.ConfirmDialog(
-                    title = "Reset config",
-                    message = "Are you sure you want to reset the config?",
-                    onConfirm = {
-                        context.config.reset()
-                        context.shortToast("Config successfully reset!")
-                    },
-                    onDismiss = { showResetConfirmationDialog = false }
-                )
-            }
+            AlertDialog(
+                title = { Text(text = context.translation["manager.dialogs.reset_config.title"]) },
+                text = { Text(text = context.translation["manager.dialogs.reset_config.content"]) },
+                onDismissRequest = { showResetConfirmationDialog = false },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            context.config.reset()
+                            context.shortToast(context.translation["manager.dialogs.reset_config.success_toast"])
+                            showResetConfirmationDialog = false
+                        }
+                    ) {
+                        Text(text = context.translation["button.positive"])
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            showResetConfirmationDialog = false
+                        }
+                    ) {
+                        Text(text = context.translation["button.negative"])
+                    }
+                }
+            )
         }
 
         val actions = remember {
             mapOf(
-                "Export" to {
+                translation["export_option"] to {
                     activityLauncher {
                         saveFile("config.json", "application/json") { uri ->
                             context.androidContext.contentResolver.openOutputStream(Uri.parse(uri))?.use {
                                 context.config.writeConfig()
                                 context.config.exportToString().byteInputStream().copyTo(it)
-                                context.shortToast("Config exported successfully!")
+                                context.shortToast(translation["config_export_success_toast"])
                             }
                         }
                     }
                 },
-                "Import" to {
+                translation["import_option"] to {
                     activityLauncher {
                         openFile("application/json") { uri ->
                             context.androidContext.contentResolver.openInputStream(Uri.parse(uri))?.use {
                                 runCatching {
                                     context.config.loadFromString(it.readBytes().toString(Charsets.UTF_8))
                                 }.onFailure {
-                                    context.longToast("Failed to import config ${it.message}")
+                                    context.longToast(translation.format("config_import_failure_toast", "error" to it.message.toString()))
                                     return@use
                                 }
-                                context.shortToast("Config successfully loaded!")
+                                context.shortToast(translation["config_import_success_toast"])
                             }
                         }
                     }
                 },
-                "Reset" to { showResetConfirmationDialog = true }
+                translation["reset_option"] to { showResetConfirmationDialog = true }
             )
         }
 
@@ -519,9 +533,7 @@ class FeaturesRoot : Routes.Route() {
     private fun PropertiesView(
         properties: List<PropertyPair<*>>
     ) {
-        rememberScaffoldState = rememberBottomSheetScaffoldState()
         Scaffold(
-            snackbarHost = { SnackbarHost(rememberScaffoldState.snackbarHostState) },
             modifier = Modifier.fillMaxSize(),
             content = { innerPadding ->
                 LazyColumn(
@@ -541,23 +553,23 @@ class FeaturesRoot : Routes.Route() {
     }
 
     override val floatingActionButton: @Composable () -> Unit = {
-        val scope = rememberCoroutineScope()
-        FloatingActionButton(
-            onClick = {
+        fun saveConfig() {
+            context.coroutineScope.launch(Dispatchers.IO) {
                 context.config.writeConfig()
-                scope.launch {
-                    rememberScaffoldState.snackbarHostState.showSnackbar("Saved")
-                }
-            },
-            modifier = Modifier.padding(10.dp),
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Save,
-                contentDescription = null
-            )
+                context.log.verbose("saved config!")
+            }
+        }
+
+        OnLifecycleEvent { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE || event == Lifecycle.Event.ON_STOP) {
+                saveConfig()
+            }
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                saveConfig()
+            }
         }
     }
 
@@ -566,10 +578,8 @@ class FeaturesRoot : Routes.Route() {
     private fun Container(
         configContainer: ConfigContainer
     ) {
-        val properties = remember {
+        PropertiesView(remember {
             configContainer.properties.map { PropertyPair(it.key, it.value) }
-        }
-
-        PropertiesView(properties)
+        })
     }
 }

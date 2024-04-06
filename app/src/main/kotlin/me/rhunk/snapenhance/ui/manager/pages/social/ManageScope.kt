@@ -29,7 +29,6 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 class ManageScope: Routes.Route() {
     private val dialogs by lazy { AlertDialogs(context.translation) }
-    private val translation by lazy { context.translation.getCategory("manager.sections.social") }
 
     private fun deleteScope(scope: SocialScope, id: String, coroutineScope: CoroutineScope) {
         when (scope) {
@@ -56,7 +55,7 @@ class ManageScope: Routes.Route() {
                 deleteConfirmDialog = false
             }) {
                 remember { AlertDialogs(context.translation) }.ConfirmDialog(
-                    title = "Are you sure you want to delete this ${scope.key.lowercase()}?",
+                    title = translation.format("delete_scope_confirm_dialog_title", "scope" to context.translation["scopes.${scope.key}"]),
                     onDismiss = { deleteConfirmDialog = false },
                     onConfirm = {
                         deleteScope(scope, id, coroutineScope); deleteConfirmDialog = false
@@ -94,7 +93,6 @@ class ManageScope: Routes.Route() {
             SectionTitle(translation["rules_title"])
 
             ContentCard {
-                //manager anti features etc
                 MessagingRuleType.entries.forEach { ruleType ->
                     var ruleEnabled by remember {
                         mutableStateOf(rules.any { it.key == ruleType.key })
@@ -110,14 +108,17 @@ class ManageScope: Routes.Route() {
                             text = if (ruleType.listMode && ruleState != null) {
                                 context.translation["rules.properties.${ruleType.key}.options.${ruleState.key}"]
                             } else context.translation["rules.properties.${ruleType.key}.name"],
-                            modifier = Modifier.weight(1f).padding(start = 5.dp, end = 5.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 5.dp, end = 5.dp)
                         )
                         Switch(checked = ruleEnabled,
                             enabled = if (ruleType.listMode) ruleState != null else true,
                             onCheckedChange = {
                                 context.modDatabase.setRule(id, ruleType.key, it)
                                 ruleEnabled = it
-                            })
+                            }
+                        )
                     }
                 }
             }
@@ -155,8 +156,7 @@ class ManageScope: Routes.Route() {
         )
     }
 
-    //need to display all units?
-    private fun computeStreakETA(timestamp: Long): String {
+    private fun computeStreakETA(timestamp: Long): String? {
         val now = System.currentTimeMillis()
         val stringBuilder = StringBuilder()
         val diff = timestamp - now
@@ -180,7 +180,7 @@ class ManageScope: Routes.Route() {
             stringBuilder.append("$seconds seconds ")
             return stringBuilder.toString()
         }
-        return "Expired"
+        return null
     }
 
     @OptIn(ExperimentalEncodingApi::class)
@@ -234,7 +234,7 @@ class ManageScope: Routes.Route() {
                         put("id", id)
                     }
                 }) {
-                    Text("Show Logged Stories")
+                    Text(translation["logged_stories_button"])
                 }
             }
 
@@ -259,10 +259,11 @@ class ManageScope: Routes.Route() {
                                 ), maxLines = 1
                             )
                             Text(
-                                text = translation.format(
+                                text = computeStreakETA(streaks.expirationTimestamp)?.let { translation.format(
                                     "streaks_expiration_text",
-                                    "eta" to computeStreakETA(streaks.expirationTimestamp)
-                                ), maxLines = 1
+                                    "eta" to it
+                                ) } ?: translation["streaks_expiration_text_expired"],
+                                maxLines = 1
                             )
                         }
                         Row(
@@ -282,7 +283,6 @@ class ManageScope: Routes.Route() {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            // e2ee section
 
             if (context.config.root.experimental.e2eEncryption.globalState == true) {
                 SectionTitle(translation["e2ee_title"])
@@ -361,7 +361,6 @@ class ManageScope: Routes.Route() {
             Text(text = translation["not_found"])
             return
         }
-
 
         Column(
             modifier = Modifier

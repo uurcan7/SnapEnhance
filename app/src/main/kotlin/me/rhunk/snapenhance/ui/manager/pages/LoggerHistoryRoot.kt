@@ -126,7 +126,7 @@ class LoggerHistoryRoot : Routes.Route() {
                 LaunchedEffect(Unit, message) {
                     runCatching {
                         decodeMessage(message) { senderId, contentType, messageReader, attachments ->
-                            val senderUsername = senderId?.let { context.modDatabase.getFriendInfo(it)?.mutableUsername } ?: "unknown sender"
+                            val senderUsername = senderId?.let { context.modDatabase.getFriendInfo(it)?.mutableUsername } ?: translation["unknown_sender"]
 
                             @Composable
                             fun ContentHeader() {
@@ -134,7 +134,7 @@ class LoggerHistoryRoot : Routes.Route() {
                             }
 
                             if (contentType == ContentType.CHAT) {
-                                val content = messageReader.getString(2, 1) ?: "[empty chat message]"
+                                val content = messageReader.getString(2, 1) ?: "[${translation["empty_message"]}]"
                                 contentView = {
                                     Column {
                                         Text(content, modifier = Modifier
@@ -166,7 +166,7 @@ class LoggerHistoryRoot : Routes.Route() {
                                                         downloadAttachment(message.timestamp, attachment)
                                                     }.onFailure {
                                                         context.log.error("Failed to download attachment", it)
-                                                        context.shortToast("Failed to download attachment")
+                                                        context.shortToast(translation["download_attachment_failed_toast"])
                                                     }
                                                 }
                                             }) {
@@ -175,7 +175,7 @@ class LoggerHistoryRoot : Routes.Route() {
                                                     contentDescription = "Download",
                                                     modifier = Modifier.padding(end = 4.dp)
                                                 )
-                                                Text("Attachment ${index + 1}")
+                                                Text(translation.format("chat_attachment", "index" to (index + 1).toString()))
                                             }
                                         }
                                     }
@@ -186,7 +186,7 @@ class LoggerHistoryRoot : Routes.Route() {
                     }.onFailure {
                         context.log.error("Failed to parse message", it)
                         contentView = {
-                            Text("[Failed to parse message]")
+                            Text("[${translation["message_parse_failed"]}]")
                         }
                     }
                 }
@@ -212,8 +212,10 @@ class LoggerHistoryRoot : Routes.Route() {
             ) {
                 fun formatConversationId(conversationId: String?): String? {
                     if (conversationId == null) return null
-                    return context.modDatabase.getGroupInfo(conversationId)?.name?.let { "Group $it" } ?: context.modDatabase.findFriend(conversationId)?.let {
-                        "Friend " + (it.displayName?.let { name -> "$name (${it.mutableUsername})" } ?: it.mutableUsername)
+                    return context.modDatabase.getGroupInfo(conversationId)?.name?.let {
+                        translation.format("list_group_format", "name" to it)
+                    } ?: context.modDatabase.findFriend(conversationId)?.let {
+                        translation.format("list_friend_format", "name" to (it.displayName?.let { name -> "$name (${it.mutableUsername})" } ?: it.mutableUsername))
                     } ?: conversationId
                 }
 
@@ -257,7 +259,7 @@ class LoggerHistoryRoot : Routes.Route() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    Text("Reverse order")
+                    Text(translation["reverse_order_checkbox"])
                     Checkbox(checked = reverseOrder, onCheckedChange = {
                         reverseOrder = it
                     })
@@ -275,7 +277,7 @@ class LoggerHistoryRoot : Routes.Route() {
                 item {
                     if (selectedConversation != null) {
                         if (hasReachedEnd) {
-                            Text("No more messages", modifier = Modifier
+                            Text(translation["no_more_messages"], modifier = Modifier
                                 .padding(8.dp)
                                 .fillMaxWidth(), textAlign = TextAlign.Center)
                         } else {

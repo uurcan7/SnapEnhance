@@ -164,8 +164,8 @@ class SocialRoot : Routes.Route() {
                                             else MaterialTheme.colorScheme.primary
                                         )
                                         Text(
-                                            text = context.translation.format(
-                                                "manager.sections.social.streaks_expiration_short",
+                                            text = translation.format(
+                                                "streaks_expiration_short",
                                                 "hours" to (((streaks.expirationTimestamp - System.currentTimeMillis()) / 3600000).toInt().takeIf { it > 0 } ?: 0)
                                                     .toString()
                                             ),

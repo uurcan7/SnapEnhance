@@ -198,9 +198,9 @@ class HomeRoot : Routes.Route() {
                     }
                 )
             }
-            Spacer(modifier = Modifier.height(20.dp))
 
             if (latestUpdate != null) {
+                Spacer(modifier = Modifier.height(20.dp))
                 OutlinedCard(
                     modifier = Modifier
                         .padding(all = cardMargin)
@@ -218,13 +218,13 @@ class HomeRoot : Routes.Route() {
                     ) {
                         Column {
                             Text(
-                                text = "SnapEnhance Update",
+                                text = translation["update_title"],
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                             )
                             Text(
                                 fontSize = 12.sp,
-                                text = "Version ${latestUpdate?.versionName} is available!",
+                                text = translation.format("update_content", "version" to (latestUpdate?.versionName ?: "unknown")),
                                 lineHeight = 20.sp
                             )
                         }
@@ -235,7 +235,7 @@ class HomeRoot : Routes.Route() {
                                 }
                             )
                         }, modifier = Modifier.height(40.dp)) {
-                            Text(text = "Download")
+                            Text(text = translation["update_button"])
                         }
                     }
                 }

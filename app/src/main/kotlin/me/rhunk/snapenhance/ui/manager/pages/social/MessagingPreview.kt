@@ -47,7 +47,6 @@ class MessagingPreview: Routes.Route() {
     private lateinit var messagingBridge: MessagingBridge
     private lateinit var previewScrollState: LazyListState
 
-    private val myUserId by lazy { messagingBridge.myUserId }
     private val contentTypeTranslation by lazy { context.translation.getCategory("content_type") }
 
     private var messages = mutableStateListOf<Message>()
@@ -117,7 +116,7 @@ class MessagingPreview: Routes.Route() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                Text("Choose content types to process")
+                Text(context.translation["manager.dialogs.messaging_action.title"])
                 Spacer(modifier = Modifier.height(5.dp))
                 availableTypes.forEach { contentType ->
                     Row(
@@ -135,7 +134,7 @@ class MessagingPreview: Routes.Route() {
                             enabled = !selectAllState,
                             onCheckedChange = { toggleContentType(contentType) }
                         )
-                        Text(text = contentType.toString())
+                        Text(text = contentTypeTranslation[contentType.name])
                     }
                 }
                 Row(
@@ -148,7 +147,7 @@ class MessagingPreview: Routes.Route() {
                     Switch(checked = selectAllState, onCheckedChange = {
                         selectAllState = it
                     })
-                    Text(text = "Select all")
+                    Text(text = context.translation["manager.dialogs.messaging_action.select_all_button"])
                 }
                 Row(
                     modifier = Modifier
@@ -156,13 +155,13 @@ class MessagingPreview: Routes.Route() {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Button(onClick = { onDismiss() }) {
-                        Text("Cancel")
+                        Text(context.translation["button.cancel"])
                     }
                     Button(onClick = {
                         onChoose(if (selectAllState) ContentType.entries.toTypedArray()
                          else selectedTypes.toTypedArray())
                     }) {
-                        Text("Continue")
+                        Text(context.translation["button.ok"])
                     }
                 }
             }
@@ -286,28 +285,28 @@ class MessagingPreview: Routes.Route() {
             shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(50.dp))
         ) {
             DropdownMenu(
-                expanded = taskSelectionDropdown, onDismissRequest = { taskSelectionDropdown = false }
+                expanded = taskSelectionDropdown && messages.isNotEmpty(), onDismissRequest = { taskSelectionDropdown = false }
             ) {
                 val hasSelection = selectedMessages.isNotEmpty()
-                ActionButton(text = if (hasSelection) "Save selection" else "Save all", icon = Icons.Rounded.BookmarkAdded) {
+                ActionButton(text = translation[if (hasSelection) "save_selection_option" else "save_all_option"], icon = Icons.Rounded.BookmarkAdded) {
                     launchMessagingTask(MessagingTaskType.SAVE)
                     if (hasSelection) runCurrentTask()
                     else selectConstraintsDialog = true
                 }
-                ActionButton(text = if (hasSelection) "Unsave selection" else "Unsave all", icon = Icons.Rounded.BookmarkBorder) {
+                ActionButton(text = translation[if (hasSelection) "unsave_selection_option" else "unsave_all_option"], icon = Icons.Rounded.BookmarkBorder) {
                     launchMessagingTask(MessagingTaskType.UNSAVE)
                     if (hasSelection) runCurrentTask()
                     else selectConstraintsDialog = true
                 }
-                ActionButton(text = if (hasSelection) "Mark selected Snap as seen" else "Mark all Snaps as seen", icon = Icons.Rounded.RemoveRedEye) {
+                ActionButton(text = translation[if (hasSelection) "mark_selection_as_seen_option" else "mark_all_as_seen_option"], icon = Icons.Rounded.RemoveRedEye) {
                     launchMessagingTask(MessagingTaskType.READ, listOf(
-                        MessagingConstraints.NO_USER_ID(myUserId),
+                        MessagingConstraints.NO_USER_ID(messagingBridge.myUserId),
                         MessagingConstraints.CONTENT_TYPE(arrayOf(ContentType.SNAP))
                     ))
                     runCurrentTask()
                 }
-                ActionButton(text = if (hasSelection) "Delete selected" else "Delete all", icon = Icons.Rounded.DeleteForever) {
-                    launchMessagingTask(MessagingTaskType.DELETE, listOf(MessagingConstraints.USER_ID(myUserId))) { message ->
+                ActionButton(text = translation[if (hasSelection) "delete_selection_option" else "delete_all_option"], icon = Icons.Rounded.DeleteForever) {
+                    launchMessagingTask(MessagingTaskType.DELETE, listOf(MessagingConstraints.USER_ID(messagingBridge.myUserId))) { message ->
                         coroutineScope.launch {
                             message.contentType = ContentType.STATUS.id
                         }
@@ -377,7 +376,7 @@ class MessagingPreview: Routes.Route() {
                             .padding(40.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("No messages")
+                        Text(translation["no_message_hint"])
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
@@ -428,12 +427,7 @@ class MessagingPreview: Routes.Route() {
                         conversationId!!,
                         20,
                         lastMessageId
-                    )?.reversed()
-
-                    if (queriedMessages == null) {
-                        context.shortToast("Failed to fetch messages")
-                        return@cs
-                    }
+                    )?.reversed() ?: throw IllegalStateException("Failed to fetch messages. Bridge returned null")
 
                     withContext(Dispatchers.Main) {
                         messages.addAll(queriedMessages)
@@ -441,7 +435,7 @@ class MessagingPreview: Routes.Route() {
                     }
                 }.onFailure {
                     context.log.error("Failed to fetch messages", it)
-                    context.shortToast("Failed to fetch messages: ${it.message}")
+                    context.shortToast(translation["message_fetch_failed"])
                 }
             }
         }
@@ -451,11 +445,7 @@ class MessagingPreview: Routes.Route() {
 
             runCatching {
                 messagingBridge = context.bridgeService!!.messagingBridge!!
-                conversationId = if (scope == SocialScope.FRIEND) messagingBridge.getOneToOneConversationId(scopeId) else scopeId
-                if (conversationId == null) {
-                    context.longToast("Failed to fetch conversation id")
-                    return
-                }
+                conversationId = (if (scope == SocialScope.FRIEND) messagingBridge.getOneToOneConversationId(scopeId) else scopeId) ?: throw IllegalStateException("Failed to get conversation id")
                 if (runCatching { !messagingBridge.isSessionStarted }.getOrDefault(true)) {
                     context.androidContext.packageManager.getLaunchIntentForPackage(
                         Constants.SNAPCHAT_PACKAGE_NAME
@@ -474,7 +464,7 @@ class MessagingPreview: Routes.Route() {
                 }
                 fetchNewMessages()
             }.onFailure {
-                context.longToast("Failed to initialize messaging bridge")
+                context.longToast(translation["bridge_init_failed"])
                 context.log.error("Failed to initialize messaging bridge", it)
             }
         }
@@ -511,7 +501,7 @@ class MessagingPreview: Routes.Route() {
                 .fillMaxSize()
         ) {
             if (hasBridgeError) {
-                Text("Failed to connect to Snapchat through bridge service")
+                Text(translation["bridge_connection_failed"])
             }
 
             if (!isBridgeConnected && !hasBridgeError) {

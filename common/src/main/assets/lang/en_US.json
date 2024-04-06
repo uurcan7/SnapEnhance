@@ -21,6 +21,11 @@
         }
     },
 
+    "scopes": {
+        "friend": "Friend",
+        "group": "Group"
+    },
+
     "manager": {
         "routes": {
             "tasks": "Tasks",
@@ -37,27 +42,92 @@
         },
         "sections": {
             "home": {
-                "logs": {
-                    "clear_logs_button": "Clear Logs",
-                    "export_logs_button": "Export Logs"
-                }
+                "update_title": "SnapEnhance Update",
+                "update_content": "Version {version} is available!",
+                "update_button": "Download"
+            },
+            "home_logs": {
+                "no_logs_hint": "No logs available",
+                "clear_logs_button": "Clear Logs",
+                "export_logs_button": "Export Logs",
+                "saving_logs_toast": "Saving logs, this may take a while ...",
+                "saved_logs_success_toast": "Logs saved successfully",
+                "saved_logs_failure_toast": "Failed to save logs"
+            },
+            "home_settings": {
+                "actions_title": "Actions",
+                "message_logger_title": "Message Logger",
+                "debug_title": "Debug",
+                "success_toast": "Done!",
+                "message_logger_summary": "{messageCount} messages\n{storyCount} stories",
+                "export_button": "Export",
+                "clear_button": "Clear",
+                "view_logger_history_button": "View Logger History"
             },
             "tasks": {
-                "no_tasks": "No tasks"
+                "no_tasks": "No tasks",
+                "merge_files_toast": "Merging {count} files",
+                "remove_selected_tasks_title": "Are you sure you want to remove selected tasks?",
+                "remove_all_tasks_title": "Are you sure you want to remove all tasks?",
+                "delete_files_option": "Also delete files",
+                "remove_selected_tasks_confirm": "Remove {count} tasks?",
+                "remove_all_tasks_confirm": "Remove all tasks?"
             },
             "features": {
-                "disabled": "Disabled"
+                "disabled": "Disabled",
+                "export_option": "Export",
+                "import_option": "Import",
+                "reset_option": "Reset",
+                "config_export_success_toast": "Config exported successfully",
+                "config_import_success_toast": "Config imported successfully",
+                "config_import_failure_toast": "Failed to import config {error}",
+                "saved_config_snackbar": "Config saved"
             },
             "social": {
+                "streaks_expiration_short": "{hours}h"
+            },
+            "manage_scope": {
+                "logged_stories_button": "Show Logged Stories",
                 "e2ee_title": "End-to-End Encryption",
                 "rules_title": "Rules",
                 "participants_text": "{count} participants",
                 "not_found": "Not found",
                 "streaks_title": "Streaks",
                 "streaks_length_text": "Length: {length}",
-                "streaks_expiration_short": "{hours}h",
                 "streaks_expiration_text": "Expires in {eta}",
-                "reminder_button": "Set Reminder"
+                "streaks_expiration_text_expired": "Expired",
+                "reminder_button": "Set Reminder",
+                "delete_scope_confirm_dialog_title": "Are you sure you want to delete a {scope}?"
+            },
+            "logged_stories": {
+                "story_failed_to_load": "Failed to load",
+                "no_stories": "No stories found",
+                "save_from_cache_button": "Save from Cache"
+            },
+            "messaging_preview": {
+                "bridge_connection_failed": "Failed to connect to Snapchat through bridge service",
+                "bridge_init_failed": "Failed to initialize messaging bridge",
+                "message_fetch_failed": "Failed to fetch messages",
+                "no_message_hint": "No message",
+                "save_selection_option": "Save Selection",
+                "save_all_option": "Save All",
+                "unsave_selection_option": "Unsave Selection",
+                "unsave_all_option": "Unsave All",
+                "mark_selection_as_seen_option":  "Mark selected Snap as seen",
+                "mark_all_as_seen_option": "Mark all Snaps as seen",
+                "delete_selection_option": "Delete Selection",
+                "delete_all_option": "Delete All"
+            },
+            "logger_history": {
+                "list_friend_format": "Friend {name}",
+                "list_group_format": "Group {name}",
+                "no_more_messages": "No more messages",
+                "reverse_order_checkbox": "Reverse Order",
+                "chat_attachment": "Attachment {index}",
+                "empty_message": "Empty Chat Message",
+                "message_parse_failed": "Failed to parse message",
+                "unknown_sender": "Unknown Sender",
+                "download_attachment_failed_toast": "Failed to download attachment"
             }
         },
         "dialogs": {
@@ -71,6 +141,15 @@
             "scripting_warning": {
                 "title": "Warning",
                 "content": "SnapEnhance includes a scripting tool, allowing the execution of user-defined code on your device. Use extreme caution and only install modules from known, reliable sources. Unauthorized or unverified modules may pose security risks to your system."
+            },
+            "reset_config": {
+                "title": "Reset config",
+                "content": "Are you sure you want to reset the config?",
+                "success_toast": "Config reset successfully"
+            },
+            "messaging_action": {
+                "title": "Choose content types to process",
+                "select_all_button": "Select All"
             }
         }
     },

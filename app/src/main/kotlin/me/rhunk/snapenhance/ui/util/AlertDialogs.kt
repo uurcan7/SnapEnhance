@@ -44,9 +44,9 @@ class AlertDialogs(
     @Composable
     fun DefaultDialogCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
         Card(
-            shape = MaterialTheme.shapes.medium,
+            shape = MaterialTheme.shapes.large,
             modifier = Modifier
-                .padding(10.dp, 5.dp, 10.dp, 10.dp)
+                .padding(16.dp)
                 .then(modifier),
         ) {
             Column(

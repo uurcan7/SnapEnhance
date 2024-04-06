@@ -68,28 +68,27 @@ class HomeLogs : Routes.Route() {
                 navigate()
                 showDropDown = false
             }, text = {
-                Text(
-                    text = context.translation["manager.sections.home.logs.clear_logs_button"]
-                )
+                Text(translation["clear_logs_button"])
             })
 
             DropdownMenuItem(onClick = {
                 activityLauncherHelper.saveFile("snapenhance-logs-${System.currentTimeMillis()}.zip", "application/zip") { uri ->
-                    context.androidContext.contentResolver.openOutputStream(Uri.parse(uri))?.use {
-                        runCatching {
-                            context.log.exportLogsToZip(it)
-                            context.longToast("Saved logs to $uri")
-                        }.onFailure {
-                            context.longToast("Failed to save logs to $uri!")
-                            context.log.error("Failed to save logs to $uri!", it)
+                    context.coroutineScope.launch {
+                        context.shortToast(translation["saving_logs_toast"])
+                        context.androidContext.contentResolver.openOutputStream(Uri.parse(uri))?.use {
+                            runCatching {
+                                context.log.exportLogsToZip(it)
+                                context.longToast(translation["saved_logs_success_toast"])
+                            }.onFailure {
+                                context.longToast(translation["saved_logs_failure_toast"])
+                                context.log.error("Failed to save logs to $uri!", it)
+                            }
                         }
                     }
                 }
                 showDropDown = false
             }, text = {
-                Text(
-                    text = context.translation["manager.sections.home.logs.export_logs_button"]
-                )
+                Text(translation["export_logs_button"])
             })
         }
     }
@@ -141,7 +140,7 @@ class HomeLogs : Routes.Route() {
                 item {
                     if (lineCount == 0 && logReader != null) {
                         Text(
-                            text = "No logs found!",
+                            text = translation["no_logs_hint"],
                             modifier = Modifier.padding(16.dp),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Light

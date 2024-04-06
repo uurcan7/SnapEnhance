@@ -78,6 +78,8 @@ class Routes(
         lateinit var routeInfo: RouteInfo
         lateinit var routes: Routes
 
+        val translation by lazy { context.translation.getCategory("manager.sections.${routeInfo.key.substringBefore("/")}")}
+
         private fun replaceArguments(id: String, args: Map<String, String>) = args.takeIf { it.isNotEmpty() }?.let {
             args.entries.fold(id) { acc, (key, value) ->
                 acc.replace("{$key}", value)

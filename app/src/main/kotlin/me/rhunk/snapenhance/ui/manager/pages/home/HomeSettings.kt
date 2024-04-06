@@ -84,7 +84,7 @@ class HomeSettings : Routes.Route() {
 
         if (requireConfirmation && confirmationDialog) {
             Dialog(onDismissRequest = { confirmationDialog = false }) {
-                dialogs.ConfirmDialog(title = "Are you sure?", onConfirm = {
+                dialogs.ConfirmDialog(title = context.translation["manager.dialogs.action_confirm.title"], onConfirm = {
                     action()
                     confirmationDialog = false
                 }, onDismiss = {
@@ -148,7 +148,7 @@ class HomeSettings : Routes.Route() {
                 .fillMaxSize()
                 .verticalScroll(ScrollState(0))
         ) {
-            RowTitle(title = "Actions")
+            RowTitle(title = translation["actions_title"])
             EnumAction.entries.forEach { enumAction ->
                 RowAction(key = enumAction.key) {
                     launchActionIntent(enumAction)
@@ -160,7 +160,7 @@ class HomeSettings : Routes.Route() {
             RowAction(key = "change_language") {
                 context.checkForRequirements(Requirements.LANGUAGE)
             }
-            RowTitle(title = "Message Logger")
+            RowTitle(title = translation["message_logger_title"])
             ShiftedRow {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -184,8 +184,11 @@ class HomeSettings : Routes.Route() {
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
-                            Text(text = "$storedMessagesCount messages")
-                            Text(text = "$storedStoriesCount stories")
+                            Text(
+                                translation.format("message_logger_summary",
+                                "messageCount" to storedMessagesCount.toString(),
+                                "storyCount" to storedStoriesCount.toString()
+                            ), maxLines = 2)
                         }
                         Button(onClick = {
                             runCatching {
@@ -201,7 +204,7 @@ class HomeSettings : Routes.Route() {
                                 context.longToast("Failed to export database! ${it.localizedMessage}")
                             }
                         }) {
-                            Text(text = "Export")
+                            Text(text = translation["export_button"])
                         }
                         Button(onClick = {
                             runCatching {
@@ -212,10 +215,10 @@ class HomeSettings : Routes.Route() {
                                 context.log.error("Failed to clear messages", it)
                                 context.longToast("Failed to clear messages! ${it.localizedMessage}")
                             }.onSuccess {
-                                context.shortToast("Done!")
+                                context.shortToast(translation["success_toast"])
                             }
                         }) {
-                            Text(text = "Clear")
+                            Text(text = translation["clear_button"])
                         }
                     }
                     OutlinedButton(
@@ -226,12 +229,12 @@ class HomeSettings : Routes.Route() {
                             routes.loggerHistory.navigate()
                         }
                     ) {
-                        Text(text = "View Message History")
+                        Text(translation["view_logger_history_button"])
                     }
                 }
             }
 
-            RowTitle(title = "Debug")
+            RowTitle(title = translation["debug_title"])
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -275,10 +278,10 @@ class HomeSettings : Routes.Route() {
                         context.log.error("Failed to clear file", it)
                         context.longToast("Failed to clear file! ${it.localizedMessage}")
                     }.onSuccess {
-                        context.shortToast("Done!")
+                        context.shortToast(translation["success_toast"])
                     }
                 }) {
-                    Text(text = "Clear File")
+                    Text(translation["clear_button"])
                 }
             }
             ShiftedRow {

@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
- import androidx.compose.material.icons.automirrored.filled.OpenInNew
- import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.Lifecycle
- import androidx.navigation.NavBackStackEntry
- import kotlinx.coroutines.CoroutineScope
+import androidx.navigation.NavBackStackEntry
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.rhunk.snapenhance.bridge.DownloadCallback
@@ -36,8 +36,8 @@ import me.rhunk.snapenhance.task.PendingTaskListener
 import me.rhunk.snapenhance.task.Task
 import me.rhunk.snapenhance.task.TaskStatus
 import me.rhunk.snapenhance.task.TaskType
- import me.rhunk.snapenhance.ui.manager.Routes
- import me.rhunk.snapenhance.ui.util.OnLifecycleEvent
+import me.rhunk.snapenhance.ui.manager.Routes
+import me.rhunk.snapenhance.ui.util.OnLifecycleEvent
 import java.io.File
 import java.util.UUID
 import kotlin.math.absoluteValue
@@ -99,7 +99,7 @@ class TasksRoot : Routes.Route() {
             }
 
             runCatching {
-                context.shortToast("Merging ${filesToMerge.size} files")
+                context.shortToast(translation.format("merge_files_toast", "count" to filesToMerge.size.toString()))
                 FFMpegProcessor.newFFMpegProcessor(context, pendingTask).execute(
                     FFMpegProcessor.Request(FFMpegProcessor.Action.MERGE_MEDIA, filesToMerge.map { it.absolutePath }, mergedFile)
                 )
@@ -177,15 +177,15 @@ class TasksRoot : Routes.Route() {
                 onDismissRequest = { showConfirmDialog = false },
                 title = {
                     if (taskSelection.isNotEmpty()) {
-                        Text("Remove ${taskSelection.size} tasks?")
+                        Text(translation.format("remove_selected_tasks_confirm", "count" to taskSelection.size.toString()))
                     } else {
-                        Text("Remove all tasks?")
+                        Text(translation["remove_all_tasks_confirm"])
                     }
                 },
                 text = {
                     Column {
                         if (taskSelection.isNotEmpty()) {
-                            Text("Are you sure you want to remove selected tasks?")
+                            Text(translation["remove_selected_tasks_title"])
                             Row (
                                 modifier = Modifier.padding(top = 10.dp).fillMaxWidth().clickable {
                                     alsoDeleteFiles = !alsoDeleteFiles
@@ -196,10 +196,10 @@ class TasksRoot : Routes.Route() {
                                 Checkbox(checked = alsoDeleteFiles, onCheckedChange = {
                                     alsoDeleteFiles = it
                                 })
-                                Text("Also delete files")
+                                Text(translation["delete_files_option"])
                             }
                         } else {
-                            Text("Are you sure you want to remove all tasks?")
+                            Text(translation["remove_all_tasks_title"])
                         }
                     }
                 },
@@ -233,7 +233,7 @@ class TasksRoot : Routes.Route() {
                             }
                         }
                     ) {
-                        Text("Yes")
+                        Text(context.translation["button.positive"])
                     }
                 },
                 dismissButton = {
@@ -242,7 +242,7 @@ class TasksRoot : Routes.Route() {
                             showConfirmDialog = false
                         }
                     ) {
-                        Text("No")
+                        Text(context.translation["button.negative"])
                     }
                 }
             )
@@ -429,7 +429,7 @@ class TasksRoot : Routes.Route() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        context.translation["manager.sections.tasks.no_tasks"].let {
+                        translation["no_tasks"].let {
                             Icon(Icons.Filled.CheckCircle, contentDescription = it, tint = MaterialTheme.colorScheme.primary)
                             Text(it, style = MaterialTheme.typography.bodyLarge)
                         }
