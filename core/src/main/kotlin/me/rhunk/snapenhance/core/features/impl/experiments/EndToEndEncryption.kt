@@ -59,6 +59,8 @@ class EndToEndEncryption : MessagingRuleFeature(
     val isEnabled get() = context.config.experimental.e2eEncryption.globalState == true
     private val e2eeInterface by lazy { context.bridgeClient.getE2eeInterface() }
 
+    private val translation by lazy { context.translation.getCategory("end_to_end_encryption") }
+
     companion object {
         const val REQUEST_PK_MESSAGE_ID = 1
         const val RESPONSE_SK_MESSAGE_ID = 2
@@ -116,18 +118,19 @@ class EndToEndEncryption : MessagingRuleFeature(
 
         context.mainActivity?.runOnUiThread {
             val mainActivity = context.mainActivity ?: return@runOnUiThread
+            val translation = translation.getCategory("confirmation_dialogs")
             ViewAppearanceHelper.newAlertDialogBuilder(mainActivity).apply {
-                setTitle("End-to-end encryption")
-                setMessage("WARNING: This will overwrite your existing key. You will loose access to all encrypted messages from this friend. Are you sure you want to continue?")
-                setPositiveButton("Yes") { _, _ ->
+                setTitle(translation["title"])
+                setMessage(translation["confirmation_1"])
+                setPositiveButton(this@EndToEndEncryption.context.translation["button.positive"]) { _, _ ->
                     ViewAppearanceHelper.newAlertDialogBuilder(mainActivity).apply {
-                        setTitle("End-to-end encryption")
-                        setMessage("Are you REALLY sure you want to continue? This is your last chance to back out.")
-                        setNeutralButton("Yes") { _, _ -> block() }
-                        setPositiveButton("No") { _, _ -> }
+                        setTitle(translation["title"])
+                        setMessage(translation["confirmation_2"])
+                        setNeutralButton(this@EndToEndEncryption.context.translation["button.positive"]) { _, _ -> block() }
+                        setPositiveButton(this@EndToEndEncryption.context.translation["button.negative"]) { _, _ -> }
                     }.show()
                 }
-                setNegativeButton("No") { _, _ -> }
+                setNegativeButton(this@EndToEndEncryption.context.translation["button.negative"]) { _, _ -> }
             }.show()
         }
     }
@@ -140,11 +143,11 @@ class EndToEndEncryption : MessagingRuleFeature(
         warnKeyOverwrite(friendId) {
             val encapsulatedSecret = e2eeInterface.acceptPairingRequest(friendId, publicKey)
             if (encapsulatedSecret == null) {
-                context.longToast("Failed to accept public key")
+                context.longToast(translation["accept_public_key_failure_toast"])
                 return@warnKeyOverwrite
             }
             setState(conversationId, true)
-            context.longToast("Public key successfully accepted")
+            context.longToast(translation["accept_public_key_success_toast"])
 
             sendCustomMessage(conversationId, RESPONSE_SK_MESSAGE_ID) {
                 addBuffer(2, encapsulatedSecret)
@@ -158,14 +161,13 @@ class EndToEndEncryption : MessagingRuleFeature(
             return
         }
         warnKeyOverwrite(friendId) {
-            context.log.verbose("handleSecretResponse, secret = $secret")
             val result = e2eeInterface.acceptPairingResponse(friendId, secret)
             if (!result) {
-                context.longToast("Failed to accept secret")
+                context.longToast(translation["accept_secret_key_failure_toast"])
                 return@warnKeyOverwrite
             }
             setState(conversationId, true)
-            context.longToast("Done! You can now exchange encrypted messages with this friend.")
+            context.longToast(translation["accept_secret_key_success_toast"])
         }
     }
 
@@ -173,7 +175,7 @@ class EndToEndEncryption : MessagingRuleFeature(
     override fun onActivityCreate() {
         if (!isEnabled) return
 
-        context.feature(ConversationToolbox::class).addComposable("End-to-end Encryption", filter = {
+        context.feature(ConversationToolbox::class).addComposable(translation["confirmation_dialogs.title"], filter = {
             context.database.getDMOtherParticipant(it) != null
         }) { dialog, conversationId ->
             val friendId = remember {
@@ -185,9 +187,9 @@ class EndToEndEncryption : MessagingRuleFeature(
                 }.getOrNull()
             }
             if (fingerprint != null) {
-                Text("Your fingerprint is:\n\n$fingerprint\n\nMake sure to check if it matches your friend's fingerprint!")
+                Text(translation.format("toolbox.shared_key_fingerprint", "fingerprint" to fingerprint))
             } else {
-                Text("You don't have a shared secret with this friend yet. Click below to initiate a new one.")
+                Text(translation["toolbox.no_shared_key"])
             }
             Spacer(modifier = Modifier.height(10.dp))
             Button(onClick = {
@@ -196,7 +198,7 @@ class EndToEndEncryption : MessagingRuleFeature(
                     askForKeys(conversationId)
                 }
             }) {
-                Text("Initiate new shared secret")
+                Text(translation["toolbox.initiate_exchange_button"])
             }
         }
 
@@ -246,10 +248,10 @@ class EndToEndEncryption : MessagingRuleFeature(
                                 contentAlignment = Alignment.Center
                             ) {
                                 if (publicKey != null) {
-                                    Text("Receive public key")
+                                    Text(translation["accept_public_key_button"])
                                 }
                                 if (secret != null) {
-                                    Text("Accept secret")
+                                    Text(translation["accept_secret_button"])
                                 }
                             }
                         }
@@ -369,10 +371,10 @@ class EndToEndEncryption : MessagingRuleFeature(
             if (senderId == context.database.myUserId) {
                 when (messageTypeId) {
                     REQUEST_PK_MESSAGE_ID -> {
-                        replaceMessageText("[Key exchange request]")
+                        replaceMessageText("[${translation["outgoing_pk_message"]}]")
                     }
                     RESPONSE_SK_MESSAGE_ID -> {
-                        replaceMessageText("[Key exchange response]")
+                        replaceMessageText("[${translation["outgoing_secret_message"]}]")
                     }
                 }
                 return@followPath
@@ -381,11 +383,11 @@ class EndToEndEncryption : MessagingRuleFeature(
             when (messageTypeId) {
                 REQUEST_PK_MESSAGE_ID -> {
                     pkRequests[clientMessageId] = payload
-                    replaceMessageText("You just received a public key request. Click below to accept it.")
+                    replaceMessageText(translation["incoming_pk_message"])
                 }
                 RESPONSE_SK_MESSAGE_ID -> {
                     secretResponses[clientMessageId] = payload
-                    replaceMessageText("Your friend just accepted your public key. Click below to accept the secret.")
+                    replaceMessageText(translation["incoming_secret_message"])
                 }
             }
         }
@@ -419,13 +421,13 @@ class EndToEndEncryption : MessagingRuleFeature(
 
             if (e2eeConversations.size != destinations.conversations!!.size || destinations.stories?.isNotEmpty() == true) {
                 if (!forceMessageEncryption) return@subscribe
-                context.longToast("You can't send encrypted content to both encrypted and unencrypted conversations!")
+                context.longToast(translation["unencrypted_conversation_send_failure_toast"])
                 event.canceled = true
                 return@subscribe
             }
 
             if (!NativeLib.initialized) {
-                context.longToast("Failed to send! Please enable Native Hooks in the settings.")
+                context.longToast(translation["native_hooks_send_failure_toast"])
                 event.canceled = true
                 return@subscribe
             }
@@ -468,7 +470,7 @@ class EndToEndEncryption : MessagingRuleFeature(
             val participantsIds = conversationIds.map { getE2EParticipants(it.toString()) }.flatten().distinct()
 
             if (participantsIds.isEmpty()) {
-                context.shortToast("You don't have any friends in this conversation to encrypt messages with!")
+                context.shortToast(translation["no_participants_to_encrypt_toast"])
                 return@subscribe
             }
             val messageReader = protoReader.followPath(4) ?: return@subscribe
@@ -518,7 +520,7 @@ class EndToEndEncryption : MessagingRuleFeature(
                 }.onFailure {
                     event.canceled = true
                     context.log.error("Failed to encrypt message", it)
-                    context.longToast("Failed to encrypt message! Check logcat for more details.")
+                    context.longToast(translation["encryption_failed_toast"])
                 }
             }.toByteArray()
         }

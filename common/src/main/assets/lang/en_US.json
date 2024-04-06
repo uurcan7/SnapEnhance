@@ -1301,6 +1301,33 @@
         "notification_text": "You will lose your Streak with {friend} in {hoursLeft} hours"
     },
 
+    "end_to_end_encryption": {
+        "toolbox": {
+            "no_shared_key": "You don't have a shared secret with this friend yet. Click below to initiate a new one.",
+            "shared_key_fingerprint": "Your fingerprint is:\n\n{fingerprint}\n\nMake sure to check if it matches your friend's fingerprint!",
+            "initiate_exchange_button": "Initiate Key Exchange"
+        },
+        "confirmation_dialogs": {
+            "title": "End-to-end encryption",
+            "confirmation_1": "WARNING: This will overwrite your existing key. You will loose access to all encrypted messages from this friend. Are you sure you want to continue?",
+            "confirmation_2": "Are you REALLY sure you want to continue? This is your last chance to back out."
+        },
+        "unencrypted_conversation_send_failure_toast": "You can't send encrypted content to both encrypted and unencrypted conversations!",
+        "native_hooks_send_failure_toast": "Failed to send! Please enable Native Hooks in the settings.",
+        "no_participants_to_encrypt_toast": "You don't have any friends in this conversation to encrypt messages with!",
+        "encryption_failed_toast": "Failed to encrypt message! Check logcat for more details.",
+        "accept_public_key_success_toast": "Public key successfully accepted!",
+        "accept_secret_key_success_toast": "Done! You can now send and receive encrypted messages with this friend.",
+        "accept_public_key_failure_toast": "Failed to accept public key",
+        "accept_secret_key_failure_toast": "Failed to accept secret key",
+        "accept_secret_button": "Accept Secret",
+        "accept_public_key_button": "Accept Public Key",
+        "outgoing_pk_message": "Key exchange request",
+        "outgoing_secret_message": "Key exchange response",
+        "incoming_pk_message": "You just received a public key request. Click below to accept it.",
+        "incoming_secret_message": "Your friend just accepted your public key. Click below to accept the secret."
+    },
+
     "suspend_location_updates": {
         "switch_text": "Suspend Location Updates"
     },
