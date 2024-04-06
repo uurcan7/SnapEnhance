@@ -1293,7 +1293,13 @@
         "failed_generic_toast": "Failed to download",
         "failed_to_create_preview_toast": "Failed to create preview",
         "failed_processing_toast": "Failed processing {error}",
-        "failed_gallery_toast": "Failed saving to gallery {error}"
+        "failed_gallery_toast": "Failed saving to gallery {error}",
+        "dash_no_chapter": "No chapter found",
+        "dash_dialog": {
+            "title": "Download dash media",
+            "download_all": "Download All",
+            "segment_text": "Segment {from} - {to}"
+        }
     },
 
     "streaks_reminder": {

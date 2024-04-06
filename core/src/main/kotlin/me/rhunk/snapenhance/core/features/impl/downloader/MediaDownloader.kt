@@ -387,7 +387,7 @@ class MediaDownloader : MessagingRuleFeature("MediaDownloader", MessagingRuleTyp
             val currentChapterIndex = snapChapterList.indexOfFirst { it.snapId == snapItem.snapId }
 
             if (snapChapterList.isEmpty()) {
-                context.shortToast("No chapters found")
+                context.shortToast(translations["dash_no_chapter"])
                 return
             }
 
@@ -395,7 +395,7 @@ class MediaDownloader : MessagingRuleFeature("MediaDownloader", MessagingRuleTyp
                 val seconds = time / 1000
                 val minutes = seconds / 60
                 val hours = minutes / 60
-                return "${hours % 24}:${minutes % 60}:${seconds % 60}"
+                return "${(hours % 24).toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}"
             }
 
             val playlistUrl = paramMap["MEDIA_ID"].toString().let {
@@ -408,15 +408,16 @@ class MediaDownloader : MessagingRuleFeature("MediaDownloader", MessagingRuleTyp
 
             context.runOnUiThread {
                 val selectedChapters = mutableListOf<Int>()
+                val dialogTranslation = translations.getCategory("dash_dialog")
                 val chapters = snapChapterList.mapIndexed { index, snapChapter ->
                     val nextChapter = snapChapterList.getOrNull(index + 1)
                     val duration = nextChapter?.startTimeMs?.minus(snapChapter.startTimeMs)
                     SnapChapterInfo(snapChapter.startTimeMs, duration)
                 }
                 ViewAppearanceHelper.newAlertDialogBuilder(context.mainActivity!!).apply {
-                    setTitle("Download dash media")
+                    setTitle(dialogTranslation["title"])
                     setMultiChoiceItems(
-                        chapters.map { "Segment ${prettyPrintTime(it.offset)} - ${prettyPrintTime(it.offset + (it.duration ?: 0))}" }.toTypedArray(),
+                        chapters.map { dialogTranslation.format("segment_text", "from" to prettyPrintTime(it.offset), "to" to prettyPrintTime(it.offset + (it.duration ?: 0))) }.toTypedArray(),
                         List(chapters.size) { index ->
                             if (currentChapterIndex == index) {
                                 selectedChapters.add(index)
@@ -430,15 +431,15 @@ class MediaDownloader : MessagingRuleFeature("MediaDownloader", MessagingRuleTyp
                             selectedChapters.remove(which)
                         }
                     }
-                    setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-                    setNeutralButton("Download all") { _, _ ->
+                    setNegativeButton(this@MediaDownloader.context.translation["button.cancel"]) { dialog, _ -> dialog.dismiss() }
+                    setNeutralButton(dialogTranslation["download_all"]) { _, _ ->
                         provideDownloadManagerClient(
                             mediaIdentifier = paramMap["STORY_ID"].toString(),
                             downloadSource = MediaDownloadSource.PUBLIC_STORY,
                             mediaAuthor = storyName
                         ).downloadDashMedia(playlistUrl, 0, null)
                     }
-                    setPositiveButton("Download") { _, _ ->
+                    setPositiveButton(this@MediaDownloader.context.translation["button.download"]) { _, _ ->
                         val groups = mutableListOf<MutableList<SnapChapterInfo>>()
 
                         var lastChapterIndex = -1
