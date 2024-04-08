@@ -2,13 +2,15 @@
     "setup": {
         "dialogs": {
             "select_language": "भाषा चुनें",
-            "select_save_folder_button": "फोल्डर चुनें"
+            "select_save_folder_button": "फोल्डर चुनें",
+            "save_folder": "SnapEnhance को स्नैपचैट से मीडिया को डाउनलोड करने और सेव करने के लिए स्टोरेज अनुमति की आवश्यकता होती है।\n कृपया वह स्थान चुनें जहां से मीडिया डाउनलोड किया जाना चाहिए।"
         },
         "mappings": {
             "generate_button": "बनाएं",
             "generate_failure_no_snapchat": "स्नैपएन्हांस के द्वारा स्नैपचैट को डिटेक्ट नहीं किया गया, कृपया स्नैपचैट दुबारा इंस्टॉल करें।",
             "generate_failure": "मैपिंग बनाते समय एक त्रुटि पाई गई है, कृपया दुबारा कोसिस करें।",
-            "generate_success": "मैपिंग को सफलतापूर्वक बना लिया गया है।"
+            "generate_success": "मैपिंग को सफलतापूर्वक बना लिया गया है।",
+            "dialog": "स्नैपचैट संस्करणों की एक विस्तृत श्रृंखला को गतिशील रूप से समर्थन देने के लिए, SnapEnhance के ठीक से काम करने के लिए मैपिंग आवश्यक है, इसमें 5 सेकंड से अधिक समय नहीं लगना चाहिए।"
         },
         "permissions": {
             "dialog": "आगे बढ़ने के लिए आपको निम्नलिखित मांगो को पूरा करना पड़ेगा।:",
@@ -24,24 +26,99 @@
             "home": "होम",
             "home_settings": "सेटिंग्स",
             "social": "सामाजिक",
-            "scripts": "स्क्रिप्ट"
+            "scripts": "स्क्रिप्ट",
+            "home_logs": "लॉग्स",
+            "tasks": "कार्य",
+            "manage_scope": "दायरा प्रबंधित करें",
+            "messaging_preview": "पूर्व दर्शन",
+            "logger_history": "प्रचालेखन इतिहास",
+            "logged_stories": "प्रचालेखित कि गई स्टोरी"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "लॉग मिटाएं",
-                    "export_logs_button": "लॉग एक्सपोर्ट करें"
-                }
-            },
             "features": {
-                "disabled": "निष्क्रिय"
+                "disabled": "निष्क्रिय",
+                "export_option": "निर्यात",
+                "import_option": "आयात",
+                "reset_option": "फिर से सब पहले जैसा करे",
+                "config_import_success_toast": "फाइल सफलतापूर्वक लग चुकी है",
+                "config_import_failure_toast": "फाइल असफल हुई आने मे (Import failed)",
+                "saved_config_snackbar": "फाइल सेव हो चुकी है"
             },
             "social": {
-                "e2ee_title": "एंड-टू-एंड एन्क्रिप्शन",
-                "rules_title": "नियम",
-                "participants_text": "{count} प्रतिभागी",
-                "not_found": "नहीं मिला",
-                "streaks_title": "स्ट्रीक"
+                "streaks_expiration_short": "{hours}h"
+            },
+            "tasks": {
+                "no_tasks": "कोई कार्य नहीं",
+                "merge_files_toast": "{संख्या} फाईल जुड़ रही है",
+                "delete_files_option": "files भी हटाएं",
+                "remove_selected_tasks_confirm": "{संख्या} कार्य हटाएं?",
+                "remove_all_tasks_confirm": "सभी कार्य हटाएं?",
+                "remove_all_tasks_title": "क्या आप सभी कार्यों को हटाने के लिए सहमत हैं?",
+                "remove_selected_tasks_title": "क्या आप चिह्नित किए हुए कार्यों को हटाने के लिए सहमत है?"
+            },
+            "home": {
+                "update_content": "वर्जन {वर्जन} उपलब्ध है!",
+                "update_title": "SnapEnhance अपडेट",
+                "update_button": "डाऊनलोड"
+            },
+            "home_logs": {
+                "no_logs_hint": "logs उपलब्ध नहीं",
+                "clear_logs_button": "logs साफ करें",
+                "export_logs_button": "logs निर्यात करें",
+                "saving_logs_toast": "logs सेव हो रहे हैं,  इसमें थोड़ा सा ही समय लगेगा..।",
+                "saved_logs_success_toast": "logs सफलतापूर्वक सेव हो चुके हैं",
+                "saved_logs_failure_toast": "logs सेव होने में असफल"
+            },
+            "home_settings": {
+                "actions_title": "प्रत्क्रिया",
+                "message_logger_summary": "{मैसेज संख्या} मैसेज\n{स्टोरी संख्या} स्टोरीज",
+                "view_logger_history_button": "logger हिस्ट्री देखे",
+                "export_button": "निर्यात करें",
+                "clear_button": "साफ करें",
+                "message_logger_title": "मेसेज को डिलीट होने से बचाएं",
+                "debug_title": "दोष मुक्त",
+                "success_toast": "हो चुका!"
+            },
+            "messaging_preview": {
+                "mark_selection_as_seen_option": "चुने हुए स्नेप को पढा हुआ करे",
+                "mark_all_as_seen_option": "सभी स्नेप को पढा हुआ करे",
+                "delete_all_option": "सभी डिलीट करे",
+                "bridge_connection_failed": "ब्रिज सर्विस के माध्यम से स्नैपचैट से कनेक्ट करने में विफल",
+                "bridge_init_failed": "मैसेजिंग ब्रिज आरंभ करने में विफल",
+                "no_message_hint": "कोई मैसेज नही",
+                "save_all_option": "सभी सेव करें",
+                "unsave_all_option": "सभी सेव हटाए",
+                "delete_selection_option": "चुने हुए डिलिट करें"
+            },
+            "manage_scope": {
+                "rules_title": "नियम"
+            },
+            "logged_stories": {
+                "story_failed_to_load": "लोड करने में असफल",
+                "no_stories": "कोर्ई स्टोरी नही"
+            },
+            "logger_history": {
+                "list_friend_format": "दोस्त {नाम}",
+                "list_group_format": "समुह {नाम}",
+                "no_more_messages": "कोई मैसेज नही",
+                "message_parse_failed": "संदेश को पार्स करने में विफल",
+                "unknown_sender": "अज्ञात व्यक्ति"
+            }
+        },
+        "dialogs": {
+            "add_friend": {
+                "title": "मित्र या समूह जोड़ें",
+                "category_groups": "समूह",
+                "fetch_error": "डेटा लाने में विफल",
+                "category_friends": "दोस्त",
+                "search_hint": "खोज"
+            },
+            "scripting_warning": {
+                "title": "चेतावनी",
+                "content": "SnapEnhance में एक स्क्रिप्टिंग टूल शामिल है, जो आपके डिवाइस पर उपयोगकर्ता द्वारा परिभाषित कोड के निष्पादन की अनुमति देता है।  अत्यधिक सावधानी बरतें और केवल ज्ञात, विश्वसनीय स्रोतों से ही मॉड्यूल स्थापित करें।  अनधिकृत या असत्यापित मॉड्यूल आपके सिस्टम के लिए सुरक्षा जोखिम पैदा कर सकते हैं।"
+            },
+            "messaging_action": {
+                "select_all_button": "सभी सिलेक्ट करे"
             }
         }
     },
@@ -108,5 +185,24 @@
         "processing_toast": "प्रोसेसिंग {path}...",
         "failed_generic_toast": "डाउनलोड करने में असफल",
         "failed_to_create_preview_toast": "प्रीव्यू करने में असफल"
+    },
+    "scopes": {
+        "friend": "दोस्त",
+        "group": "समुह"
+    },
+    "rules": {
+        "modes": {
+            "blacklist": "इन्हे छोड़ कर",
+            "whitelist": "सिर्फ इन्हे"
+        },
+        "properties": {
+            "auto_download": {
+                "description": "देखते समय अपने आप डाउनलोड करे",
+                "name": "अपने आप डाउनलोड करे",
+                "options": {
+                    "blacklist": "अपने आप डाउनलोड होने से इन्हे हटाएँ"
+                }
+            }
+        }
     }
 }

@@ -30,25 +30,11 @@
             "scripts": "Komentosarjat"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "Tyhjennä lokit",
-                    "export_logs_button": "Vie lokit"
-                }
-            },
             "features": {
                 "disabled": "Pois päältä"
             },
             "social": {
-                "e2ee_title": "End-to-End Salaus",
-                "rules_title": "Säännöt",
-                "participants_text": "{count} osallistujaa",
-                "not_found": "Ei löytynyt",
-                "streaks_title": "Streakit",
-                "streaks_length_text": "Pituus: {length}",
-                "streaks_expiration_short": "{hours}h",
-                "streaks_expiration_text": "Vanhenee {eta} kuluttua",
-                "reminder_button": "Aseta muistutus"
+                "streaks_expiration_short": "{hours}h"
             }
         },
         "dialogs": {

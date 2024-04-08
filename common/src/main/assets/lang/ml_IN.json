@@ -60,21 +60,7 @@
         },
         "sections": {
             "social": {
-                "rules_title": "നിയമങ്ങൾ",
-                "streaks_length_text": "നീളം: {length}",
-                "not_found": "കണ്ടെത്തിയില്ല",
-                "streaks_expiration_text": "ൽ കാലഹരണപ്പെടുന്നു",
-                "participants_text": "{count} പങ്കെടുക്കുന്നവർ",
-                "streaks_title": "വരകൾ",
-                "reminder_button": "ഓർമ്മപ്പെടുത്തൽ സജ്ജമാക്കുക",
-                "streaks_expiration_short": "{hours}h",
-                "e2ee_title": "എൻഡ്-ടു-എൻഡ് എൻക്രിപ്ഷൻ"
-            },
-            "home": {
-                "logs": {
-                    "clear_logs_button": "ലോഗുകൾ മായ്‌ക്കുക",
-                    "export_logs_button": "ലോഗുകൾ കയറ്റുമതി ചെയ്യുക"
-                }
+                "streaks_expiration_short": "{hours}h"
             },
             "features": {
                 "disabled": "അപ്രാപ്തമാക്കി"

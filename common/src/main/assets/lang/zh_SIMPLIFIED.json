@@ -1,7 +1,9 @@
 {
     "setup": {
         "dialogs": {
-            "select_language": "选择语言"
+            "select_language": "选择语言",
+            "save_folder": "SnapEnhance 需要存储权限才能从 Snapchat 下载和保存媒体。\n请选择媒体下载的位置。",
+            "select_save_folder_button": "选择文件夹"
         }
     },
     "friend_menu_option": {

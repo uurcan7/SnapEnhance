@@ -35,28 +35,93 @@
             "messaging_preview": "Önizleme"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "Kayıtları Temizle",
-                    "export_logs_button": "Kayırları Dışa Aktar"
-                }
-            },
             "features": {
-                "disabled": "Devre Dışı"
+                "disabled": "Devre Dışı",
+                "export_option": "Dışa Aktar",
+                "import_option": "İçe Aktar",
+                "reset_option": "Sıfırla",
+                "config_import_success_toast": "Konfigürasyon başarıyla içe aktarıldı",
+                "config_import_failure_toast": "Konfigürasyon içe aktarılamadı {error}",
+                "saved_config_snackbar": "Konfigürasyon kaydedildi",
+                "config_export_success_toast": "Konfigürasyon başarıyla dışa aktarıldı"
             },
             "social": {
+                "streaks_expiration_short": "{hours} saat"
+            },
+            "tasks": {
+                "no_tasks": "Görev yok",
+                "remove_selected_tasks_title": "Seçili görevleri kaldırmak istediğinizden emin misiniz?",
+                "remove_all_tasks_title": "Tüm görevleri kaldırmak istediğinizden emin misiniz?",
+                "delete_files_option": "Ayrıca dosyaları sil",
+                "remove_selected_tasks_confirm": "{count} görev kaldırılsın mı?",
+                "merge_files_toast": "{count} dosya birleştiriliyor",
+                "remove_all_tasks_confirm": "Tüm görevler kaldırılsın mı?"
+            },
+            "home": {
+                "update_title": "SnapEnhance Güncellemesi",
+                "update_button": "İndir",
+                "update_content": "Sürüm {version} kullanılabilir!"
+            },
+            "home_logs": {
+                "clear_logs_button": "Günlükleri Temizle",
+                "no_logs_hint": "Mevcut günlük yok",
+                "export_logs_button": "Günlükleri Dışa Aktar",
+                "saving_logs_toast": "Günlükler kaydediliyor, bu biraz zaman alabilir ...",
+                "saved_logs_success_toast": "Günlükler başarıyla kaydedildi",
+                "saved_logs_failure_toast": "Günlükler kaydedilemedi"
+            },
+            "home_settings": {
+                "actions_title": "Eylemler",
+                "message_logger_title": "Mesaj Kaydedici",
+                "debug_title": "Hata Ayıklama",
+                "success_toast": "Tamam!",
+                "message_logger_summary": "{messageCount} mesajlar\n{storyCount} hikayeler",
+                "export_button": "Dışa Aktar",
+                "clear_button": "Temizle",
+                "view_logger_history_button": "Günlük Geçmişini Görüntüle"
+            },
+            "manage_scope": {
+                "logged_stories_button": "Kaydedilen Hikayeleri Göster",
                 "e2ee_title": "Uçtan Uca Şifreleme",
                 "rules_title": "Kurallar",
-                "participants_text": "{count} Katılımcı",
                 "not_found": "Bulunamadı",
                 "streaks_title": "Seriler",
                 "streaks_length_text": "Uzunluk: {length}",
-                "streaks_expiration_short": "{hours} saat",
-                "streaks_expiration_text": "{eta} içerisinde sona eriyor",
-                "reminder_button": "Hatırlatıcıyı Ayarla"
+                "streaks_expiration_text": "{eta} içinde sona erecek",
+                "streaks_expiration_text_expired": "Süresi doldu",
+                "reminder_button": "Hatırlatıcı Ayarla",
+                "participants_text": "{sayı} katılımcı",
+                "delete_scope_confirm_dialog_title": "Bir {scope} silmek istediğinizden emin misiniz?"
             },
-            "tasks": {
-                "no_tasks": "Görev yok"
+            "logged_stories": {
+                "story_failed_to_load": "Yükleme başarısız oldu",
+                "no_stories": "Hikaye bulunamadı",
+                "save_from_cache_button": "Önbellekten Kaydet"
+            },
+            "messaging_preview": {
+                "bridge_connection_failed": "Köprü hizmeti aracılığıyla Snapchat'e bağlanılamadı",
+                "message_fetch_failed": "Mesajlar alınamadı",
+                "save_all_option": "Tümünü Kaydet",
+                "unsave_selection_option": "Seçimi Kaydetmeyi Kaldır",
+                "unsave_all_option": "Tümünü Kaydet'i Kaldır",
+                "bridge_init_failed": "Mesajlaşma köprüsü başlatılamadı",
+                "no_message_hint": "Mesaj yok",
+                "save_selection_option": "Seçimi Kaydet",
+                "mark_selection_as_seen_option": "Seçilen Snap'i görüldü olarak işaretle",
+                "mark_all_as_seen_option": "Tüm Snap'leri görüldü olarak işaretle",
+                "delete_selection_option": "Seçimi Sil",
+                "delete_all_option": "Tümünü Sil"
+            },
+            "logger_history": {
+                "list_friend_format": "Arkadaş {name}",
+                "list_group_format": "Grup {name}",
+                "no_more_messages": "Daha fazla mesaj yok",
+                "reverse_order_checkbox": "Ters Sıralama",
+                "chat_attachment": "Ek {index}",
+                "empty_message": "Boş Sohbet Mesajı",
+                "message_parse_failed": "Mesaj ayrıştırılamadı",
+                "unknown_sender": "Bilinmeyen Gönderen",
+                "download_attachment_failed_toast": "Ek indirilemedi"
             }
         },
         "dialogs": {
@@ -70,6 +135,15 @@
             "scripting_warning": {
                 "content": "SnapEnhance, cihazınızda kullanıcı tanımlı kodun yürütülmesine izin veren bir komut dosyası aracı içerir. Çok dikkatli olun ve modülleri yalnızca bilinen, güvenilir kaynaklardan yükleyin. Yetkisiz veya doğrulanmamış modüller sisteminiz için güvenlik riskleri oluşturabilir.",
                 "title": "Uyarı"
+            },
+            "reset_config": {
+                "title": "Konfigürasyonu sıfırla",
+                "content": "Konfigürasyonu sıfırlamak istediğinizden emin misiniz?",
+                "success_toast": "Konfigürasyon başarıyla sıfırlandı"
+            },
+            "messaging_action": {
+                "title": "İşlenecek içerik türlerini seçin",
+                "select_all_button": "Tümünü Seç"
             }
         }
     },
@@ -641,10 +715,6 @@
                             "disable_bitmoji": {
                                 "name": "Bitmoji'yi Devre Dışı Bırak",
                                 "description": "Arkadaş Profili Bitmoji'sini devre dışı bırakır"
-                            },
-                            "remap_apk": {
-                                "name": "Yeniden Eşleme APK",
-                                "description": "SnapEnhance apk yolunu /proc/self/maps içinde gizler"
                             }
                         }
                     },
@@ -941,7 +1011,8 @@
             },
             "hide_story_suggestions": {
                 "hide_friend_suggestions": "Arkadaş önerilerini gizle",
-                "hide_suggested_friend_stories": "Önerilen arkadaş hikayelerini gizle"
+                "hide_suggested_friend_stories": "Önerilen arkadaş hikayelerini gizle",
+                "hide_my_stories": "Hikayelerimi Gizle"
             },
             "disable_story_sections": {
                 "friends": "Arkadaşlar",
@@ -984,7 +1055,8 @@
         "preview_button": "Önizleme",
         "download_button": "İndir",
         "delete_logged_message_button": "Kaydedilen Mesajı Sil",
-        "convert_message": "Mesajı Dönüştür"
+        "convert_message": "Mesajı Dönüştür",
+        "edit_message": "Mesajı Düzenle"
     },
     "opera_context_menu": {
         "download": "Medyayı İndir",
@@ -1080,7 +1152,13 @@
         "failed_generic_toast": "İndirme başarısız oldu",
         "failed_to_create_preview_toast": "Önizleme oluşturulamadı",
         "failed_processing_toast": "İşlem başarısız {error}",
-        "failed_gallery_toast": "Galeriye kaydedilemedi {error}"
+        "failed_gallery_toast": "Galeriye kaydedilemedi {error}",
+        "dash_dialog": {
+            "title": "Dash medyasını indir",
+            "download_all": "Tümünü İndir",
+            "segment_text": "Segment {from} - {to}"
+        },
+        "dash_no_chapter": "Bölüm bulunamadı"
     },
     "streaks_reminder": {
         "notification_title": "Seriler",
@@ -1106,7 +1184,8 @@
         "FAMILY_CENTER_ACCEPT": "Aile Merkezi Kabul",
         "FAMILY_CENTER_LEAVE": "Aile Merkezi Ayrıl",
         "STATUS_CALL_MISSED_AUDIO": "Cevapsız Sesli Arama",
-        "NOTE": "Sesli Not"
+        "NOTE": "Sesli Not",
+        "MAP_REACTION": "Harita Tepkisi"
     },
     "suspend_location_updates": {
         "switch_text": "Konum Güncellemelerini Askıya Al"
@@ -1215,5 +1294,35 @@
             "name": "Dili Değiştir",
             "description": "SnapEnhance'in dilini değiştir"
         }
+    },
+    "scopes": {
+        "friend": "Arkadaş",
+        "group": "Grup"
+    },
+    "end_to_end_encryption": {
+        "toolbox": {
+            "initiate_exchange_button": "Anahtar Değişimini Başlat",
+            "no_shared_key": "Bu arkadaşınızla henüz paylaşılmış bir sırrınız yok. Yeni bir tane başlatmak için aşağıya tıklayın.",
+            "shared_key_fingerprint": "Parmak iziniz:\n\n{fingerprint}\n\nArkadaşınızın parmak iziyle eşleşip eşleşmediğini kontrol edin!"
+        },
+        "confirmation_dialogs": {
+            "title": "Uçtan uca şifreleme",
+            "confirmation_2": "Devam etmek istediğinizden gerçekten emin misiniz? Bu geri çekilmek için son şansın.",
+            "confirmation_1": "UYARI: Bu işlem mevcut anahtarınızın üzerine yazacaktır. Bu arkadaşınızdan gelen tüm şifreli mesajlara erişiminizi kaybedeceksiniz. Devam etmek istediğinizden emin misiniz?"
+        },
+        "unencrypted_conversation_send_failure_toast": "Hem şifrelenmiş hem de şifrelenmemiş konuşmalara şifrelenmiş içerik gönderemezsiniz!",
+        "no_participants_to_encrypt_toast": "Bu konuşmada mesajlarınızı şifreleyebileceğiniz hiç arkadaşınız yok!",
+        "accept_public_key_failure_toast": "Açık anahtar kabul edilemedi",
+        "accept_secret_button": "Sırrı Kabul Et",
+        "accept_public_key_button": "Açık Anahtarı Kabul Et",
+        "outgoing_pk_message": "Anahtar değişim talebi",
+        "outgoing_secret_message": "Anahtar değişimi yanıtı",
+        "incoming_secret_message": "Arkadaşınız az önce açık anahtarınızı kabul etti. Sırrı kabul etmek için aşağıya tıklayın.",
+        "accept_public_key_success_toast": "Açık anahtar başarıyla kabul edildi!",
+        "accept_secret_key_success_toast": "Tamamlandı! Artık bu arkadaşınızla şifreli mesajlar gönderip alabilirsiniz.",
+        "accept_secret_key_failure_toast": "Gizli anahtar kabul edilemedi",
+        "incoming_pk_message": "Az önce bir açık anahtar isteği aldınız. Kabul etmek için aşağıya tıklayın.",
+        "native_hooks_send_failure_toast": "Gönderilemedi! Lütfen ayarlardan Yerel Kancaları etkinleştirin.",
+        "encryption_failed_toast": "İleti şifrelenemedi! Daha fazla ayrıntı için logcat'i kontrol edin."
     }
 }

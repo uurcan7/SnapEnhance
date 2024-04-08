@@ -30,18 +30,8 @@
             "scripts": "Skrypty"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "Wyczyść logi",
-                    "export_logs_button": "Eksportuj logi"
-                }
-            },
             "features": {
                 "disabled": "Wyłączony"
-            },
-            "social": {
-                "e2ee_title": "Szyfrowanie end-to-end",
-                "rules_title": "Reguły"
             }
         }
     },

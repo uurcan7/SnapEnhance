@@ -1,7 +1,9 @@
 {
     "setup": {
         "dialogs": {
-            "select_save_folder_button": "Välj Mapp"
+            "select_save_folder_button": "Välj Mapp",
+            "select_language": "Välj språk",
+            "save_folder": "SnapEnhance kräver lagringsbehörigheter för att ladda ner och spara media från Snapchat.\nVälj var media ska laddas ner till."
         },
         "mappings": {
             "dialog": "För att dynamiskt stödja ett brett utbud av Snapchat Versioner, mappningar är nödvändiga för att SnapEnhance ska fungera korrekt, detta bör inte ta mer än 5 sekunder.",
@@ -25,26 +27,379 @@
             "home_settings": "Inställningar",
             "home_logs": "Loggar",
             "social": "Socialt",
-            "scripts": "Skript"
+            "scripts": "Skript",
+            "logged_stories": "Loggade berättelser",
+            "tasks": "Uppgifter",
+            "logger_history": "Logger Historia",
+            "manage_scope": "Hantera omfattning",
+            "messaging_preview": "Förhandsvisning"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "Rensa loggar",
-                    "export_logs_button": "Exportera loggar"
-                }
-            },
             "features": {
-                "disabled": "Inaktiverad"
+                "disabled": "Inaktiverad",
+                "export_option": "Exportera",
+                "import_option": "Importera",
+                "reset_option": "Återställ"
             },
             "social": {
-                "e2ee_title": "End-to-end-kryptering",
-                "rules_title": "Regler",
-                "participants_text": "{count} deltagare",
-                "not_found": "Hittades inte",
-                "streaks_title": "Streaks",
-                "streaks_length_text": "Längd: {length}"
+                "streaks_expiration_short": "{timmar}t"
+            },
+            "tasks": {
+                "no_tasks": "Inga uppgifter",
+                "merge_files_toast": "Slår samman {count} filer",
+                "remove_selected_tasks_confirm": "Ta bort {count} uppgifter?",
+                "remove_all_tasks_confirm": "Ta bort alla upgifter?",
+                "remove_selected_tasks_title": "Är du säker på att du vill ta bort markerade uppgifter?",
+                "remove_all_tasks_title": "Är du säker på att du vill ta bort alla uppgifter?",
+                "delete_files_option": "Radera även filer"
+            },
+            "logged_stories": {
+                "story_failed_to_load": "Misslyckades att ladda",
+                "no_stories": "Inga berättelser hittades",
+                "save_from_cache_button": "Spara från cachen"
+            },
+            "messaging_preview": {
+                "bridge_connection_failed": "Det gick inte att ansluta till Snapchat via bryggtjänsten",
+                "bridge_init_failed": "Det gick inte att initiera meddelandebryggan",
+                "message_fetch_failed": "Det gick inte att hämta meddelanden",
+                "no_message_hint": "Inget meddelande",
+                "save_selection_option": "Spara urval",
+                "save_all_option": "Rädda alla",
+                "unsave_selection_option": "Ta bort val",
+                "unsave_all_option": "Ta bort alla",
+                "mark_selection_as_seen_option": "Markera vald Snap som sett",
+                "mark_all_as_seen_option": "Markera alla Snaps som sett",
+                "delete_selection_option": "Ta bort urval",
+                "delete_all_option": "Radera allt"
+            },
+            "logger_history": {
+                "list_friend_format": "Vän {namn}",
+                "no_more_messages": "Inga fler meddelanden",
+                "list_group_format": "Grupp {name}",
+                "reverse_order_checkbox": "Omvänd ordning",
+                "chat_attachment": "Bilaga {index}",
+                "empty_message": "Tomt chattmeddelande",
+                "message_parse_failed": "Det gick inte att tolka meddelandet",
+                "unknown_sender": "Okänd avsändare",
+                "download_attachment_failed_toast": "Det gick inte att ladda ned bilagan"
+            },
+            "home": {
+                "update_title": "SnapEnhance Updatering",
+                "update_content": "Version {version} är tillgänglig!"
+            },
+            "home_logs": {
+                "clear_logs_button": "Rensa loggar",
+                "export_logs_button": "Exportera loggar",
+                "saved_logs_success_toast": "Loggarna sparades",
+                "saved_logs_failure_toast": "Det gick inte att spara loggar",
+                "no_logs_hint": "Inga loggar tillgängliga",
+                "saving_logs_toast": "Sparar loggar, detta kan ta ett tag ..."
+            },
+            "home_settings": {
+                "debug_title": "Felsökning",
+                "export_button": "Exportera",
+                "clear_button": "Rensa",
+                "view_logger_history_button": "Visa Logger Historik",
+                "actions_title": "Handlingar",
+                "success_toast": "Klart!"
+            }
+        },
+        "dialogs": {
+            "add_friend": {
+                "category_friends": "Vänner",
+                "title": "Lägg till vän eller grupp",
+                "search_hint": "Sök",
+                "fetch_error": "Det gick inte att hämta data",
+                "category_groups": "Grupper"
+            },
+            "scripting_warning": {
+                "title": "Varning",
+                "content": "SnapEnhance inkluderar ett skriptverktyg som tillåter exekvering av användardefinierad kod på din enhet. Var extremt försiktig och installera endast moduler från kända, pålitliga källor. Obehöriga eller overifierade moduler kan utgöra säkerhetsrisker för ditt system."
+            },
+            "reset_config": {
+                "title": "Återställ konfiguration",
+                "content": "Är du säker på att du vill återställa konfigurationen?",
+                "success_toast": "Konfigurationsåterställningen lyckades"
             }
         }
+    },
+    "rules": {
+        "properties": {
+            "auto_download": {
+                "name": "Automatisk nedladdning",
+                "description": "Ladda ned Snaps automatiskt när du tittar på dem",
+                "options": {
+                    "blacklist": "Uteslut från automatisk nedladdning",
+                    "whitelist": "Automatisk nedladdning"
+                }
+            },
+            "unsaveable_messages": {
+                "name": "Meddelanden som inte går att spara",
+                "description": "Förhindrar att meddelanden sparas i chatten av andra",
+                "options": {
+                    "blacklist": "Uteslut från meddelanden som inte går att spara",
+                    "whitelist": "Meddelanden som inte går att spara"
+                }
+            },
+            "auto_save": {
+                "description": "Sparar chattmeddelanden när du visar dem",
+                "name": "Automatisk sparning",
+                "options": {
+                    "blacklist": "Uteslut från Autospara",
+                    "whitelist": "Automatisk sparning"
+                }
+            },
+            "stealth": {
+                "name": "Smygläge",
+                "description": "Hindrar någon från att veta att du har öppnat deras Snaps/chattar och konversationer",
+                "options": {
+                    "blacklist": "Uteslut från Stealth Mode",
+                    "whitelist": "Smygläge"
+                }
+            },
+            "hide_friend_feed": {
+                "name": "Göm från Friend Feed"
+            },
+            "e2e_encryption": {
+                "name": "Använd E2E-kryptering"
+            },
+            "pin_conversation": {
+                "name": "Fäst konversation"
+            }
+        },
+        "toasts": {
+            "enabled": "{ruleName} aktiverad",
+            "disabled": "{ruleName} inaktiverad"
+        },
+        "modes": {
+            "blacklist": "Svartlista läge",
+            "whitelist": "Vitlista läge"
+        }
+    },
+    "actions": {
+        "clean_snapchat_cache": {
+            "name": "Rengör Snapchat-cachen",
+            "description": "Rengör Snapchat-cachen"
+        },
+        "manage_friend_list": {
+            "name": "Hantera vänlista",
+            "description": "Importera/exportera din vänlista vid säkerhetskopiering"
+        },
+        "bulk_messaging_action": {
+            "description": "Genomför operationer som ta bort kompisar eller ta bort ett flertal conversationer",
+            "name": "Massutskick av meddelanden"
+        },
+        "regen_mappings": {
+            "name": "Generera Mappar",
+            "description": "Manuellt Generera mappar"
+        },
+        "export_memories": {
+            "description": "Exportera minnen till en ZIP fil",
+            "name": "Exportera minnen"
+        },
+        "export_chat_messages": {
+            "name": "Exportera Chat Meddelanden",
+            "description": "Exporterar conversations meddelanden till en JSON/HTML/TXT fil"
+        },
+        "change_language": {
+            "name": "Bytt språk",
+            "description": "Bytt språk av SnapEnhance"
+        }
+    },
+    "features": {
+        "notices": {
+            "internal_behavior": "⚠ Detta kan förstöra Snapchats interna beteenden",
+            "ban_risk": "⚠ Denna funktion kan leda till avstängning",
+            "unstable": "⚠ Ostabilt",
+            "require_native_hooks": "⚠ Denna funktionen behöver experimentella Native Hooks att fungera korrekt"
+        },
+        "properties": {
+            "downloader": {
+                "properties": {
+                    "auto_download_sources": {
+                        "description": "Välj vilka källor som ska automatiskt installeras från",
+                        "name": "Automatiskt installera källor"
+                    },
+                    "prevent_self_auto_download": {
+                        "description": "Hindrar dina egna snaps från att bli nedladdade automatiskt",
+                        "name": "Hindra automatisk nedladdning"
+                    },
+                    "save_folder": {
+                        "name": "Spara Mapp",
+                        "description": "Välj en mapp som all media ska vara nedladdat till"
+                    },
+                    "allow_duplicate": {
+                        "description": "Tillåt samma media att bli installerat flera gånger",
+                        "name": "Tillåt duplication"
+                    },
+                    "download_context_menu": {
+                        "description": "Gör att du kan ladda ner/förhandsgranska meddelanden från en konversation eller en story med hjälp av snabbmenyn.\nHåll ner knappen för att tvinga nedladdning",
+                        "name": "Ladda ner Snabbmeny"
+                    },
+                    "merge_overlays": {
+                        "name": "Sammanfoga överlägg",
+                        "description": "Kombinerar text och media från en Snap till en enda fil"
+                    },
+                    "path_format": {
+                        "name": "Sökvägsformat",
+                        "description": "Ange filsökvägsformat"
+                    },
+                    "ffmpeg_options": {
+                        "properties": {
+                            "threads": {
+                                "description": "Antalet trådar som ska användas",
+                                "name": "Trådar"
+                            },
+                            "video_bitrate": {
+                                "description": "Ställ in videobithastighet (kbps)",
+                                "name": "Video bithastighet"
+                            },
+                            "audio_bitrate": {
+                                "name": "Ljud bithastighet",
+                                "description": "Ställ in ljudets bithastighet (kbps)"
+                            },
+                            "custom_video_codec": {
+                                "name": "Anpassad videokodek",
+                                "description": "Ange en anpassad videokodek (t.ex. libx264)"
+                            },
+                            "custom_audio_codec": {
+                                "description": "Ange en anpassad ljudkodek (t.ex. AAC)",
+                                "name": "Anpassad ljudkodek"
+                            },
+                            "preset": {
+                                "name": "Förinställning",
+                                "description": "Ställ in hastigheten för konverteringen"
+                            },
+                            "constant_rate_factor": {
+                                "name": "Konstant hastighet faktor",
+                                "description": "Ange den konstanta hastighetsfaktorn för videokodaren\nFrån 0 till 51 för libx264"
+                            }
+                        },
+                        "name": "FFmpeg Alternativ",
+                        "description": "Ange ytterligare FFmpeg Alternativ"
+                    },
+                    "custom_path_format": {
+                        "description": "Ange ett anpassat sökvägsformat för nedladdade media\n\nTillgängliga variabler:\n - %användarnamn%\n - %källa\n - %hash%\n - %datum_tid%",
+                        "name": "Format för anpassad sökväg"
+                    },
+                    "force_voice_note_format": {
+                        "name": "Tvingar röstanteckningsformat",
+                        "description": "Tvingar röstanteckningar att sparas i ett specificerat format"
+                    },
+                    "logging": {
+                        "description": "Visar toasts när media laddas ner",
+                        "name": "Loggning"
+                    },
+                    "force_image_format": {
+                        "description": "Tvingar bilder att sparas i ett specificerat format",
+                        "name": "Tvingar Bildformat"
+                    },
+                    "download_profile_pictures": {
+                        "name": "Ladda ner profilbilder",
+                        "description": "Gör det möjligt att ladda ner profilbilder från profilsidan"
+                    },
+                    "opera_download_button": {
+                        "name": "Opera nedladdnings-knapp",
+                        "description": "Lägger till en nedladdningsknapp i det övre högra hörnet när du visar en Snap.\nHåll in knappen för att tvinga nedladdning"
+                    }
+                },
+                "description": "Ladda ner Snapchats Media",
+                "name": "Nedladdare"
+            },
+            "user_interface": {
+                "properties": {
+                    "prevent_message_list_auto_scroll": {
+                        "name": "Förhindra automatisk skrollning av meddelandelista",
+                        "description": "Förhindrar att meddelandelistan skrollar längst ner när du skickar/tar emot ett meddelande"
+                    },
+                    "snap_preview": {
+                        "description": "Visar en liten förhandsgranskning bredvid osedda Snaps i chatten",
+                        "name": "Förhandsvisning av snap"
+                    },
+                    "bootstrap_override": {
+                        "properties": {
+                            "app_appearance": {
+                                "name": "Appens utseende",
+                                "description": "Ställer in ett beständigt App-utseende"
+                            },
+                            "home_tab": {
+                                "name": "Fliken Hem",
+                                "description": "Överskriver startfliken när Snapchat öppnas"
+                            }
+                        },
+                        "name": "Bootstrap-överskrivning",
+                        "description": "Överskriver användargränssnittets bootstrap-inställningar"
+                    },
+                    "enable_app_appearance": {
+                        "name": "Aktivera inställningar för apputseende",
+                        "description": "Aktiverar de dolda Apputseendesinställningarna\nKanske inte nödvändigt på nyare Snapchat-versioner"
+                    },
+                    "hide_friend_feed_entry": {
+                        "description": "Döljer en viss vän från vänflödet\nAnvänd fliken Social för att hantera den här funktionen",
+                        "name": "Dölj imnatning in vänflödet"
+                    },
+                    "hide_streak_restore": {
+                        "description": "Döljer knappen Återställ i vänflödet",
+                        "name": "Göm Streak-Återställning"
+                    },
+                    "hide_quick_add_friend_feed": {
+                        "name": "Dölj Lägg till snabbt i vänflödet",
+                        "description": "Döljer Lägg till snabbt-sektionen i vänflödet"
+                    },
+                    "hide_ui_components": {
+                        "name": "Dölj komponenter i användargränssnittet",
+                        "description": "Välj vilka UI-komponenter som ska döljas"
+                    },
+                    "opera_media_quick_info": {
+                        "description": "Visar användbar information om media, t.ex. skapelsedatum, i kontextmenyn i operafönstret",
+                        "name": "Opera Media Snabbinformation"
+                    },
+                    "disable_spotlight": {
+                        "description": "Inaktiverar Spotlight-sidan",
+                        "name": "Inaktivera Spotlight"
+                    },
+                    "amoled_dark_mode": {
+                        "description": "Aktiverar AMOLED mörkt läge\nSe till att Snapchats mörka läge är aktiverat",
+                        "name": "AMOLED Mörkt läge"
+                    },
+                    "friend_feed_message_preview": {
+                        "name": "Förhandsgranskning av meddelande från Vänflödet",
+                        "description": "Visar en förhandsgranskning av de senaste meddelandena i vänflödet",
+                        "properties": {
+                            "amount": {
+                                "name": "Antal",
+                                "description": "Antalet meddelanden som ska förhandsgranskas"
+                            }
+                        }
+                    },
+                    "map_friend_nametags": {
+                        "description": "Förbättrar namntaggar av vänner på Snapmap",
+                        "name": "Förbättrade Namntaggar på vänkartan"
+                    },
+                    "streak_expiration_info": {
+                        "name": "Visa info om utgång för Streak",
+                        "description": "Visar en timer för Streakens utgång bredvid Streaks-räknaren"
+                    },
+                    "old_bitmoji_selfie": {
+                        "name": "Gamla Bitmoji-selfien",
+                        "description": "Återinför Bitmoji-selfies från äldre Snapchat-versioner"
+                    },
+                    "hide_settings_gear": {
+                        "name": "Dölj inställningar-ikonen",
+                        "description": "Döljer SnapEnhance-inställningsikonen i vänflödet"
+                    },
+                    "hide_story_suggestions": {
+                        "name": "Dölj Story-förslag",
+                        "description": "Tar bort förslag från Stories-fliken"
+                    }
+                },
+                "name": "Användargränssnitt",
+                "description": "Ändra utseende och känsla för Snapchat"
+            }
+        }
+    },
+    "scopes": {
+        "friend": "Vän",
+        "group": "Grupp"
     }
 }

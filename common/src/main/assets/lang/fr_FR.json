@@ -35,28 +35,93 @@
             "messaging_preview": "Aperçu"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "Effacer les logs",
-                    "export_logs_button": "Exporter les logs"
-                }
-            },
             "features": {
-                "disabled": "Désactivé"
+                "disabled": "Désactivé",
+                "export_option": "Exporter",
+                "import_option": "Importer",
+                "reset_option": "Réinitialiser",
+                "config_export_success_toast": "Configuration exportée avec succès",
+                "config_import_success_toast": "Configuration importée avec succès",
+                "config_import_failure_toast": "Échec de l'importation de la configuration {erreur}",
+                "saved_config_snackbar": "Configuration enregistrée"
             },
             "social": {
-                "e2ee_title": "Chiffrement de bout-en-bout",
-                "rules_title": "Règles",
-                "participants_text": "{count} participants",
-                "not_found": "Introuvable",
-                "streaks_title": "Rappels des flammes",
-                "streaks_length_text": "Longueur : {length}",
-                "streaks_expiration_short": "{hours}h",
-                "streaks_expiration_text": "Expire dans {eta}",
-                "reminder_button": "Définir le rappel"
+                "streaks_expiration_short": "{hours}h"
             },
             "tasks": {
-                "no_tasks": "Aucune tâche"
+                "no_tasks": "Aucune tâche",
+                "merge_files_toast": "Fusion de {count}fichiers",
+                "remove_selected_tasks_title": "Êtes-vous sûr de vouloir supprimer les tâches sélectionnées ?",
+                "remove_all_tasks_title": "Êtes-vous sûr de vouloir supprimer toutes les tâches ?",
+                "delete_files_option": "Supprimez également les fichiers",
+                "remove_selected_tasks_confirm": "Supprimer {count} tâches ?",
+                "remove_all_tasks_confirm": "Supprimer toutes les tâches ?"
+            },
+            "home": {
+                "update_content": "La version {version} est disponible !",
+                "update_button": "Télécharger",
+                "update_title": "Mise à jour SnapEnhance"
+            },
+            "manage_scope": {
+                "logged_stories_button": "Afficher les histoires enregistrées",
+                "e2ee_title": "Chiffrement de bout en bout",
+                "rules_title": "Règles",
+                "participants_text": "­compter les participants",
+                "not_found": "Pas trouvé",
+                "streaks_title": "Traces",
+                "streaks_length_text": "Longueur : {longueur}",
+                "streaks_expiration_text": "Expire dans eta",
+                "streaks_expiration_text_expired": "Expiré",
+                "reminder_button": "Définir un rappel",
+                "delete_scope_confirm_dialog_title": "Êtes-vous sûr de vouloir supprimer une {étendue}?"
+            },
+            "home_logs": {
+                "no_logs_hint": "Aucun journal disponible",
+                "clear_logs_button": "Effacer les journaux",
+                "export_logs_button": "Exporter les journaux",
+                "saving_logs_toast": "Sauvegarde des journaux, cela peut prendre un certain temps ...",
+                "saved_logs_success_toast": "Journaux enregistrés avec succès",
+                "saved_logs_failure_toast": "Échec de l'enregistrement des journaux"
+            },
+            "home_settings": {
+                "actions_title": "Actions",
+                "message_logger_title": "Enregistreur de messages",
+                "debug_title": "Déboguer",
+                "success_toast": "Fait !",
+                "message_logger_summary": "{messageCompter} les messages\n{histoireCompter} les histoires",
+                "export_button": "Exporter",
+                "clear_button": "Claire",
+                "view_logger_history_button": "Afficher l'historique de l'enregistreur"
+            },
+            "logged_stories": {
+                "story_failed_to_load": "Échec du chargement",
+                "no_stories": "Aucune histoire trouvée",
+                "save_from_cache_button": "Enregistrer depuis le cache"
+            },
+            "messaging_preview": {
+                "bridge_connection_failed": "Échec de la connexion à Snapchat via le service de pont",
+                "bridge_init_failed": "Échec de l'initialisation du pont de messagerie",
+                "message_fetch_failed": "Échec de la récupération des messages",
+                "no_message_hint": "Pas de message",
+                "save_selection_option": "Enregistrer la sélection",
+                "save_all_option": "Sauver tous",
+                "unsave_selection_option": "Annuler l'enregistrement de la sélection",
+                "unsave_all_option": "Tout annuler",
+                "mark_selection_as_seen_option": "Marquer le Snap sélectionné comme vu",
+                "mark_all_as_seen_option": "Marquer tous les Snaps comme vus",
+                "delete_selection_option": "Supprimer la sélection",
+                "delete_all_option": "Supprimer tout"
+            },
+            "logger_history": {
+                "list_friend_format": "Ami {nom}",
+                "list_group_format": "Nom de groupe}",
+                "no_more_messages": "Plus de messages",
+                "reverse_order_checkbox": "Ordre inverse",
+                "chat_attachment": "Indice des {pièces jointes}",
+                "empty_message": "Message de discussion vide",
+                "message_parse_failed": "Échec de l'analyse du message",
+                "unknown_sender": "Expéditeur inconnu",
+                "download_attachment_failed_toast": "Échec du téléchargement de la pièce jointe"
             }
         },
         "dialogs": {
@@ -70,6 +135,15 @@
             "scripting_warning": {
                 "content": "SnapEnhance inclut un outil de développement de scripts, permettant l'exécution d'un code défini par l'utilisateur sur votre appareil. Soyez extrêmement prudent et n'installez que des modules provenant de sources connues et fiables. Les modules non autorisés ou non vérifiés peuvent présenter des risques pour la sécurité de votre système.",
                 "title": "Attention"
+            },
+            "messaging_action": {
+                "title": "Choisissez les types de contenu à traiter",
+                "select_all_button": "Tout sélectionner"
+            },
+            "reset_config": {
+                "title": "Réinitialiser la configuration",
+                "content": "Êtes-vous sûr de vouloir réinitialiser la configuration ?",
+                "success_toast": "La configuration a été réinitialisée avec succès"
             }
         }
     },
@@ -120,6 +194,10 @@
                 },
                 "description": "Empêche les messages d'être enregistrés dans le chat par d'autres personnes"
             }
+        },
+        "toasts": {
+            "enabled": "{ruleName} activé",
+            "disabled": "{ruleName} désactivé"
         }
     },
     "features": {
@@ -329,6 +407,10 @@
                     "stealth_mode_indicator": {
                         "name": "Indicateur de Mode Furtif",
                         "description": "Ajoute un emoji 👻 à côté des conversations en mode furtif"
+                    },
+                    "message_indicators": {
+                        "name": "Indicateur de messages",
+                        "description": "Ajoute des indicateurs d'icônes spécifiques aux messages\nNote: les indications peuvent ne pas être 100% exactes"
                     }
                 }
             },
@@ -443,6 +525,14 @@
                     "bypass_message_retention_policy": {
                         "name": "Contourner la politique de conservation des messages",
                         "description": "Empêche la disparition des messages après les avoir consultés"
+                    },
+                    "bypass_message_action_restrictions": {
+                        "name": "Contourner les restrictions d'action des messages",
+                        "description": "Permet de réagir à un snap sans l'avoir ouvert ou d'enregistrer un message non sauvegardé"
+                    },
+                    "remove_groups_locked_status": {
+                        "name": "Supprimer le statut verrouillé des groupes",
+                        "description": "Vous permet d'afficher les informations du groupe après avoir été expulsé"
                     }
                 }
             },
@@ -468,7 +558,7 @@
                     },
                     "bypass_video_length_restriction": {
                         "name": "Contourner la restriction de longueur vidéo",
-                        "description": "Unique : envoie une seule vidéo\nDécoupé : découper les vidéos après l'édition"
+                        "description": "Unique : envoie une seule vidéo\n Split : diviser les vidéos après le montage"
                     },
                     "disable_google_play_dialogs": {
                         "name": "Désactiver les avertissements des services Google Play",
@@ -505,6 +595,44 @@
                     "disable_permission_requests": {
                         "name": "Désactiver la demande d'autorisation",
                         "description": "Empêche Snapchat de demander des autorisations spécifiques"
+                    },
+                    "better_location": {
+                        "name": "Meilleur emplacement",
+                        "properties": {
+                            "coordinates": {
+                                "name": "Coordonnées",
+                                "description": "Choisir les coordonnées de l'usurpation de localisation"
+                            },
+                            "always_update_location": {
+                                "name": "Toujours actualiser la localisation",
+                                "description": "Forcer Snapchat à mettre à jour la position même si aucune donnée GPS n'est reçue"
+                            },
+                            "spoof_location": {
+                                "description": "Usurpe votre emplacement à un emplacement spécifié",
+                                "name": "Cacher sa Localisation"
+                            },
+                            "suspend_location_updates": {
+                                "name": "Suspendre les mises à jour de localisation",
+                                "description": "Ajouter un bouton dans les paramètres de la carte pour suspendre les mises à jour de la localisation"
+                            },
+                            "spoof_battery_level": {
+                                "description": "Usure le niveau de la batterie de votre appareil sur la carte\n La valeur doit être comprise entre 0 et 100",
+                                "name": "Usurper le niveau de batterie"
+                            },
+                            "spoof_headphones": {
+                                "description": "Usure le statut d'écoute de musique sur la carte",
+                                "name": "Faux écouteurs"
+                            }
+                        },
+                        "description": "Améliore la localisation de Snapchat"
+                    },
+                    "default_volume_controls": {
+                        "description": "Force Snapchat à utiliser les commandes de volume du système",
+                        "name": "Contrôles de volume par défaut"
+                    },
+                    "video_playback_rate_slider": {
+                        "name": "Curseur de taux de lecture vidéo",
+                        "description": "Ajoute un curseur dans le menu contextuel de l'opéra pour modifier la vitesse de lecture vidéo\n\n Remarque : Les modifications ne s'appliquent qu'aux vidéos suivantes."
                     }
                 }
             },
@@ -677,6 +805,46 @@
                     "story_logger": {
                         "description": "Fournit un historique des Stories d'amis",
                         "name": "Journal des Stories"
+                    },
+                    "session_events": {
+                        "description": "Enregistre les événements de la session",
+                        "properties": {
+                            "capture_duplex_events": {
+                                "name": "Capturer les événements duplex",
+                                "description": "Capturez les événements de présence et de messagerie lorsqu'une session est active"
+                            },
+                            "allow_running_in_background": {
+                                "name": "Autoriser l'exécution en arrière-plan",
+                                "description": "Permet à la session de s'exécuter en arrière-plan"
+                            }
+                        },
+                        "name": "Événements de session"
+                    },
+                    "new_chat_action_menu": {
+                        "name": "Nouveau menu d'actions de discussion",
+                        "description": "Utilisez le nouveau tiroir du menu d'action de chat"
+                    },
+                    "media_file_picker": {
+                        "name": "Sélecteur de fichiers multimédias",
+                        "description": "Vous permet de choisir n'importe quel fichier vidéo/audio dans la galerie"
+                    },
+                    "call_recorder": {
+                        "name": "Enregistreur d'appel",
+                        "description": "Enregistre automatiquement les appels audio"
+                    },
+                    "account_switcher": {
+                        "name": "Changeur de compte",
+                        "description": "Vous permet de basculer entre les comptes sans vous déconnecter\n Appuyez longuement sur l'icône de recherche à côté de votre profil Bitmoji pour ouvrir le menu\n Remarque : cette fonctionnalité est expérimentale et sera probablement modifiée à l'avenir.",
+                        "properties": {
+                            "auto_backup_current_account": {
+                                "name": "Compte courant de sauvegarde automatique",
+                                "description": "Sauvegarde automatiquement le compte actuel lors de la déconnexion ou du changement de compte"
+                            }
+                        }
+                    },
+                    "edit_message": {
+                        "name": "Modifier les messages",
+                        "description": "Vous permet de modifier les messages dans les conversations"
                     }
                 }
             },
@@ -848,11 +1016,30 @@
             },
             "hide_story_suggestions": {
                 "hide_suggested_friend_stories": "Cacher les stories d'amis suggérées",
-                "hide_friend_suggestions": "Cacher les suggestions d'ami"
+                "hide_friend_suggestions": "Cacher les suggestions d'ami",
+                "hide_my_stories": "Cacher mes histoires"
             },
             "disable_cameras": {
                 "front": "Caméra Frontale",
                 "back": "Caméra arrière"
+            },
+            "disable_permission_requests": {
+                "notifications": "Notifications",
+                "microphone": "microphone",
+                "location": "Emplacement",
+                "phone_calls": "Appels téléphoniques",
+                "read_media_images": "Lire des images médiatiques",
+                "read_media_video": "Lire la vidéo multimédia",
+                "camera": "Caméra",
+                "read_contacts": "Lire les contacts",
+                "nearby_devices": "Appareils à proximité"
+            },
+            "message_indicators": {
+                "encryption_indicator": "Ajoute une icône 🔒 à côté des messages qui vous ont été envoyés uniquement",
+                "location_indicator": "Ajoute une icône 📍 aux clichés lorsqu'ils ont été envoyés avec la localisation activée",
+                "ovf_editor_indicator": "Indique si un snap a été envoyé à l'aide de l'éditeur OVF",
+                "director_mode_indicator": "Ajoute une icône ✏️ aux clichés lorsqu'ils ont été envoyés en mode Directeur, qui peut être utilisée pour envoyer des images de la galerie sous forme de clichés",
+                "platform_indicator": "Ajoute l'icône de la plateforme à partir de laquelle un média a été envoyé (par exemple Android, iOS, Web)"
             }
         }
     },
@@ -868,7 +1055,8 @@
         "preview_button": "Aperçu",
         "download_button": "Télécharger",
         "delete_logged_message_button": "Supprimer le message enregistré",
-        "convert_message": "Convertir le message"
+        "convert_message": "Convertir le message",
+        "edit_message": "Modifier le message"
     },
     "opera_context_menu": {
         "download": "Télécharger",
@@ -964,7 +1152,13 @@
         "failed_generic_toast": "Échec du téléchargement",
         "failed_to_create_preview_toast": "Échec de création de l'aperçu",
         "failed_processing_toast": "Échec du traitement {error}",
-        "failed_gallery_toast": "Échec de l'enregistrement dans la galerie {error}"
+        "failed_gallery_toast": "Échec de l'enregistrement dans la galerie {error}",
+        "dash_dialog": {
+            "download_all": "Tout télécharger",
+            "title": "Télécharger le média Dash",
+            "segment_text": "Segment {de} à  -{à}"
+        },
+        "dash_no_chapter": "Aucun chapitre trouvé"
     },
     "streaks_reminder": {
         "notification_title": "Rappels des flammes",
@@ -990,7 +1184,8 @@
         "FAMILY_CENTER_ACCEPT": "Acceptation Family Center",
         "FAMILY_CENTER_LEAVE": "A quitté Family Center",
         "STATUS_CALL_MISSED_AUDIO": "Appel audio manqué",
-        "NOTE": "Vocal"
+        "NOTE": "Vocal",
+        "MAP_REACTION": "Réaction de la carte"
     },
     "media_download_source": {
         "public_story": "Story Publique",
@@ -1001,7 +1196,9 @@
         "none": "Aucun",
         "profile_picture": "Photo de profil",
         "story": "Story",
-        "chat_media": "Média de Chat"
+        "chat_media": "Média de Chat",
+        "voice_call": "Appel vocal",
+        "message_logger": "Enregistreur de messages"
     },
     "suspend_location_updates": {
         "switch_text": "Suspendre les mises à jour de localisation"
@@ -1060,5 +1257,72 @@
             "message": "Cette action affectera tous les amis sélectionnés. Cette action ne peut pas être annulée.",
             "title": "Êtes-vous sûr ?"
         }
+    },
+    "actions": {
+        "clean_snapchat_cache": {
+            "name": "Nettoyer le cache Snapchat",
+            "description": "Nettoie le cache de Snapchat"
+        },
+        "manage_friend_list": {
+            "name": "Gérer la liste d'amis",
+            "description": "Importez/exportez votre liste d'amis lors de la sauvegarde"
+        },
+        "export_chat_messages": {
+            "name": "Exporter les messages de discussion",
+            "description": "Exporte les messages de conversation dans un fichier JSON/HTML/TXT"
+        },
+        "export_memories": {
+            "name": "Exporter des souvenirs",
+            "description": "Exporter les souvenirs dans un fichier ZIP"
+        },
+        "bulk_messaging_action": {
+            "description": "Réaliser des opérations tel que la suppression d'amis ou la suppression groupé de conversations",
+            "name": "Action de messagerie en masse"
+        },
+        "change_language": {
+            "name": "Changer la langue",
+            "description": "Changer la langue de SnapEnhance"
+        },
+        "regen_mappings": {
+            "name": "Régénérer les mappages",
+            "description": "Régénérer manuellement les mappages"
+        }
+    },
+    "mark_as_seen": {
+        "no_unseen_snaps_toast": "Aucun Snap invisible trouvé !",
+        "seen_toast": "Marqué comme vu !",
+        "already_seen_toast": "Déjà marqué comme vu !",
+        "unseen_toast": "Marqué comme vu !",
+        "already_unseen_toast": "Déjà marqué comme invisible !"
+    },
+    "end_to_end_encryption": {
+        "toolbox": {
+            "no_shared_key": "Vous n'avez pas encore de secret partagé avec cet ami.  Cliquez ci-dessous pour en lancer un nouveau.",
+            "shared_key_fingerprint": "Votre empreinte digitale est :\n\n {empreinte digitale}\n\n Assurez-vous de vérifier si cela correspond à l'empreinte digitale de votre ami !",
+            "initiate_exchange_button": "Lancer l'échange de clés"
+        },
+        "confirmation_dialogs": {
+            "confirmation_1": "AVERTISSEMENT : Cela écrasera votre clé existante.  Vous perdrez l'accès à tous les messages cryptés de cet ami.  Es-tu sur de vouloir continuer?",
+            "title": "Chiffrement de bout en bout",
+            "confirmation_2": "Êtes-vous VRAIMENT sûr de vouloir continuer ?  C'est votre dernière chance de vous retirer."
+        },
+        "unencrypted_conversation_send_failure_toast": "Vous ne pouvez pas envoyer de contenu crypté à des conversations cryptées et non cryptées !",
+        "accept_public_key_success_toast": "Clé publique acceptée avec succès !",
+        "native_hooks_send_failure_toast": "Échec de l'envoi !  Veuillez activer Native Hooks dans les paramètres.",
+        "accept_secret_key_success_toast": "Fait!  Vous pouvez désormais envoyer et recevoir des messages cryptés avec cet ami.",
+        "accept_public_key_failure_toast": "Échec de l'acceptation de la clé publique",
+        "accept_secret_button": "Accepter la clé publique",
+        "no_participants_to_encrypt_toast": "Vous n'avez aucun ami dans cette conversation avec qui crypter les messages !",
+        "accept_secret_key_failure_toast": "Échec de l'acceptation de la clé secrète",
+        "encryption_failed_toast": "Échec du chiffrement du message !  Consultez logcat pour plus de détails.",
+        "accept_public_key_button": "Accepter la clé publique",
+        "outgoing_pk_message": "Demande d'échange de clés",
+        "outgoing_secret_message": "Réponse d'échange de clés",
+        "incoming_pk_message": "Vous venez de recevoir une demande de clé publique.  Cliquez ci-dessous pour l'accepter.",
+        "incoming_secret_message": "Votre ami vient d'accepter votre clé publique.  Cliquez ci-dessous pour accepter le secret."
+    },
+    "scopes": {
+        "friend": "Amie ami",
+        "group": "Groupe"
     }
 }

@@ -27,28 +27,65 @@
             "home_settings": "Instellingen",
             "home_logs": "Logs",
             "social": "Sociaal",
-            "scripts": "Scripts"
+            "scripts": "Scripts",
+            "manage_scope": "Scope beheren",
+            "messaging_preview": "Preview",
+            "tasks": "Assignments",
+            "logger_history": "Logger geschiedenis",
+            "logged_stories": "Gelogde Stories"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "Wis logs",
-                    "export_logs_button": "Logs exporteren"
-                }
-            },
             "features": {
-                "disabled": "Uitgeschakeld"
+                "disabled": "Uitgeschakeld",
+                "export_option": "Exporteer",
+                "import_option": "Impoteer",
+                "reset_option": "Opnieuw instellen",
+                "config_export_success_toast": "Config succesvol geëxporteerd",
+                "config_import_success_toast": "Config succesvol geïmporteerd",
+                "config_import_failure_toast": "Gefaald om config te importeren {error}",
+                "saved_config_snackbar": "Config opgeslagen"
             },
             "social": {
-                "e2ee_title": "End-to-End encryptie",
+                "streaks_expiration_short": "{hours}u"
+            },
+            "tasks": {
+                "no_tasks": "Geen taken",
+                "remove_all_tasks_confirm": "Verwijder alle taken?"
+            },
+            "home": {
+                "update_title": "SnapEnhance Update",
+                "update_content": "Versie {versie} is beschikbaar!",
+                "update_button": "Download"
+            },
+            "home_logs": {
+                "no_logs_hint": "Geen logs beschikbaar",
+                "export_logs_button": "Exporteer logs",
+                "saving_logs_toast": "Logs opslaan, dit kan een ogenblik duren ...",
+                "saved_logs_success_toast": "Logs opslagen gelukt",
+                "saved_logs_failure_toast": "Gefaald om logs op te slaan"
+            },
+            "home_settings": {
+                "actions_title": "Acties",
+                "message_logger_title": "Berichten logger",
+                "success_toast": "Klaar!",
+                "export_button": "Exporteren"
+            },
+            "manage_scope": {
+                "logged_stories_button": "Toon gelogde verhalen",
+                "e2ee_title": "Eind-tot-eind encryptie",
                 "rules_title": "Regels",
-                "participants_text": "{count} deelnemers",
+                "participants_text": "{aantal) deelnemers",
                 "not_found": "Niet gevonden",
-                "streaks_title": "Snapreeks",
-                "streaks_length_text": "Lengte: {length}",
-                "streaks_expiration_short": "{hours}u",
+                "streaks_title": "Reeksen",
+                "streaks_length_text": "Lengte: {lengte}",
                 "streaks_expiration_text": "Verloopt in {eta}",
-                "reminder_button": "Stel herinnering in"
+                "streaks_expiration_text_expired": "Verlopen",
+                "reminder_button": "Zet herinnering",
+                "delete_scope_confirm_dialog_title": "Weet u zeker dat u {scope} wilt verwijderen?"
+            },
+            "logged_stories": {
+                "story_failed_to_load": "Gefaald om te laden",
+                "no_stories": "Geen verhalen gevonden"
             }
         },
         "dialogs": {
@@ -58,6 +95,9 @@
                 "fetch_error": "Kan gegevens niet ophalen",
                 "category_groups": "Groepen",
                 "category_friends": "Vrienden"
+            },
+            "scripting_warning": {
+                "title": "Waarschuwing"
             }
         }
     },
@@ -99,12 +139,23 @@
             },
             "pin_conversation": {
                 "name": "Gesprek vastzetten"
+            },
+            "unsaveable_messages": {
+                "name": "Onopslaanbare berichten",
+                "description": "Voorkomt dat berichten opgeslagen worden in chat door andere personen",
+                "options": {
+                    "blacklist": "Sluit uit van onopslaanbare berichten",
+                    "whitelist": "Onopslaanbare berichten"
+                }
             }
+        },
+        "toasts": {
+            "enabled": "{ruleName} Ingeschakeld"
         }
     },
     "features": {
         "notices": {
-            "unstable": "⚠️ Onstabiel",
+            "unstable": "⚠ onstabiel",
             "ban_risk": "⚠️ Deze functie kan bans veroorzaken",
             "internal_behavior": "⚠️ Dit kan het interne gedrag van Snapchat breken",
             "require_native_hooks": "⚠️ Deze functie vereist experimentele Native Hooks om correct te werken"
@@ -227,5 +278,9 @@
                 }
             }
         }
+    },
+    "scopes": {
+        "friend": "Vriend",
+        "group": "Groep"
     }
 }

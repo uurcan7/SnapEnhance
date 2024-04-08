@@ -28,28 +28,16 @@
             "home_logs": "لاگز",
             "social": "سوشل",
             "scripts": "اسکرپٹس",
-            "tasks": "کام"
+            "tasks": "کام",
+            "logger_history": "لاگ ریکارڈ",
+            "messaging_preview": "جہلک"
         },
         "sections": {
-            "home": {
-                "logs": {
-                    "clear_logs_button": "لاگز صاف کریں",
-                    "export_logs_button": "لاگز ایکسپورٹ کریں"
-                }
-            },
             "features": {
                 "disabled": "غیر فعال"
             },
             "social": {
-                "e2ee_title": "آخر تک آخر اینڈ انکرپشن",
-                "rules_title": "قوانین",
-                "participants_text": "{count} مشترکین",
-                "not_found": "نہیں ملی",
-                "streaks_title": "استریکس",
-                "streaks_length_text": "لمبائی: {length}",
-                "streaks_expiration_short": "{hours}گنٹے",
-                "streaks_expiration_text": "میں ختم ہو جائے گا {eta}",
-                "reminder_button": "یاد دلانے کی ترتیب دیں"
+                "streaks_expiration_short": "{hours}گنٹے"
             },
             "tasks": {
                 "no_tasks": "کوئی کام نہیں"
@@ -109,7 +97,8 @@
                 "name": "بات چیت کو پن کریں"
             },
             "unsaveable_messages": {
-                "name": "ناقابل محفوظ پیغامات"
+                "name": "ناقابل محفوظ پیغامات",
+                "description": "لوگوں کی چیٹ میں پیغامات کو محفوظ ہونے سے روکتا ہے۔"
             }
         }
     },

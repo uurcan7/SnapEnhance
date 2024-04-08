@@ -62,5 +62,50 @@
         "processing_toast": "Elaborando {path}...",
         "failed_generic_toast": "Impossibile scaricare",
         "failed_to_create_preview_toast": "Impossibile creare l'anteprima"
+    },
+    "manager": {
+        "sections": {
+            "social": {
+                "streaks_expiration_short": "{hours}h"
+            },
+            "tasks": {
+                "no_tasks": "Nessuna attività"
+            },
+            "features": {
+                "disabled": "Disabilitato"
+            }
+        },
+        "routes": {
+            "tasks": "Attività",
+            "home_logs": "Log",
+            "home_settings": "Impostazioni",
+            "social": "Social",
+            "logged_stories": "Log registrati",
+            "messaging_preview": "Anteprima",
+            "features": "Caratteristiche",
+            "home": "Home",
+            "logger_history": "Cronologia Log"
+        }
+    },
+    "setup": {
+        "mappings": {
+            "dialog": "Per funzionare dinamicamente con un'ampia gamma di versioni di Snapchat, la mappatura è necessaria per far funzionare correttamente SnapEnhance, questo non dovrebbe durare più di 5 secondi.",
+            "generate_button": "Genera",
+            "generate_failure_no_snapchat": "SnapEnhance non è in grado di rilevare Snapchat, per favore prova a reinstallare Snapchat.",
+            "generate_failure": "C'è stato un errore durante la generazione della mappatura, prova di nuovo.",
+            "generate_success": "Mappatura generata con successo."
+        },
+        "dialogs": {
+            "select_save_folder_button": "Seleziona cartella",
+            "select_language": "Seleziona la lingua",
+            "save_folder": "SnapEnhance richiede i permessi di archiviazione per scaricare e salvare i file da Snapchat.\nScegli una cartella dove salvare i file."
+        },
+        "permissions": {
+            "dialog": "Per continuare devi rispettare i seguenti requisiti:",
+            "notification_access": "Accesso alle notifiche",
+            "battery_optimization": "Ottimizzazione batteria",
+            "display_over_other_apps": "Mostra sopra altre app",
+            "request_button": "Richiedi"
+        }
     }
 }
