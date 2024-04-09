@@ -127,6 +127,7 @@ class FeatureManager(
             BypassMessageActionRestrictions(),
             BetterLocation(),
             MediaFilePicker(),
+            HideActiveMusic(),
         )
 
         initializeFeatures()

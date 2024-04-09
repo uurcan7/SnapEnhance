@@ -669,6 +669,10 @@
                         "name": "Default Volume Controls",
                         "description": "Forces Snapchat to use system volume controls"
                     },
+                    "hide_active_music": {
+                        "name": "Hide Active Music",
+                        "description": "Prevents Snapchat from knowing you're listening to music\nThis will allow you to take snaps using control volume buttons while listening to music"
+                    },
                     "disable_snap_splitting": {
                         "name": "Disable Snap Splitting",
                         "description": "Prevents Snaps from being split into multiple parts\nPictures you send will turn into videos"

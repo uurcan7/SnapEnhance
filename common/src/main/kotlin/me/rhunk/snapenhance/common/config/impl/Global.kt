@@ -42,5 +42,6 @@ class Global : ConfigContainer() {
     val disableGooglePlayDialogs = boolean("disable_google_play_dialogs") { requireRestart() }
     val forceUploadSourceQuality = boolean("force_upload_source_quality") { requireRestart() }
     val defaultVolumeControls = boolean("default_volume_controls") { requireRestart() }
+    val hideActiveMusic = boolean("hide_active_music") { requireRestart() }
     val disableSnapSplitting = boolean("disable_snap_splitting") { addNotices(FeatureNotice.INTERNAL_BEHAVIOR) }
 }
