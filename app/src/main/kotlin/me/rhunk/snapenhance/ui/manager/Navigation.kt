@@ -41,7 +41,8 @@ class Navigation(
         } == true }
 
         TopAppBar(title = {
-            routes.getCurrentRoute(navBackStackEntry)?.title?.invoke() ?: Text(text = routes.getCurrentRoute(navBackStackEntry)?.routeInfo?.translatedKey ?: "Unknown Page")
+            val currentRoute = routes.getCurrentRoute(navBackStackEntry)
+            currentRoute?.title?.invoke() ?: Text(text = currentRoute?.routeInfo?.translatedKey?.value ?: "Unknown Page")
         }, navigationIcon =  {
             val backButtonAnimation by animateFloatAsState(if (canGoBack) 1f else 0f,
                 label = "backButtonAnimation"

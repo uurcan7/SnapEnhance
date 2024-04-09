@@ -35,7 +35,7 @@ data class RouteInfo(
     val icon: ImageVector = Icons.Default.Home,
     val primary: Boolean = false,
 ) {
-    var translatedKey: String? = null
+    var translatedKey: Lazy<String?>? = null
     val childIds = mutableListOf<String>()
 }
 
@@ -132,7 +132,7 @@ class Routes(
             this.routeInfo = routeInfo
             routes = this@Routes
             context = this@Routes.context
-            this.routeInfo.translatedKey = context.translation.getOrNull("manager.routes.${route.routeInfo.key.substringBefore("/")}")
+            this.routeInfo.translatedKey = lazy { context.translation.getOrNull("manager.routes.${route.routeInfo.key.substringBefore("/")}") }
         }
         routes.add(route)
         return route
