@@ -107,8 +107,6 @@ class RemoteScriptManager(
 
     fun getScriptsFolder() = runCatching {
         DocumentFile.fromTreeUri(context.androidContext, Uri.parse(context.config.root.scripting.moduleFolder.get()))
-    }.onFailure {
-        context.log.warn("Failed to get scripts folder")
     }.getOrNull()
 
     private fun getScriptFileNames(): List<String> {
