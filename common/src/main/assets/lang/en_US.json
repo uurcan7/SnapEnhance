@@ -84,6 +84,9 @@
                 "saved_config_snackbar": "Config saved"
             },
             "social": {
+                "friends_tab": "Friends",
+                "groups_tab": "Groups",
+                "empty_hint": "(empty)",
                 "streaks_expiration_short": "{hours}h"
             },
             "manage_scope": {
