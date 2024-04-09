@@ -27,11 +27,18 @@
             "home_settings": "Ustawienia",
             "home_logs": "Logi",
             "social": "Społeczność",
-            "scripts": "Skrypty"
+            "scripts": "Skrypty",
+            "messaging_preview": "Podgląd",
+            "tasks": "Zadania"
         },
         "sections": {
             "features": {
                 "disabled": "Wyłączony"
+            },
+            "home": {
+                "update_title": "Aktualizacja SnapEnchance",
+                "update_content": "Wersja {version} jest dostępna!",
+                "update_button": "Pobierz"
             }
         }
     },
@@ -98,5 +105,9 @@
         "processing_toast": "Przetwarzanie {path}...",
         "failed_generic_toast": "Pobieranie nie powiodło się",
         "failed_to_create_preview_toast": "Nie można wczytać podglądu"
+    },
+    "scopes": {
+        "friend": "Przyjaciel",
+        "group": "Grupa"
     }
 }

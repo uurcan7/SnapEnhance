@@ -29,9 +29,9 @@
             "social": "Social",
             "scripts": "Scripts",
             "tasks": "Tâches",
-            "logger_history": "Historique de connexion",
+            "logger_history": "Historique des logs",
             "logged_stories": "Stories enregistrées",
-            "manage_scope": "Gérer la portée",
+            "manage_scope": "Gérer le champ d'application",
             "messaging_preview": "Aperçu"
         },
         "sections": {
@@ -42,7 +42,7 @@
                 "reset_option": "Réinitialiser",
                 "config_export_success_toast": "Configuration exportée avec succès",
                 "config_import_success_toast": "Configuration importée avec succès",
-                "config_import_failure_toast": "Échec de l'importation de la configuration {erreur}",
+                "config_import_failure_toast": "Échec de l'importation de la configuration {error}",
                 "saved_config_snackbar": "Configuration enregistrée"
             },
             "social": {
@@ -50,10 +50,10 @@
             },
             "tasks": {
                 "no_tasks": "Aucune tâche",
-                "merge_files_toast": "Fusion de {count}fichiers",
+                "merge_files_toast": "Fusion de {count} fichiers",
                 "remove_selected_tasks_title": "Êtes-vous sûr de vouloir supprimer les tâches sélectionnées ?",
                 "remove_all_tasks_title": "Êtes-vous sûr de vouloir supprimer toutes les tâches ?",
-                "delete_files_option": "Supprimez également les fichiers",
+                "delete_files_option": "Supprimer également les fichiers",
                 "remove_selected_tasks_confirm": "Supprimer {count} tâches ?",
                 "remove_all_tasks_confirm": "Supprimer toutes les tâches ?"
             },
@@ -63,17 +63,17 @@
                 "update_title": "Mise à jour SnapEnhance"
             },
             "manage_scope": {
-                "logged_stories_button": "Afficher les histoires enregistrées",
+                "logged_stories_button": "Afficher les stories enregistrées",
                 "e2ee_title": "Chiffrement de bout en bout",
                 "rules_title": "Règles",
-                "participants_text": "­compter les participants",
+                "participants_text": "{count} participant(s)",
                 "not_found": "Pas trouvé",
-                "streaks_title": "Traces",
-                "streaks_length_text": "Longueur : {longueur}",
-                "streaks_expiration_text": "Expire dans eta",
+                "streaks_title": "Flammes",
+                "streaks_length_text": "Longueur: {length}",
+                "streaks_expiration_text": "Expire dans {eta}",
                 "streaks_expiration_text_expired": "Expiré",
                 "reminder_button": "Définir un rappel",
-                "delete_scope_confirm_dialog_title": "Êtes-vous sûr de vouloir supprimer une {étendue}?"
+                "delete_scope_confirm_dialog_title": "Êtes-vous sûr de vouloir supprimer ce {scope} ?"
             },
             "home_logs": {
                 "no_logs_hint": "Aucun journal disponible",
@@ -85,17 +85,17 @@
             },
             "home_settings": {
                 "actions_title": "Actions",
-                "message_logger_title": "Enregistreur de messages",
+                "message_logger_title": "Loggeur de messages",
                 "debug_title": "Déboguer",
-                "success_toast": "Fait !",
-                "message_logger_summary": "{messageCompter} les messages\n{histoireCompter} les histoires",
+                "success_toast": "Succès !",
+                "message_logger_summary": "{messageCount} message(s)\n{storyCount} histoire(s)",
                 "export_button": "Exporter",
-                "clear_button": "Claire",
+                "clear_button": "Vider",
                 "view_logger_history_button": "Afficher l'historique de l'enregistreur"
             },
             "logged_stories": {
                 "story_failed_to_load": "Échec du chargement",
-                "no_stories": "Aucune histoire trouvée",
+                "no_stories": "Aucune story trouvée",
                 "save_from_cache_button": "Enregistrer depuis le cache"
             },
             "messaging_preview": {
@@ -104,21 +104,21 @@
                 "message_fetch_failed": "Échec de la récupération des messages",
                 "no_message_hint": "Pas de message",
                 "save_selection_option": "Enregistrer la sélection",
-                "save_all_option": "Sauver tous",
-                "unsave_selection_option": "Annuler l'enregistrement de la sélection",
-                "unsave_all_option": "Tout annuler",
+                "save_all_option": "Enregistrer tout",
+                "unsave_selection_option": "Désenregistrer la sélection",
+                "unsave_all_option": "Tout désenregistrer",
                 "mark_selection_as_seen_option": "Marquer le Snap sélectionné comme vu",
                 "mark_all_as_seen_option": "Marquer tous les Snaps comme vus",
                 "delete_selection_option": "Supprimer la sélection",
                 "delete_all_option": "Supprimer tout"
             },
             "logger_history": {
-                "list_friend_format": "Ami {nom}",
-                "list_group_format": "Nom de groupe}",
+                "list_friend_format": "Ami(e) {name}",
+                "list_group_format": "Groupe {name}",
                 "no_more_messages": "Plus de messages",
                 "reverse_order_checkbox": "Ordre inverse",
-                "chat_attachment": "Indice des {pièces jointes}",
-                "empty_message": "Message de discussion vide",
+                "chat_attachment": "Pièce jointe n°{index}",
+                "empty_message": "Message vide",
                 "message_parse_failed": "Échec de l'analyse du message",
                 "unknown_sender": "Expéditeur inconnu",
                 "download_attachment_failed_toast": "Échec du téléchargement de la pièce jointe"
@@ -126,7 +126,7 @@
         },
         "dialogs": {
             "add_friend": {
-                "title": "Ajouter des amis ou un groupe",
+                "title": "Ajouter des amis ou des groupes",
                 "search_hint": "Rechercher",
                 "fetch_error": "Échec de la récupération des données",
                 "category_groups": "Groupes",
@@ -283,8 +283,8 @@
                         }
                     },
                     "logging": {
-                        "name": "Enregistrement",
-                        "description": "Afficher une bulle de notification lorsque le média est en téléchargement"
+                        "name": "Journalisation",
+                        "description": "Afficher une bulle de notification lorsque un média est en cours de téléchargement"
                     },
                     "custom_path_format": {
                         "description": "Spécifier un format de chemin personnalisé pour les médias téléchargés\n\nVariables disponibles :\n - %username%\n - %source%\n - %hash%\n - %date_time%",
@@ -338,7 +338,7 @@
                     },
                     "map_friend_nametags": {
                         "name": "Améliorations des nametags d'amis sur la Carte Snap",
-                        "description": "Améliore-les nametags des amis sur la Carte Snap"
+                        "description": "Améliore les nametags des amis sur la Carte Snap"
                     },
                     "streak_expiration_info": {
                         "name": "Infos sur l'expiration des flammes",
@@ -397,7 +397,7 @@
                         "description": "Affiche un petit aperçu à côté des Snaps non vus dans le chat"
                     },
                     "hide_friend_feed_entry": {
-                        "description": "Masque un ami spécifique du fil d'actualité des amis\nUtilisez l'onglet social pour gérer cette fonctionnalité",
+                        "description": "Masque un ami spécifique du fil des amis\nUtilisez l'onglet social pour gérer cette fonctionnalité",
                         "name": "Masquer l'entrée dans le fil d'amis"
                     },
                     "hide_story_suggestions": {
@@ -415,7 +415,7 @@
                 }
             },
             "messaging": {
-                "name": "Messages",
+                "name": "Messagerie",
                 "description": "Changez la façon dont vous interagissez avec vos amis",
                 "properties": {
                     "anonymous_story_viewing": {
@@ -435,8 +435,8 @@
                         "description": "Supprime la limite de temps pour la visualisation des Snaps"
                     },
                     "disable_replay_in_ff": {
-                        "name": "Désactiver la relecture en FF",
-                        "description": "Désactive la possibilité de rejouer avec un appui long du Flux d'Ami"
+                        "name": "Désactiver la relecture dans le FF",
+                        "description": "Désactive la possibilité de rejouer avec un appui long du fil des amis"
                     },
                     "message_preview_length": {
                         "name": "Longueur de la prévisualisation du message",
@@ -620,8 +620,8 @@
                                 "name": "Usurper le niveau de batterie"
                             },
                             "spoof_headphones": {
-                                "description": "Usure le statut d'écoute de musique sur la carte",
-                                "name": "Faux écouteurs"
+                                "description": "Usurpe le statut d'écoute de musique sur la carte",
+                                "name": "Usurper les écouteurs"
                             }
                         },
                         "description": "Améliore la localisation de Snapchat"
@@ -632,7 +632,7 @@
                     },
                     "video_playback_rate_slider": {
                         "name": "Curseur de taux de lecture vidéo",
-                        "description": "Ajoute un curseur dans le menu contextuel de l'opéra pour modifier la vitesse de lecture vidéo\n\n Remarque : Les modifications ne s'appliquent qu'aux vidéos suivantes."
+                        "description": "Ajoute un curseur dans le menu contextuel de l'opéra pour modifier la vitesse de lecture vidéo\nRemarque: Les modifications ne s'appliquent qu'aux vidéos suivantes"
                     }
                 }
             },
@@ -834,7 +834,7 @@
                     },
                     "account_switcher": {
                         "name": "Changeur de compte",
-                        "description": "Vous permet de basculer entre les comptes sans vous déconnecter\n Appuyez longuement sur l'icône de recherche à côté de votre profil Bitmoji pour ouvrir le menu\n Remarque : cette fonctionnalité est expérimentale et sera probablement modifiée à l'avenir.",
+                        "description": "Vous permet de basculer entre les comptes sans vous déconnecter\nAppuyez longuement sur l'icône de recherche à côté de votre profil Bitmoji pour ouvrir le menu\nRemarque: cette fonctionnalité est expérimentale et sera probablement modifiée à l'avenir",
                         "properties": {
                             "auto_backup_current_account": {
                                 "name": "Compte courant de sauvegarde automatique",
@@ -1156,7 +1156,7 @@
         "dash_dialog": {
             "download_all": "Tout télécharger",
             "title": "Télécharger le média Dash",
-            "segment_text": "Segment {de} à  -{à}"
+            "segment_text": "Segment {from} - {to}"
         },
         "dash_no_chapter": "Aucun chapitre trouvé"
     },
@@ -1297,32 +1297,32 @@
     },
     "end_to_end_encryption": {
         "toolbox": {
-            "no_shared_key": "Vous n'avez pas encore de secret partagé avec cet ami.  Cliquez ci-dessous pour en lancer un nouveau.",
-            "shared_key_fingerprint": "Votre empreinte digitale est :\n\n {empreinte digitale}\n\n Assurez-vous de vérifier si cela correspond à l'empreinte digitale de votre ami !",
+            "no_shared_key": "Vous n'avez pas encore de secret partagé avec cet ami. Cliquez ci-dessous pour en lancer un nouveau.",
+            "shared_key_fingerprint": "Votre fingerprint est :\n\n{fingerprint}\n\nAssurez-vous de vérifier si cela correspond à la fingerprint de votre ami !",
             "initiate_exchange_button": "Lancer l'échange de clés"
         },
         "confirmation_dialogs": {
-            "confirmation_1": "AVERTISSEMENT : Cela écrasera votre clé existante.  Vous perdrez l'accès à tous les messages cryptés de cet ami.  Es-tu sur de vouloir continuer?",
+            "confirmation_1": "AVERTISSEMENT: Cela écrasera votre clé existante. Vous perdrez l'accès à tous les messages cryptés de cet ami. Es-tu sur de vouloir continuer?",
             "title": "Chiffrement de bout en bout",
-            "confirmation_2": "Êtes-vous VRAIMENT sûr de vouloir continuer ?  C'est votre dernière chance de vous retirer."
+            "confirmation_2": "Êtes-vous VRAIMENT sûr de vouloir continuer? C'est votre dernière chance de vous retirer."
         },
         "unencrypted_conversation_send_failure_toast": "Vous ne pouvez pas envoyer de contenu crypté à des conversations cryptées et non cryptées !",
-        "accept_public_key_success_toast": "Clé publique acceptée avec succès !",
-        "native_hooks_send_failure_toast": "Échec de l'envoi !  Veuillez activer Native Hooks dans les paramètres.",
-        "accept_secret_key_success_toast": "Fait!  Vous pouvez désormais envoyer et recevoir des messages cryptés avec cet ami.",
+        "accept_public_key_success_toast": "Clé publique acceptée avec succès!",
+        "native_hooks_send_failure_toast": "Échec de l'envoi! Veuillez activer Native Hooks dans les paramètres.",
+        "accept_secret_key_success_toast": "Fait! Vous pouvez désormais envoyer et recevoir des messages cryptés avec cet ami.",
         "accept_public_key_failure_toast": "Échec de l'acceptation de la clé publique",
         "accept_secret_button": "Accepter la clé publique",
         "no_participants_to_encrypt_toast": "Vous n'avez aucun ami dans cette conversation avec qui crypter les messages !",
         "accept_secret_key_failure_toast": "Échec de l'acceptation de la clé secrète",
-        "encryption_failed_toast": "Échec du chiffrement du message !  Consultez logcat pour plus de détails.",
+        "encryption_failed_toast": "Échec du chiffrement du message! Consultez logcat pour plus de détails.",
         "accept_public_key_button": "Accepter la clé publique",
         "outgoing_pk_message": "Demande d'échange de clés",
         "outgoing_secret_message": "Réponse d'échange de clés",
-        "incoming_pk_message": "Vous venez de recevoir une demande de clé publique.  Cliquez ci-dessous pour l'accepter.",
-        "incoming_secret_message": "Votre ami vient d'accepter votre clé publique.  Cliquez ci-dessous pour accepter le secret."
+        "incoming_pk_message": "Vous venez de recevoir une demande de clé publique. Cliquez ci-dessous pour l'accepter.",
+        "incoming_secret_message": "Votre ami vient d'accepter votre clé publique. Cliquez ci-dessous pour accepter le secret."
     },
     "scopes": {
-        "friend": "Amie ami",
+        "friend": "Ami(e)",
         "group": "Groupe"
     }
 }

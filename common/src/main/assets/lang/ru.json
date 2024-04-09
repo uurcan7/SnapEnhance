@@ -7,10 +7,147 @@
         },
         "mappings": {
             "dialog": "Для динамической поддержки широкого диапазона версий Snapchat, для корректной работы SnapEnhance необходимо сопоставление параметров, это не должно занять более 5 секунд.",
-            "generate_button": "Генерировать",
+            "generate_button": "Сгенерировать",
             "generate_failure_no_snapchat": "SnapEnhance не удалось обнаружить Snapchat, попробуйте переустановить Snapchat.",
             "generate_failure": "Произошла ошибка при генерации сопоставлений, пожалуйста, попробуйте еще раз.",
             "generate_success": "Сопоставления сгенерированы успешно."
+        },
+        "permissions": {
+            "notification_access": "Доступ к уведомлениям",
+            "display_over_other_apps": "Отображение поверх других приложений",
+            "dialog": "Для продолжения вам необходимо соответствовать следующим требованиям:",
+            "battery_optimization": "Оптимизация батареи",
+            "request_button": "Запрос"
         }
+    },
+    "manager": {
+        "sections": {
+            "tasks": {
+                "no_tasks": "Нет задач",
+                "remove_selected_tasks_title": "Вы уверены, что хотите удалить выбранные задачи?",
+                "remove_all_tasks_title": "Вы уверены, что хотите удалить все задачи?",
+                "delete_files_option": "Также удалить файлы",
+                "remove_selected_tasks_confirm": "Удалить {count} задач?",
+                "remove_all_tasks_confirm": "Убрать все задачи?",
+                "merge_files_toast": "Объединение {count} файла"
+            },
+            "home_logs": {
+                "clear_logs_button": "Очистить логи",
+                "saved_logs_failure_toast": "Не удалось сохранить логи",
+                "no_logs_hint": "Нет доступных логов",
+                "export_logs_button": "Экспорт логов",
+                "saving_logs_toast": "Сохранение логов, это может занять некоторое время...",
+                "saved_logs_success_toast": "Логи успешно сохранены"
+            },
+            "home_settings": {
+                "export_button": "Экспорт",
+                "clear_button": "Очистить",
+                "view_logger_history_button": "Посмотреть логгер историй",
+                "message_logger_title": "Логгер сообщений",
+                "success_toast": "Сделанно!",
+                "message_logger_summary": "{messageCount} сообщений\n{storyCount} историй",
+                "actions_title": "Действия",
+                "debug_title": "Режим отладки"
+            },
+            "home": {
+                "update_title": "Обновить SnapEnchance",
+                "update_content": "Версия {version} доступна!",
+                "update_button": "Скачать"
+            },
+            "features": {
+                "disabled": "Отключенно",
+                "export_option": "Экспорт",
+                "import_option": "Импорт",
+                "config_export_success_toast": "Конфигурация успешно экспортирована",
+                "config_import_success_toast": "Конфигурация успешно импортирована",
+                "config_import_failure_toast": "Не удалось импортировать конфигурацию {error}",
+                "saved_config_snackbar": "Конфигурация сохранена",
+                "reset_option": "Сброс"
+            },
+            "manage_scope": {
+                "logged_stories_button": "Показать сохранённые истории",
+                "e2ee_title": "Сквозное шифрование",
+                "rules_title": "Правила",
+                "participants_text": "{count} участников",
+                "not_found": "Не найдено",
+                "streaks_length_text": "Длина: {length}",
+                "streaks_expiration_text": "Истекает через {eta}",
+                "streaks_title": "Серия",
+                "streaks_expiration_text_expired": "Истекло",
+                "reminder_button": "Установить напоминание",
+                "delete_scope_confirm_dialog_title": "Вы уверены, что хотите удалить {scope}?"
+            },
+            "social": {
+                "streaks_expiration_short": "{hours} часа"
+            },
+            "logged_stories": {
+                "story_failed_to_load": "Ошибка загрузки",
+                "no_stories": "Истории не найдены",
+                "save_from_cache_button": "Сохранить из кэша"
+            },
+            "messaging_preview": {
+                "bridge_connection_failed": "Не удалось подключиться к Snapchat через службу моста.",
+                "bridge_init_failed": "Не удалось инициализировать мост обмена сообщениями.",
+                "message_fetch_failed": "Не удалось получить сообщения.",
+                "no_message_hint": "Нет сообщений",
+                "save_selection_option": "Сохранить выбранное",
+                "save_all_option": "Сохранить все",
+                "mark_selection_as_seen_option": "Авторами выбранный Snap как просмотренный",
+                "mark_all_as_seen_option": "Отметить все Snap как просмотренные",
+                "delete_selection_option": "Удалить выбранное",
+                "delete_all_option": "Удалить все"
+            },
+            "logger_history": {
+                "list_friend_format": "Друг {name}",
+                "list_group_format": "Группа {name}",
+                "no_more_messages": "Больше нет сообщений",
+                "chat_attachment": "Вложение {index}",
+                "reverse_order_checkbox": "Обратный порядок",
+                "message_parse_failed": "Не удалось проанализировать сообщение",
+                "unknown_sender": "Неизвестный отправитель",
+                "download_attachment_failed_toast": "Не удалось загрузить вложение"
+            }
+        },
+        "routes": {
+            "home_logs": "Логи",
+            "tasks": "Задания",
+            "features": "Функции",
+            "home": "Дом",
+            "home_settings": "Настройки",
+            "scripts": "Скрипты",
+            "logger_history": "История логов",
+            "messaging_preview": "Предварительный просмотр",
+            "logged_stories": "Сохранённые истории",
+            "manage_scope": "Управление область"
+        },
+        "dialogs": {
+            "scripting_warning": {
+                "title": "Предупреждение",
+                "content": "SnapEnhance включает в себя инструмент сценариев, позволяющий выполнять пользовательский код на вашем устройстве.  Будьте предельно осторожны и устанавливайте модули только из известных и надежных источников.  Неавторизованные или непроверенные модули могут представлять угрозу безопасности вашей системы."
+            },
+            "reset_config": {
+                "title": "Сбросить конфигурацию",
+                "content": "Вы уверены, что хотите сбросить конфигурацию?",
+                "success_toast": "Конфигурация успешно сброшена"
+            },
+            "messaging_action": {
+                "title": "Выберите типы контента для обработки",
+                "select_all_button": "Выбрать все"
+            },
+            "add_friend": {
+                "title": "Добавить друга или группу",
+                "search_hint": "Поиск",
+                "fetch_error": "Не удалось получить данные",
+                "category_groups": "Группы",
+                "category_friends": "Друзья"
+            }
+        }
+    },
+    "scopes": {
+        "friend": "Друг",
+        "group": "Группа"
+    },
+    "material3_strings": {
+        "date_range_input_invalid_range_input": "Неверный диапазон дат"
     }
 }

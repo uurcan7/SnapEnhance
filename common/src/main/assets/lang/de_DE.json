@@ -410,7 +410,7 @@
                     },
                     "message_indicators": {
                         "name": "Nachrichtenindikatoren",
-                        "description": "Fügt Nachrichten spezifische Anzeigesymbole hinzu.\nHinweis: Die Symbole sind möglicherweise nicht 100 % genau."
+                        "description": "Fügt Nachrichten spezifische Anzeigesymbole hinzu\nHinweis: Die Symbole sind möglicherweise nicht 100 % genau"
                     }
                 }
             },

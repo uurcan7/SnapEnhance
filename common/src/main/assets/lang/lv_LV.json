@@ -28,7 +28,19 @@
             "home_settings": "Iestatijumi",
             "logger_history": "Žurnāla Vēsture",
             "home_logs": "Žurnāli",
-            "tasks": "Uzdevumi"
+            "tasks": "Uzdevumi",
+            "social": "Sociāls"
+        },
+        "sections": {
+            "home": {
+                "update_title": "SnapEnhance atjauninājums",
+                "update_content": "Versija {version} ir pieejama!",
+                "update_button": "Lejuplādēt"
+            }
         }
+    },
+    "scopes": {
+        "friend": "Draugs",
+        "group": "Grupa"
     }
 }

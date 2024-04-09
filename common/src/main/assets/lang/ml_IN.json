@@ -56,7 +56,8 @@
             "features": "ഫീച്ചറുകൾ",
             "home": "വീട്",
             "tasks": "ചുമതലകൾ",
-            "social": "സാമൂഹിക"
+            "social": "സാമൂഹിക",
+            "messaging_preview": "മുഴുവനായും"
         },
         "sections": {
             "social": {
@@ -67,6 +68,23 @@
             },
             "tasks": {
                 "no_tasks": "ജോലികളൊന്നുമില്ല"
+            },
+            "home": {
+                "update_content": "വേർഷൻ {version} ഇപ്പോൾ ലഭ്യമാണ്",
+                "update_title": "സ്നാപ്ഇൻഹാൻസ് പുതുക്കൽ",
+                "update_button": "ശേഖരിക്കുക"
+            },
+            "home_logs": {
+                "no_logs_hint": "ലോഗ്സ് ലഭ്യമല്ല",
+                "saving_logs_toast": "ലോഗുകൾ സേവ് ചെയുന്നു, അൽപ്പ സമയം കാത്തിരിക്കുക",
+                "clear_logs_button": "ക്ലിയർ ലോഗ്‌സ്",
+                "export_logs_button": "എക്സ്പോർട്ട് ലോക്‌സ്",
+                "saved_logs_success_toast": "വിജയകരമായി ലോഗ്‌സ് സേവ് ചെയ്തു",
+                "saved_logs_failure_toast": "Logs സേവ് ചെയ്യുന്നത് പരാജയപ്പെട്ടു"
+            },
+            "home_settings": {
+                "actions_title": "പ്രവർത്തികൾ",
+                "debug_title": "തെറ്റ്"
             }
         },
         "dialogs": {
@@ -977,5 +995,9 @@
         "stealth_mode": "സ്റ്റെൽത്ത് മോഡ്",
         "auto_download_blacklist": "ഓട്ടോ ഡൗൺലോഡ് ബ്ലാക്ക്‌ലിസ്റ്റ്",
         "anti_auto_save": "ആന്റി ഓട്ടോ സേവ്"
+    },
+    "scopes": {
+        "friend": "സുഹൃത്ത്",
+        "group": "കുട്ടായ്മ"
     }
 }

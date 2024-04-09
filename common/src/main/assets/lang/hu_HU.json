@@ -1152,7 +1152,13 @@
         "failed_generic_toast": "Letöltés sikertelen",
         "failed_to_create_preview_toast": "Előnézet létrehozása sikertelen",
         "failed_processing_toast": "Nem sikerült feldolgozni {error}",
-        "failed_gallery_toast": "Nem sikerült lementeni a galériába {error}"
+        "failed_gallery_toast": "Nem sikerült lementeni a galériába {error}",
+        "dash_dialog": {
+            "download_all": "Összes letötlése",
+            "segment_text": "Szegmens {from} - {to}",
+            "title": "Dash média letöltése"
+        },
+        "dash_no_chapter": "Nincsenek fejezetek"
     },
     "streaks_reminder": {
         "notification_title": "Sorozatok",
@@ -1292,5 +1298,31 @@
     "scopes": {
         "friend": "Barát",
         "group": "Csoport"
+    },
+    "end_to_end_encryption": {
+        "toolbox": {
+            "shared_key_fingerprint": "Az ujjlenyomatod:\n\n{fingerprint}\n\nEllenőrizd, hogy egyezik-e a barátod ujjlenyomatával!",
+            "no_shared_key": "Ezzel a barátoddal még nincs közös titkotok. Kattints az alábbi gombra, hogy új titok létrehozását kezdeményezd.",
+            "initiate_exchange_button": "Kulcscsere kezdeményezése"
+        },
+        "confirmation_dialogs": {
+            "confirmation_1": "FIGYELMEZTETÉS: Ez felülírja a meglévő kulcsot. Elveszted a hozzáférést az összes titkosított üzenethez ezzel a barátoddal. Biztos, hogy folytatni akarod?",
+            "confirmation_2": "TÉNYLEG biztos vagy benne, hogy folytatni akarod? Ez az utolsó esélyed, hogy visszalépj.",
+            "title": "Végpontok közti titkosítás"
+        },
+        "unencrypted_conversation_send_failure_toast": "Nem küldhetsz titkosított tartalmat titkosított és titkosítatlan beszélgetésekbe egyaránt!",
+        "accept_public_key_failure_toast": "Nem sikerült elfogadni a publikus kulcsot",
+        "accept_secret_key_failure_toast": "Nem sikerült elfogadni a titkos kulcsot",
+        "accept_public_key_button": "Publikus kulcs elfogadása",
+        "outgoing_pk_message": "Kulcs cserélési kérelem",
+        "incoming_pk_message": "Kaptál egy publikus kulcs kérelmet. Kattints lejjeb az elfogadáshot.",
+        "native_hooks_send_failure_toast": "Nem sikerült elküldeni! Kérlek, engedélyezd a Natív hookok használatát a beállításokban.",
+        "no_participants_to_encrypt_toast": "Nincsenek barátaid ebben a beszélgetésben, akikkel üzeneteket titkosíthatnál!",
+        "encryption_failed_toast": "Nem sikerült titkosítani az üzenetet! További részletekért nézd meg a logcat-et.",
+        "accept_public_key_success_toast": "Publikus kulcs elfogadva!",
+        "accept_secret_key_success_toast": "Siker! Most már küldhetsz és fogadhatsz titkosított üzeneteket ezzel a barátoddal.",
+        "accept_secret_button": "Titok elfogadása",
+        "outgoing_secret_message": "Kulcs cserélésre a válasz",
+        "incoming_secret_message": "A barátod elfogadta a publikus kulcsot. Kattints lejjebb az elfogadáshoz."
     }
 }

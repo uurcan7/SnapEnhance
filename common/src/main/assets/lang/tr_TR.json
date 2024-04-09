@@ -633,6 +633,10 @@
                             }
                         },
                         "name": "Daha İyi Konum"
+                    },
+                    "hide_active_music": {
+                        "name": "Aktif Müziği Gizle",
+                        "description": "Snapchat'in müzik dinlediğinizi bilmesini engeller\nBu sayede müzik dinlerken ses kontrol düğmelerini kullanarak fotoğraf çekebilirsiniz"
                     }
                 }
             },
