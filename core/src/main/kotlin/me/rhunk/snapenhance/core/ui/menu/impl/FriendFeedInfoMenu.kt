@@ -259,30 +259,6 @@ class FriendFeedInfoMenu : AbstractMenu() {
         builder.show()
     }
 
-    private fun getCurrentConversationInfo(): Pair<String, String?> {
-        val messaging = context.feature(Messaging::class)
-        val focusedConversationTargetUser: String? = messaging.lastFetchConversationUserUUID?.toString()
-
-        //mapped conversation fetch (may not work with legacy sc versions)
-        messaging.lastFetchGroupConversationUUID?.let {
-            context.database.getFeedEntryByConversationId(it.toString())?.let { friendFeedInfo ->
-                val participantSize = friendFeedInfo.participantsSize
-                return it.toString() to if (participantSize == 1) focusedConversationTargetUser else null
-            }
-            throw IllegalStateException("No conversation found")
-        }
-
-        //old conversation fetch
-        val conversationId = if (messaging.lastFetchConversationUUID == null && focusedConversationTargetUser != null) {
-            val conversation: UserConversationLink = context.database.getConversationLinkFromUserId(focusedConversationTargetUser) ?: throw IllegalStateException("No conversation found")
-            conversation.clientConversationId!!.trim().lowercase()
-        } else {
-            messaging.lastFetchConversationUUID.toString()
-        }
-
-        return conversationId to focusedConversationTargetUser
-    }
-
     private fun createToggleFeature(viewConsumer: ((View) -> Unit), value: String, checked: () -> Boolean, toggle: (Boolean) -> Unit) {
         viewConsumer(Switch(context.androidContext).apply {
             text = this@FriendFeedInfoMenu.context.translation[value]
@@ -301,7 +277,13 @@ class FriendFeedInfoMenu : AbstractMenu() {
         val friendFeedMenuOptions by context.config.userInterface.friendFeedMenuButtons
         if (friendFeedMenuOptions.isEmpty()) return
 
-        val (conversationId, targetUser) = getCurrentConversationInfo()
+        val messaging = context.feature(Messaging::class)
+        val conversationId = messaging.lastFocusedConversationId ?: run {
+            context.shortToast("No conversation focused!")
+            return
+        }
+        val targetUser = context.database.getDMOtherParticipant(conversationId)
+        messaging.resetLastFocusedConversation()
 
         val translation = context.translation.getCategory("friend_menu_option")
         if (friendFeedMenuOptions.contains("conversation_info")) {
