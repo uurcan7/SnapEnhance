@@ -173,7 +173,7 @@ class DownloadProcessor (
         fun updateDownloadProgress() {
             pendingTask.updateProgress(
                 inputMediaProgress.values.joinToString("\n"),
-                progress = (inputMediaDownloadedBytes.values.sum() * 100 / totalSize).toInt().coerceIn(0, 100)
+                progress = (inputMediaDownloadedBytes.values.sum() * 100 / totalSize.coerceAtLeast(1)).toInt().coerceIn(0, 100)
             )
         }
 
