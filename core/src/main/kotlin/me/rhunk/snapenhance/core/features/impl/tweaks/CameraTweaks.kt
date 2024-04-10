@@ -94,10 +94,8 @@ class CameraTweaks : Feature("Camera Tweaks", loadParams = FeatureLoadParams.ACT
                 val customFrameRate = (if (isFrontCamera) config.frontCustomFrameRate.getNullable() else config.backCustomFrameRate.getNullable())?.toIntOrNull() ?: return@hook
                 val fpsRanges = param.getResult() as? Array<*> ?: return@hook
 
-                if (customFrameRate <= 30) {
-                    param.setResult(arrayOf(Range(customFrameRate, customFrameRate)))
-                    return@hook
-                }
+                param.setResult(arrayOf(Range(customFrameRate, customFrameRate)))
+                if (customFrameRate <= 30) return@hook
 
                 val closestMaxFps = fpsRanges.mapNotNull {
                     (it as? Range<*>)?.upper?.toString()?.toIntOrNull()
