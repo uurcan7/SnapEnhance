@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.kotlinAndroid) apply false
 }
 
-var versionName = "2.0.0"
-var versionCode = 200
+var versionName = "2.0.1"
+var versionCode = 201
 
 rootProject.ext.set("appVersionName", versionName)
 rootProject.ext.set("appVersionCode", versionCode)
