@@ -1,4 +1,4 @@
-name: Beta CI
+name: Debug CI
 on:
   workflow_dispatch:
       inputs:
@@ -6,6 +6,8 @@ on:
           description: 'Upload to CI channel'
           required: false
           type: boolean
+  pull_request:
+    branches: ["dev"]
 
 jobs:
   job_armv8:
