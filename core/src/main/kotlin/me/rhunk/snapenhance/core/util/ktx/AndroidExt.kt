@@ -22,9 +22,12 @@ fun Resources.getIdentifier(name: String, type: String): Int {
     return getIdentifier(name, type, Constants.SNAPCHAT_PACKAGE_NAME)
 }
 
-@SuppressLint("DiscouragedApi")
 fun Resources.getId(name: String): Int {
-    return getIdentifier(name, "id", Constants.SNAPCHAT_PACKAGE_NAME)
+    return getIdentifier(name, "id")
+}
+
+fun Resources.getLayoutId(name: String): Int {
+    return getIdentifier(name, "layout")
 }
 
 fun Resources.getDimens(name: String): Int {
