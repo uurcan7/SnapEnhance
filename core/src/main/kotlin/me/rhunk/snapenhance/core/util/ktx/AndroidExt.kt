@@ -31,11 +31,11 @@ fun Resources.getLayoutId(name: String): Int {
 }
 
 fun Resources.getDimens(name: String): Int {
-    return getDimensionPixelSize(getIdentifier(name, "dimen"))
+    return getDimensionPixelSize(getIdentifier(name, "dimen").takeIf { it > 0 } ?: return 0)
 }
 
 fun Resources.getDimensFloat(name: String): Float {
-    return getDimension(getIdentifier(name, "dimen"))
+    return getDimension(getIdentifier(name, "dimen").takeIf { it > 0 } ?: return 0F)
 }
 
 fun Resources.getStyledAttributes(name: String, theme: Theme): TypedArray {
