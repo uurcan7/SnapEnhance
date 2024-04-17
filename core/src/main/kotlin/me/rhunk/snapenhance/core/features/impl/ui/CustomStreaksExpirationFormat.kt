@@ -26,7 +26,7 @@ class CustomStreaksExpirationFormat: Feature("CustomStreaksExpirationFormat", lo
                 val expirationTime = streaksExpiration.getObjectField(expirationTimeField.get() ?: return@hook) as? Long ?: return@hook
                 val delta = (expirationTime - System.currentTimeMillis()).milliseconds
 
-                val hourGlassEmoji = if (delta.inWholeMilliseconds in 1..hourGlassTimeRemaining) if (expirationTime % 2 == 0L) "⏳" else "⌛" else ""
+                val hourGlassEmoji = if (delta.inWholeMilliseconds in 1..hourGlassTimeRemaining) if (expirationTime % 2 == 0L) "\u23F3" else "\u231B" else ""
 
                 param.setResult(expirationFormat
                     .replace("%c", streaksCount.toString())
