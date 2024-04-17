@@ -128,6 +128,7 @@ class FeatureManager(
             BetterLocation(),
             MediaFilePicker(),
             HideActiveMusic(),
+            AutoOpenSnaps(),
         )
 
         initializeFeatures()

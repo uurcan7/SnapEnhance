@@ -199,6 +199,14 @@
                     "whitelist": "Unsaveable Messages"
                 }
             },
+            "auto_open_snaps": {
+                "name": "Auto Open Snaps",
+                "description": "Automatically opens Snaps when receiving them",
+                "options": {
+                    "blacklist": "Exclude from Auto Open Snaps",
+                    "whitelist": "Auto Open Snaps"
+                }
+            },
             "hide_friend_feed": {
                 "name": "Hide from Friend Feed"
             },
@@ -945,6 +953,7 @@
                 "auto_download": "\u2B07\uFE0F Auto Download",
                 "auto_save": "\uD83D\uDCAC Auto Save Messages",
                 "unsaveable_messages": "\u2B07\uFE0F Unsaveable Messages",
+                "auto_open_snaps": "\uD83D\uDCF7 Auto Open Snaps",
                 "stealth": "\uD83D\uDC7B Stealth Mode",
                 "mark_snaps_as_seen": "\uD83D\uDC40 Mark Snaps as seen",
                 "mark_stories_as_seen_locally": "\uD83D\uDC40 Mark Stories as seen locally",
@@ -1355,6 +1364,11 @@
         "outgoing_secret_message": "Key exchange response",
         "incoming_pk_message": "You just received a public key request. Click below to accept it.",
         "incoming_secret_message": "Your friend just accepted your public key. Click below to accept the secret."
+    },
+
+    "auto_open_snaps": {
+        "title": "Auto Open Snaps",
+        "notification_content": "{count} Snaps opened"
     },
 
     "suspend_location_updates": {
