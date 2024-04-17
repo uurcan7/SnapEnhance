@@ -129,6 +129,7 @@ class FeatureManager(
             MediaFilePicker(),
             HideActiveMusic(),
             AutoOpenSnaps(),
+            CustomStreaksExpirationFormat(),
         )
 
         initializeFeatures()
