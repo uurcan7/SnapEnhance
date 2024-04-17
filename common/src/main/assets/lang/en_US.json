@@ -490,7 +490,7 @@
                     },
                     "auto_mark_as_read": {
                         "name": "Auto Mark as Read",
-                        "description": "Automatically marks messages as read when sending a message to a conversation, even when Stealth Mode is enabled"
+                        "description": "Automatically marks messages/snaps as read even when Stealth Mode is enabled"
                     },
                     "loop_media_playback": {
                         "name": "Loop Media Playback",
@@ -1092,6 +1092,10 @@
                 "location_indicator": "Adds a \uD83D\uDCCD icon to snaps when they have been sent with location enabled",
                 "ovf_editor_indicator": "Indicates if a snap has been sent using OVF Editor",
                 "director_mode_indicator": "Adds a \u270F\uFE0F icon to snaps when they have been sent using Director Mode, which can be used to send gallery images as snaps"
+            },
+            "auto_mark_as_read": {
+                "conversation_read": "Mark conversation as read when sending a message",
+                "snap_reply": "Mark snaps as read when replying to them"
             }
         }
     },
