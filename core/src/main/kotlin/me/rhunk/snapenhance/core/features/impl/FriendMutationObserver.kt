@@ -17,15 +17,17 @@ class FriendMutationObserver: Feature("FriendMutationObserver", loadParams = Fea
     private val translation by lazy { context.translation.getCategory("friend_mutation_observer") }
     private val addSourceCache = EvictingMap<String, String>(500)
 
-    private val notificationManager get() = context.androidContext.getSystemService(NotificationManager::class.java)
-    private val channelId = "friend_mutation_observer".also {
-        notificationManager.createNotificationChannel(
-            NotificationChannel(
-                it,
-                translation["notification_channel_name"],
-                NotificationManager.IMPORTANCE_HIGH
+    private val notificationManager by lazy { context.androidContext.getSystemService(NotificationManager::class.java) }
+    private val channelId by lazy {
+        "friend_mutation_observer".also {
+            notificationManager.createNotificationChannel(
+                NotificationChannel(
+                    it,
+                    translation["notification_channel_name"],
+                    NotificationManager.IMPORTANCE_HIGH
+                )
             )
-        )
+        }
     }
 
     fun getFriendAddSource(userId: String): String? {
