@@ -951,6 +951,7 @@
                 "download_button": "Add download button",
                 "mark_as_read_button": "Mark as Read button",
                 "mark_as_read_and_save_in_chat": "Save in Chat when marking as read (depends on Auto Save)",
+                "friend_add_source": "Show friend add source",
                 "group": "Group notifications"
             },
             "friend_feed_menu_buttons": {
