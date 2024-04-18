@@ -538,6 +538,10 @@
                         "name": "Instant Delete",
                         "description": "Removes the confirmation dialog when deleting messages"
                     },
+                    "relationship_notifier": {
+                        "name": "Relationship Notifier",
+                        "description": "Notifies you when someone removes you as a friend"
+                    },
                     "better_notifications": {
                         "name": "Better Notifications",
                         "description": "Adds more information in received notifications"
@@ -1374,6 +1378,13 @@
     "auto_open_snaps": {
         "title": "Auto Open Snaps",
         "notification_content": "{count} Snaps opened"
+    },
+
+    "friend_mutation_observer": {
+        "notification_channel_name": "Friend Mutation Observer",
+        "removed_friend_notification_title": "Friend Removed",
+        "removed_friend_notification_content": "{username} has removed you as a friend",
+        "removed_friend_notification_content_with_display_name": "{displayName} ({username}) has removed you as a friend"
     },
 
     "suspend_location_updates": {

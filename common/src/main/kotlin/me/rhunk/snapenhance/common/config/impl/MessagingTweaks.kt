@@ -73,6 +73,7 @@ class MessagingTweaks : ConfigContainer() {
         nativeHooks()
     }
     val instantDelete = boolean("instant_delete") { requireRestart() }
+    val relationshipNotifier = boolean("relationship_notifier") { requireRestart() }
     val betterNotifications = multiple("better_notifications",
         "chat_preview",
         "media_preview",
