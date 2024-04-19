@@ -1115,7 +1115,7 @@
                 "conversation_read": "Mark conversation as read when sending a message",
                 "snap_reply": "Mark snaps as read when replying to them"
             },
-            "friend_mutation_observer": {
+            "friend_mutation_notifier": {
                 "remove_friend": "Notify when someone removes you as a friend",
                 "birthday_changes": "Notify when someone changes their birthday",
                 "bitmoji_selfie_changes": "Notify when someone changes their Bitmoji selfie",

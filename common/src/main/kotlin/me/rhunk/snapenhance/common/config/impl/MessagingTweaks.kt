@@ -73,7 +73,7 @@ class MessagingTweaks : ConfigContainer() {
         nativeHooks()
     }
     val instantDelete = boolean("instant_delete") { requireRestart() }
-    val friendMutationObserver = multiple("friend_mutation_observer",
+    val friendMutationNotifier = multiple("friend_mutation_notifier",
         "remove_friend",
         "birthday_changes",
         "bitmoji_selfie_changes",

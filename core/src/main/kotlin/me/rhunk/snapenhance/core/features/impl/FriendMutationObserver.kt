@@ -73,7 +73,7 @@ class FriendMutationObserver: Feature("FriendMutationObserver", loadParams = Fea
     }
 
     override fun init() {
-        val config by context.config.messaging.friendMutationObserver
+        val config by context.config.messaging.friendMutationNotifier
 
         context.event.subscribe(NetworkApiRequestEvent::class) { event ->
             if (!event.url.contains("ami/friends")) return@subscribe
