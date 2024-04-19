@@ -534,10 +534,6 @@
                         "name": "Prevent Message Sending",
                         "description": "Prevents sending certain types of messages"
                     },
-                    "instant_delete": {
-                        "name": "Instant Delete",
-                        "description": "Removes the confirmation dialog when deleting messages"
-                    },
                     "friend_mutation_notifier": {
                         "name": "Friend Mutation Notifier",
                         "description": "Notifies you when something changes in a friend's profile"
@@ -1055,6 +1051,7 @@
                 "3d": "3D Bitmoji"
             },
             "disable_confirmation_dialogs": {
+                "erase_message": "Erase Message",
                 "remove_friend": "Remove Friend",
                 "block_friend": "Block Friend",
                 "ignore_friend": "Ignore Friend",

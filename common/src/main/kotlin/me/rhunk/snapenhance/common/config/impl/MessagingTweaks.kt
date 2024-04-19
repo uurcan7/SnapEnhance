@@ -72,7 +72,6 @@ class MessagingTweaks : ConfigContainer() {
         customOptionTranslationPath = "features.options.notifications"
         nativeHooks()
     }
-    val instantDelete = boolean("instant_delete") { requireRestart() }
     val friendMutationNotifier = multiple("friend_mutation_notifier",
         "remove_friend",
         "birthday_changes",
