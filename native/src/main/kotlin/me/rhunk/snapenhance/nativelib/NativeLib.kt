@@ -62,4 +62,6 @@ class NativeLib {
     private external fun init(): Boolean
     private external fun loadConfig(config: NativeConfig)
     private external fun lockDatabase(name: String, callback: Runnable)
+    external fun waitForComposer()
+    external fun composerEval(code: String): String?
 }
