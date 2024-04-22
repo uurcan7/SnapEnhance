@@ -1,9 +1,3 @@
-const callExport = require('composer_core/src/DeviceBridge')[EXPORTED_FUNCTION_NAME];
-
-if (!callExport) {
-    return "No export function found";
-}
-
 const config = callExport("getConfig");
 
 if (config.composerLogs) {

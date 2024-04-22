@@ -93,20 +93,32 @@ namespace ComposerHook {
 
     static uintptr_t global_instance;
     static JSContext *global_ctx;
+    static std::string* composer_loader;
 
-    HOOK_DEF(JSValue, js_eval, uintptr_t instance, JSContext *ctx, uintptr_t this_obj, uint8_t *input, uintptr_t input_len, const char *filename, unsigned int flags, unsigned int scope_idx) {
+    HOOK_DEF(JSValue, js_eval, uintptr_t instance, JSContext *ctx, uintptr_t this_obj, char *input, uintptr_t input_len, const char *filename, unsigned int flags, unsigned int scope_idx) {
         if (global_instance == 0 || global_ctx == nullptr) {
             global_instance = instance;
             global_ctx = ctx;
-        }
+            LOGD("Injecting composer loader");
 
+            composer_loader->resize(composer_loader->size() + input_len);
+            memcpy((void*) (composer_loader->c_str() + composer_loader->size() - input_len), input, input_len);
+
+            input = (char*) composer_loader->c_str();
+            input_len = composer_loader->size();
+        } else {
+            if (composer_loader != nullptr) {
+                delete composer_loader;
+                composer_loader = nullptr;
+            }
+        }
         return js_eval_original(instance, ctx, this_obj, input, input_len, filename, flags, scope_idx);
     }
 
-    void waitForComposer(JNIEnv *, jobject) {
-        while (global_instance == 0 || global_ctx == nullptr) {
-            usleep(10000);
-        }
+    void setComposerLoader(JNIEnv *env, jobject, jstring code) {
+        auto code_str = env->GetStringUTFChars(code, nullptr);
+        composer_loader = new std::string(code_str, env->GetStringUTFLength(code));
+        env->ReleaseStringUTFChars(code, code_str);
     }
 
     jstring composerEval(JNIEnv *env, jobject, jstring script) {
@@ -117,7 +129,7 @@ namespace ComposerHook {
 
         auto script_str = env->GetStringUTFChars(script, nullptr);
         auto length = env->GetStringUTFLength(script);
-        auto jsvalue = js_eval_original(global_instance, global_ctx, (uintptr_t) &global_ctx->global_obj, (uint8_t *) script_str, length, "<input>", 0, 0);
+        auto jsvalue = js_eval_original(global_instance, global_ctx, (uintptr_t) &global_ctx->global_obj, (char *) script_str, length, "<eval>", 0, 0);
         env->ReleaseStringUTFChars(script, script_str);
 
         if (jsvalue.tag == JS_TAG_STRING) {
@@ -157,12 +169,11 @@ namespace ComposerHook {
     }
 
     void init() {
-        if (!ARM64) return;
         auto js_eval_ptr = util::find_signature(
             common::client_module.base,
             common::client_module.size,
-            "00 E4 00 6F 29 00 80 52 76 00 04 8B",
-            -0x28
+            ARM64 ? "00 E4 00 6F 29 00 80 52 76 00 04 8B" : "A1 B0 07 92 81 46",
+            ARM64 ? -0x28 : -0x7
         );
         if (js_eval_ptr == 0) {
             LOGE("js_eval_ptr signature not found");

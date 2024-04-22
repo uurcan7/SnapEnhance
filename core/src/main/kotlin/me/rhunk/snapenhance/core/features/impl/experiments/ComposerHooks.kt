@@ -186,20 +186,15 @@ class ComposerHooks: Feature("ComposerHooks", loadParams = FeatureLoadParams.ACT
             return
         }
 
-        val hookResult = context.native.composerEval("""
-            (() => { try { const EXPORTED_FUNCTION_NAME = "$exportedFunctionName"; $loaderScript
+        context.native.setComposerLoader("""
+            (() => { const callExport = require('composer_core/src/DeviceBridge')["$exportedFunctionName"]; try { $loaderScript
                 } catch (e) {
-                    return e.toString() + "\n" + e.stack;
+                    try {
+                        callExport("log", "error", e.toString() + "\n" + e.stack);
+                    } catch (t) {}
                 }
-                return "success";
-            })()
+            })();
         """.trimIndent().trim())
-
-        if (hookResult != "success") {
-            context.shortToast(("Composer loader failed : $hookResult").also {
-                context.log.error(it)
-            })
-        }
 
         if (config.composerConsole.get()) {
             injectConsole()
@@ -221,16 +216,6 @@ class ComposerHooks: Feature("ComposerHooks", loadParams = FeatureLoadParams.ACT
             }
         }
 
-        var composerThreadTask: (() -> Unit)? = null
-
-        findClass("com.snap.composer.callable.ComposerFunctionNative").hook("nativePerform", HookStage.BEFORE) {
-            composerThreadTask?.invoke()
-            composerThreadTask = null
-        }
-
-        context.coroutineScope.launch {
-            context.native.waitForComposer()
-            composerThreadTask = ::loadHooks
-        }
+        loadHooks()
     }
 }

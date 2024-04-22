@@ -772,7 +772,7 @@
                         "properties": {
                             "composer_hooks": {
                                 "name": "Composer Hooks",
-                                "description": "Injects code into the Composer cross-platform UI framework (arm64 only)",
+                                "description": "Injects code into the Composer cross-platform UI framework",
                                 "properties": {
                                     "bypass_camera_roll_limit": {
                                         "name": "Bypass Camera Roll Limit",
@@ -780,7 +780,7 @@
                                     },
                                     "composer_console": {
                                         "name": "Composer Console",
-                                        "description": "Allows you to execute JavaScript code in Composer"
+                                        "description": "Allows you to execute JavaScript code in Composer (arm64 only)"
                                     },
                                     "composer_logs": {
                                         "name": "Composer Logs",

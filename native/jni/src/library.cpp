@@ -2,7 +2,6 @@
 #include <string>
 #include <dobby.h>
 #include <vector>
-#include <thread>
 
 #include "logger.h"
 #include "common.h"
@@ -33,21 +32,13 @@ bool JNICALL init(JNIEnv *env, jobject clazz) {
 
     util::remap_sections(BUILD_PACKAGE);
 
-    auto threads = std::vector<std::thread>();
-
-    #define RUN(body) \
-        threads.push_back(std::thread([&] { body; }))
-
-    RUN(UnaryCallHook::init(env));
-    RUN(AssetHook::init(env));
-    RUN(FstatHook::init());
-    RUN(SqliteMutexHook::init());
-    RUN(DuplexHook::init(env));
+    UnaryCallHook::init(env);
+    AssetHook::init(env);
+    FstatHook::init();
+    SqliteMutexHook::init();
+    DuplexHook::init(env);
     if (common::native_config->composer_hooks) {
-        RUN(ComposerHook::init());
-    }
-    for (auto &thread : threads) {
-        thread.join();
+        ComposerHook::init();
     }
 
     LOGD("Native initialized");
@@ -94,7 +85,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *_) {
     methods.push_back({"init", "()Z", (void *)init});
     methods.push_back({"loadConfig", "(L" BUILD_NAMESPACE "/NativeConfig;)V", (void *)load_config});
     methods.push_back({"lockDatabase", "(Ljava/lang/String;Ljava/lang/Runnable;)V", (void *)lock_database});
-    methods.push_back({"waitForComposer", "()V", (void *) ComposerHook::waitForComposer});
+    methods.push_back({"setComposerLoader", "(Ljava/lang/String;)V", (void *) ComposerHook::setComposerLoader});
     methods.push_back({"composerEval", "(Ljava/lang/String;)Ljava/lang/String;",(void *) ComposerHook::composerEval});
 
     env->RegisterNatives(env->FindClass(std::string(BUILD_NAMESPACE "/NativeLib").c_str()), methods.data(), methods.size());
