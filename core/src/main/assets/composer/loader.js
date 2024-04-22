@@ -33,9 +33,9 @@ if (LOADER_CONFIG.logPrefix) {
 if (LOADER_CONFIG.bypassCameraRollLimit) {
     ((module) => {
         module.MultiSelectClickHandler = new Proxy(module.MultiSelectClickHandler, {
-            construct: function(target, args) {
+            construct: function(target, args, newTarget) {
                 args[1].selectionLimit = 9999999;
-                return new target(...args);
+                return Reflect.construct(target, args, newTarget);
             },
         });
     })(require('memories_ui/src/clickhandlers/MultiSelectClickHandler'))
