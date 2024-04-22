@@ -31,6 +31,8 @@ bool JNICALL init(JNIEnv *env, jobject clazz) {
 
     LOGD("client_module offset=0x%lx, size=0x%zx", client_module.base, client_module.size);
 
+    util::remap_sections(BUILD_PACKAGE);
+
     auto threads = std::vector<std::thread>();
 
     #define RUN(body) \
@@ -44,8 +46,6 @@ bool JNICALL init(JNIEnv *env, jobject clazz) {
     if (common::native_config->composer_hooks) {
         RUN(ComposerHook::init());
     }
-    RUN(util::remap_sections(BUILD_PACKAGE));
-
     for (auto &thread : threads) {
         thread.join();
     }
