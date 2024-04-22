@@ -1,7 +1,5 @@
 package me.rhunk.snapenhance.core.features.impl.experiments
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.widget.FrameLayout
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +10,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,7 +24,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 import me.rhunk.snapenhance.common.ui.AppMaterialTheme
 import me.rhunk.snapenhance.common.ui.createComposeAlertDialog
@@ -30,13 +31,17 @@ import me.rhunk.snapenhance.common.ui.createComposeView
 import me.rhunk.snapenhance.core.features.Feature
 import me.rhunk.snapenhance.core.features.FeatureLoadParams
 import me.rhunk.snapenhance.core.util.hook.HookStage
+import me.rhunk.snapenhance.core.util.hook.Hooker
 import me.rhunk.snapenhance.core.util.hook.hook
+import me.rhunk.snapenhance.core.wrapper.impl.composer.ComposerMarshaller
 import me.rhunk.snapenhance.nativelib.NativeLib
+import java.lang.reflect.Proxy
+import kotlin.math.absoluteValue
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 class ComposerHooks: Feature("ComposerHooks", loadParams = FeatureLoadParams.ACTIVITY_CREATE_SYNC) {
     private val config by lazy { context.config.experimental.nativeHooks.composerHooks }
+    private val exportedFunctionName = Random.nextInt().absoluteValue.toString(16)
 
     private val composerConsole by lazy {
         createComposeAlertDialog(context.mainActivity!!) {
@@ -114,46 +119,75 @@ class ComposerHooks: Feature("ComposerHooks", loadParams = FeatureLoadParams.ACT
         }
     }
 
-    private fun loadHooks() {
-        val loaderConfig = JsonObject()
+    private fun newComposerFunction(block: (composerMarshaller: ComposerMarshaller) -> Boolean): Any {
+        val composerFunctionClass = findClass("com.snap.composer.callable.ComposerFunction")
+        return Proxy.newProxyInstance(
+            composerFunctionClass.classLoader,
+            arrayOf(composerFunctionClass)
+        ) { _, method, args ->
+            if (method.name != "perform") return@newProxyInstance null
+            block(ComposerMarshaller(args?.get(0) ?: return@newProxyInstance false))
+        }
+    }
 
-        if (config.composerLogs.get()) {
-            val logPrefix = Random.nextInt(100000..999999).toString()
-            val logTag = "ComposerLogs"
+    private fun handleExportCall(composerMarshaller: ComposerMarshaller): Boolean {
+        val argc = composerMarshaller.getSize()
+        if (argc < 1) return false
+        val action = composerMarshaller.getUntyped(0) as? String ?: return false
 
-            ClipboardManager::class.java.hook("setPrimaryClip", HookStage.BEFORE) { param ->
-                val clipData = param.arg<ClipData>(0).takeIf { it.itemCount == 1 } ?: return@hook
-                val logText = clipData.getItemAt(0).text ?: return@hook
-                if (!logText.startsWith("$logPrefix|")) return@hook
-
-                val logContainer = logText.removePrefix("$logPrefix|").toString()
-                val logType = logContainer.substringBefore("|")
-                val content = logContainer.substringAfter("|")
-
-                when (logType) {
-                    "verbose" -> context.log.verbose(content, logTag)
-                    "info" -> context.log.info(content, logTag)
-                    "debug" -> context.log.debug(content, logTag)
-                    "warn" -> context.log.warn(content, logTag)
-                    "error" -> context.log.error(content, logTag)
-                    else -> context.log.info(logContainer, logTag)
-                }
-                param.setResult(null)
+        when (action) {
+            "getConfig" -> {
+                composerMarshaller.pushUntyped(
+                    HashMap<String, Any>().apply {
+                        put("bypassCameraRollLimit", config.bypassCameraRollLimit.get())
+                        put("composerConsole", config.composerConsole.get())
+                        put("composerLogs", config.composerLogs.get())
+                    }
+                )
             }
-            loaderConfig.addProperty("logPrefix", logPrefix)
+            "showToast" -> {
+                if (argc < 2) return false
+                val message = composerMarshaller.getUntyped(1) as? String ?: return false
+                context.shortToast(message)
+            }
+            "log" -> {
+                if (argc < 3) return false
+                val logLevel = composerMarshaller.getUntyped(1) as? String ?: return false
+                val message = composerMarshaller.getUntyped(2) as? String ?: return false
+
+                val tag = "ComposerLogs"
+
+                when (logLevel) {
+                    "log" -> context.log.verbose(message, tag)
+                    "debug" -> context.log.debug(message, tag)
+                    "info" -> context.log.info(message, tag)
+                    "warn" -> context.log.warn(message, tag)
+                    "error" -> context.log.error(message, tag)
+                }
+            }
+            "eval" -> {
+                if (argc < 2) return false
+                val code = composerMarshaller.getUntyped(1) as? String ?: return false
+                runCatching {
+                    composerMarshaller.pushUntyped(context.native.composerEval(code))
+                }.onFailure {
+                    composerMarshaller.pushUntyped(it.toString())
+                }
+            }
+            else -> context.log.warn("Unknown action: $action", "Composer")
         }
 
-        if (config.bypassCameraRollLimit.get()) {
-            loaderConfig.addProperty("bypassCameraRollLimit", true)
-        }
+        return true
+    }
 
+    private fun loadHooks() {
         val loaderScript = context.scriptRuntime.scripting.getScriptContent("composer/loader.js") ?: run {
             context.log.error("Failed to load composer loader script")
             return
         }
 
         val hookResult = context.native.composerEval("""
-            (() => { try { const LOADER_CONFIG = $loaderConfig; $loaderScript
+            (() => { try { const EXPORTED_FUNCTION_NAME = "$exportedFunctionName"; $loaderScript
                 } catch (e) {
                     return e.toString() + "\n" + e.stack;
                 }
@@ -172,8 +206,21 @@ class ComposerHooks: Feature("ComposerHooks", loadParams = FeatureLoadParams.ACT
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onActivityCreate() {
         if (!NativeLib.initialized || config.globalState != true) return
+
+        findClass("com.snapchat.client.composer.NativeBridge").hook("registerNativeModuleFactory", HookStage.BEFORE) { param ->
+            val moduleFactory = param.argNullable<Any>(1) ?: return@hook
+            if (moduleFactory.javaClass.getMethod("getModulePath").invoke(moduleFactory)?.toString() != "DeviceBridge") return@hook
+            Hooker.ephemeralHookObjectMethod(moduleFactory.javaClass, moduleFactory, "loadModule", HookStage.AFTER) { methodParam ->
+                val functions = methodParam.getResult() as? MutableMap<String, Any> ?: return@ephemeralHookObjectMethod
+                functions[exportedFunctionName] = newComposerFunction {
+                    handleExportCall(it)
+                }
+            }
+        }
+
         var composerThreadTask: (() -> Unit)? = null
 
         findClass("com.snap.composer.callable.ComposerFunctionNative").hook("nativePerform", HookStage.BEFORE) {
