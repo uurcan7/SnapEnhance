@@ -928,10 +928,6 @@
                         "name": "Custom Streaks Expiration Format",
                         "description": "Customizes the Streaks Expiration format\n\nAvailable variables:\n - %c: Streaks Count\n - %e: Hourglass Emoji\n - %d: Days\n - %h: Hours\n - %m: Minutes\n - %s: Seconds\n - %w: Remaining Time"
                     },
-                    "disable_composer_modules": {
-                        "name": "Disable Composer Modules",
-                        "description": "Prevents selected composer modules from being loaded\nNames must be separated by a comma"
-                    },
                     "prevent_forced_logout": {
                         "name": "Prevent Forced Logout",
                         "description": "Prevents Snapchat from logging you out when you login on another device"

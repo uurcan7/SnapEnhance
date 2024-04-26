@@ -104,7 +104,6 @@ class FeatureManager(
             HalfSwipeNotifier(),
             DisableConfirmationDialogs(),
             MixerStories(),
-            DisableComposerModules(),
             MessageIndicators(),
             EditTextOverride(),
             PreventForcedLogout(),
