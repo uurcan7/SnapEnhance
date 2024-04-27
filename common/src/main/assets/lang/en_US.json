@@ -358,6 +358,10 @@
                         "name": "Enable App Appearance Settings",
                         "description": "Enables the hidden App Appearance Setting\nMay not be required on newer Snapchat versions"
                     },
+                    "amoled_dark_mode": {
+                        "name": "AMOLED Dark Mode",
+                        "description": "Enables AMOLED dark mode\nMake sure Snapchats Dark mode is enabled"
+                    },
                     "customize_ui": {
                         "name": "Colors",
                         "description": "Customize Snapchats Colors",
