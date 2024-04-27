@@ -249,6 +249,7 @@ Thanks to everyone involved including the [third-party libraries](https://github
 - [TheVisual](https://github.com/TheVisual)
 - [CanerKaraca23](https://github.com/CanerKaraca23)
 - [bocajthomas](https://github.com/bocajthomas)
+- [w451](https://github.com/w451)
 
 ## Donate
 - LTC: LbBnT9GxgnFhwy891EdDKqGmpn7XtduBdE

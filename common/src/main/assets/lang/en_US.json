@@ -636,6 +636,10 @@
                                 "name": "Coordinates",
                                 "description": "Set the coordinates of the spoofed location"
                             },
+                            "walk_radius": {
+                                "name": "Walk Radius",
+                                "description": "Randomly walk around within this radius (ft)"
+                            },
                             "always_update_location": {
                                 "name": "Always Update Location",
                                 "description": "Force Snapchat to update location even if no GPS data is received"
