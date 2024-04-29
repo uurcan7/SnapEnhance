@@ -118,7 +118,11 @@ class BridgeClient(
     }
 
     fun broadcastLog(tag: String, level: String, message: String) {
-        safeServiceCall { service.broadcastLog(tag, level, message) }
+        message.chunked(1024 * 256).forEach {
+            safeServiceCall {
+                service.broadcastLog(tag, level, it)
+            }
+        }
     }
 
     //TODO: use interfaces instead of direct file access
