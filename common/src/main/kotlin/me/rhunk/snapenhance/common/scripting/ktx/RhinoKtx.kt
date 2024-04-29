@@ -10,9 +10,10 @@ import java.io.File
 
 private val rhinoAndroidHelper = RhinoAndroidHelper(null as File?)
 
-fun contextScope(f: Context.() -> Any?): Any? {
+fun contextScope(shouldOptimize: Boolean = false, f: Context.() -> Any?): Any? {
     val context = rhinoAndroidHelper.enterContext().apply {
         languageVersion = Context.VERSION_ES6
+        optimizationLevel = if (!shouldOptimize) -1 else 0
     }
     try {
         return context.f().let {
