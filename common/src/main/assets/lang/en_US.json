@@ -1061,6 +1061,7 @@
                 "snap": "Snap",
                 "typing": "Typing",
                 "stories": "Stories",
+                "speaking": "Speaking",
                 "chat_reaction": "DM Reaction",
                 "group_chat_reaction": "Group Reaction",
                 "initiate_audio": "Incoming Audio Call",
