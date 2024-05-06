@@ -40,6 +40,7 @@ import me.rhunk.snapenhance.core.ui.addForegroundDrawable
 import me.rhunk.snapenhance.core.ui.removeForegroundDrawable
 import me.rhunk.snapenhance.core.util.EvictingMap
 import me.rhunk.snapenhance.core.util.hook.HookStage
+import me.rhunk.snapenhance.core.util.hook.Hooker
 import me.rhunk.snapenhance.core.util.hook.hook
 import me.rhunk.snapenhance.core.util.ktx.getObjectField
 import me.rhunk.snapenhance.core.util.ktx.getObjectFieldOrNull
@@ -406,18 +407,74 @@ class EndToEndEncryption : MessagingRuleFeature(
         }
     }
 
+    private fun ProtoWriter.writeEncryptedMessage(
+        participantsIds: List<String>,
+        messageContent: ByteArray,
+    ) {
+        from(2) {
+            from(1) {
+                addVarInt(1, ENCRYPTED_MESSAGE_ID)
+                participantsIds.forEach { participantId ->
+                    val encryptedMessage = e2eeInterface.encryptMessage(participantId,
+                        messageContent
+                    ) ?: run {
+                        throw Exception("Failed to encrypt message for participant $participantId")
+                    }
+                    context.log.debug("encrypted message size = ${encryptedMessage.ciphertext.size}")
+                    from(2) {
+                        // participantId is hashed with iv to prevent leaking it when sending to multiple conversations
+                        addBuffer(1, hashParticipantId(participantId, encryptedMessage.iv))
+                        addBuffer(2, encryptedMessage.iv)
+                        addBuffer(3, encryptedMessage.ciphertext)
+                    }
+                }
+                if (ContentType.fromMessageContainer(ProtoReader(messageContent)) == ContentType.SNAP) {
+                    addVarInt(5, 1)
+                }
+            }
+        }
+    }
+
+    private fun MessageDestinations.getEndToEndConversations(): List<String> {
+        return conversations!!.filter { getState(it.toString()) && getE2EParticipants(it.toString()).isNotEmpty() }.map { it.toString() }
+    }
+
     override fun asyncInit() {
         if (!isEnabled) return
         val forceMessageEncryption by context.config.experimental.e2eEncryption.forceMessageEncryption
+
+        context.mappings.useMapper(CallbackMapper::class) {
+            callbacks.getClass("UploadDelegate")?.hook("uploadMedia", HookStage.BEFORE) { param ->
+                val messageDestinations = MessageDestinations(param.arg(1))
+                val uploadCallback = param.arg<Any>(2)
+                val e2eeConversations = messageDestinations.getEndToEndConversations()
+                if (e2eeConversations.isEmpty()) return@hook
+
+                if (messageDestinations.conversations!!.size != e2eeConversations.size || messageDestinations.stories?.isNotEmpty() == true) {
+                    context.log.debug("skipping encryption")
+                    return@hook
+                }
+
+                Hooker.hookObjectMethod(uploadCallback::class.java, uploadCallback, "onUploadFinished", HookStage.BEFORE) { methodParam ->
+                    val messageContent = MessageContent(methodParam.arg(1))
+                    runCatching {
+                        messageContent.content = ProtoWriter().apply {
+                            writeEncryptedMessage(e2eeConversations.map { getE2EParticipants(it) }.flatten().distinct(), messageContent.content!!)
+                        }.toByteArray()
+                    }.onFailure {
+                        context.log.error("Failed to encrypt message", it)
+                        context.longToast(translation["encryption_failed_toast"])
+                    }
+                }
+            }
+        }
 
         // trick to disable fidelius encryption
         context.event.subscribe(SendMessageWithContentEvent::class) { event ->
             val messageContent = event.messageContent
             val destinations = event.destinations
 
-            val e2eeConversations = destinations.conversations!!.filter { getState(it.toString()) && getE2EParticipants(it.toString()).isNotEmpty() }
-
-            if (e2eeConversations.isEmpty()) return@subscribe
+            val e2eeConversations = destinations.getEndToEndConversations().takeIf { it.isNotEmpty() } ?: return@subscribe
 
             if (e2eeConversations.size != destinations.conversations!!.size || destinations.stories?.isNotEmpty() == true) {
                 if (!forceMessageEncryption) return@subscribe
@@ -433,12 +490,19 @@ class EndToEndEncryption : MessagingRuleFeature(
             }
 
             event.addInvokeLater {
-                if (messageContent.contentType == ContentType.SNAP) {
-                    messageContent.contentType = ContentType.EXTERNAL_MEDIA
+                if (event.messageContent.localMediaReferences?.isEmpty() == true) {
+                    runCatching {
+                        event.messageContent.content = ProtoWriter().apply {
+                            writeEncryptedMessage(e2eeConversations.map { getE2EParticipants(it) }.flatten().distinct(), messageContent.content!!)
+                        }.toByteArray()
+                    }.onFailure {
+                        context.log.error("Failed to encrypt message", it)
+                        context.longToast(translation["encryption_failed_toast"])
+                    }
                 }
 
-                if (messageContent.contentType == ContentType.CHAT) {
-                    messageContent.contentType = ContentType.SHARE
+                if (event.messageContent.contentType == ContentType.SNAP) {
+                    event.messageContent.contentType = ContentType.EXTERNAL_MEDIA
                 }
             }
         }
@@ -446,83 +510,17 @@ class EndToEndEncryption : MessagingRuleFeature(
         context.event.subscribe(NativeUnaryCallEvent::class) { event ->
             if (event.uri != "/messagingcoreservice.MessagingCoreService/CreateContentMessage") return@subscribe
             val protoReader = ProtoReader(event.buffer)
-            var hasStory = false
-
-            val conversationIds = mutableListOf<SnapUUID>()
-            protoReader.eachBuffer(3) {
-                if (contains(2)) {
-                    hasStory = true
-                    return@eachBuffer
-                }
-                conversationIds.add(SnapUUID(getByteArray(1, 1, 1) ?: return@eachBuffer))
-            }
-
-            if (hasStory) {
-                context.log.debug("Skipping encryption for story message")
-                return@subscribe
-            }
-
-            if (conversationIds.any { !getState(it.toString()) || getE2EParticipants(it.toString()).isEmpty() }) {
-                context.log.debug("Skipping encryption for conversation ids: ${conversationIds.joinToString(", ")}")
-                return@subscribe
-            }
-
-            val participantsIds = conversationIds.map { getE2EParticipants(it.toString()) }.flatten().distinct()
-
-            if (participantsIds.isEmpty()) {
-                context.shortToast(translation["no_participants_to_encrypt_toast"])
-                return@subscribe
-            }
             val messageReader = protoReader.followPath(4) ?: return@subscribe
 
-            if (messageReader.getVarInt(4, 2, 1, 1) != null) {
-                return@subscribe
-            }
-
-            event.buffer = ProtoEditor(event.buffer).apply {
-                val contentType = fixContentType(
-                    ContentType.fromId(messageReader.getVarInt(2)?.toInt() ?: -1),
-                    messageReader.followPath(4) ?: return@apply
-                ) ?: return@apply
-                val messageContent = messageReader.getByteArray(4) ?: return@apply
-
-                runCatching {
+            if (messageReader.getVarInt(4, 2, 1, 5) == 1L) {
+                event.buffer = ProtoEditor(event.buffer).apply {
                     edit(4) {
-                        //set message content type
                         remove(2)
-                        addVarInt(2, contentType.id)
-
-                        //set encrypted content
-                        remove(4)
-                        add(4) {
-                            from(2) {
-                                from(1) {
-                                    addVarInt(1, ENCRYPTED_MESSAGE_ID)
-                                    participantsIds.forEach { participantId ->
-                                        val encryptedMessage = e2eeInterface.encryptMessage(participantId,
-                                            messageContent
-                                        ) ?: run {
-                                            context.log.error("Failed to encrypt message for $participantId")
-                                            return@forEach
-                                        }
-                                        context.log.debug("encrypted message size = ${encryptedMessage.ciphertext.size} for $participantId")
-                                        from(2) {
-                                            // participantId is hashed with iv to prevent leaking it when sending to multiple conversations
-                                            addBuffer(1, hashParticipantId(participantId, encryptedMessage.iv))
-                                            addBuffer(2, encryptedMessage.iv)
-                                            addBuffer(3, encryptedMessage.ciphertext)
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        addVarInt(2, ContentType.SNAP.id)
+                        context.log.verbose("fixed snap content type")
                     }
-                }.onFailure {
-                    event.canceled = true
-                    context.log.error("Failed to encrypt message", it)
-                    context.longToast(translation["encryption_failed_toast"])
-                }
-            }.toByteArray()
+                }.toByteArray()
+            }
         }
     }
 

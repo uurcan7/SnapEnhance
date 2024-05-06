@@ -12,4 +12,6 @@ class MessageContent(obj: Any?) : AbstractWrapper(obj) {
     var quotedMessage by field("mQuotedMessage") { QuotedMessage(it) }
     @get:JSGetter @set:JSSetter
     var contentType by enum("mContentType", ContentType.UNKNOWN)
+    @get:JSGetter @set:JSSetter
+    var localMediaReferences by field<ArrayList<*>>("mLocalMediaReferences")
 }
