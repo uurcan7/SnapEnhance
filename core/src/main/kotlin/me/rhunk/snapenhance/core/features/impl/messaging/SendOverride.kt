@@ -13,6 +13,7 @@ import me.rhunk.snapenhance.core.features.impl.experiments.MediaFilePicker
 import me.rhunk.snapenhance.core.messaging.MessageSender
 import me.rhunk.snapenhance.core.ui.ViewAppearanceHelper
 import me.rhunk.snapenhance.nativelib.NativeLib
+import java.util.Locale
 
 class SendOverride : Feature("Send Override", loadParams = FeatureLoadParams.INIT_SYNC) {
     private var isLastSnapSavable = false
@@ -129,7 +130,10 @@ class SendOverride : Feature("Send Override", loadParams = FeatureLoadParams.INI
                     "NOTE" -> {
                         localMessageContent.contentType = ContentType.NOTE
                         localMessageContent.content =
-                            MessageSender.audioNoteProto(messageProtoReader.getVarInt(3, 3, 5, 1, 1, 15) ?: context.feature(MediaFilePicker::class).lastMediaDuration ?: 0)
+                            MessageSender.audioNoteProto(
+                                messageProtoReader.getVarInt(3, 3, 5, 1, 1, 15) ?: context.feature(MediaFilePicker::class).lastMediaDuration ?: 0,
+                                Locale.getDefault().toLanguageTag()
+                            )
                     }
                 }
 
