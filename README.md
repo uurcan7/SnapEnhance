@@ -237,6 +237,7 @@ We do not collect any user information. However, please be aware that third-part
   - [rhino](https://github.com/mozilla/rhino)
   - [rhino-android](https://github.com/F43nd1r/rhino-android)
   - [libsu](https://github.com/topjohnwu/libsu)
+  - [colorpicker-compose](https://github.com/skydoves/colorpicker-compose)
 </details>
 
 ## Contributors
