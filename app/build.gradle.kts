@@ -149,6 +149,7 @@ dependencies {
     fullImplementation(libs.androidx.material3)
     fullImplementation(libs.coil.compose)
     fullImplementation(libs.coil.video)
+    fullImplementation(libs.colorpicker.compose)
     fullImplementation(libs.androidx.ui.tooling.preview)
     properties["debug_flavor"]?.let {
         debugImplementation(libs.androidx.ui.tooling)

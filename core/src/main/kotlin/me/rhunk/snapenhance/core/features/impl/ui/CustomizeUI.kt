@@ -25,13 +25,13 @@ class CustomizeUI: Feature("Customize UI", loadParams = FeatureLoadParams.ACTIVI
 
         //TODO: color picker
         val customizeUIConfig = context.config.userInterface.customizeUi
-        val effectiveTextColor by lazy { parseColor(customizeUIConfig.textColor.get()) }
-        val effectivesendAndReceivedTextColor by lazy { parseColor(customizeUIConfig.sendAndReceivedTextColor.get()) }
-        val effectiveBackgroundColor by lazy { parseColor(customizeUIConfig.backgroundColor.get()) }
-        val effectiveBackgroundColorSurface by lazy { parseColor(customizeUIConfig.backgroundColorSurface.get()) }
-        val effectiveActionMenuBackgroundColor by lazy { parseColor(customizeUIConfig.actionMenuBackgroundColor.get()) }
-        val effectiveActionMenuRoundBackgroundColor by lazy { parseColor(customizeUIConfig.actionMenuRoundBackgroundColor.get()) }
-        val effectiveCameraGridLines by lazy { parseColor(customizeUIConfig.cameraGridLines.get()) }
+        val effectiveTextColor = customizeUIConfig.textColor.getNullable()
+        val effectivesendAndReceivedTextColor = customizeUIConfig.sendAndReceivedTextColor.getNullable()
+        val effectiveBackgroundColor = customizeUIConfig.backgroundColor.getNullable()
+        val effectiveBackgroundColorSurface = customizeUIConfig.backgroundColorSurface.getNullable()
+        val effectiveActionMenuBackgroundColor = customizeUIConfig.actionMenuBackgroundColor.getNullable()
+        val effectiveActionMenuRoundBackgroundColor = customizeUIConfig.actionMenuRoundBackgroundColor.getNullable()
+        val effectiveCameraGridLines = customizeUIConfig.cameraGridLines.getNullable()
 
 
         val attributeCache = mutableMapOf<String, Int>()

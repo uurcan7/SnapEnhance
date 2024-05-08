@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -244,6 +245,27 @@ class FeaturesRoot : Routes.Route() {
                     }
                 }
             }
+
+            DataProcessors.Type.INT_COLOR -> {
+                dialogComposable = {
+                    alertDialogs.ColorPickerDialog(property) {
+                        showDialog = false
+                    }
+                }
+
+                registerDialogOnClickCallback().let { { it.invoke(true) } }.also {
+                    Box(
+                        modifier = Modifier
+                            .size(30.dp)
+                            .border(2.dp, Color.White, shape = RoundedCornerShape(15.dp))
+                            .background(
+                                color = (propertyValue.getNullable() as? Int)?.let { Color(it) } ?: Color.Transparent,
+                                shape = RoundedCornerShape(15.dp)
+                            )
+                    )
+                }
+            }
+
             DataProcessors.Type.CONTAINER -> {
                 val container = propertyValue.get() as ConfigContainer
 

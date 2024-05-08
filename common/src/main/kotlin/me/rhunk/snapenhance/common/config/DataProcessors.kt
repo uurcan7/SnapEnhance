@@ -15,6 +15,7 @@ object DataProcessors {
         STRING_MULTIPLE_SELECTION,
         STRING_UNIQUE_SELECTION,
         MAP_COORDINATES,
+        INT_COLOR,
         CONTAINER,
     }
 
@@ -89,6 +90,14 @@ object DataProcessors {
             (jsonObject["lat"].asDouble.takeIf { it in -90.0..90.0 } ?: 0.0) to
                 (jsonObject["lng"].asDouble.takeIf { it in -180.0..180.0 } ?: 0.0)
         },
+    )
+
+    val INT_COLOR = PropertyDataProcessor(
+        type = Type.INT_COLOR,
+        serialize = {
+            it?.let { JsonPrimitive(it) } ?: JsonNull.INSTANCE
+        },
+        deserialize = { if (it.isJsonNull) null else it.asString.toIntOrNull() },
     )
 
     fun <T : ConfigContainer> container(container: T) = PropertyDataProcessor(

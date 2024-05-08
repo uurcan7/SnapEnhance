@@ -1,6 +1,5 @@
 package me.rhunk.snapenhance.common.config.impl
 
-import android.graphics.Color
 import me.rhunk.snapenhance.common.config.ConfigContainer
 import me.rhunk.snapenhance.common.config.FeatureNotice
 import me.rhunk.snapenhance.common.data.MessagingRuleType
@@ -20,16 +19,13 @@ class UserInterfaceTweaks : ConfigContainer() {
     }
 
     inner class CustomizeUIConfig : ConfigContainer(hasGlobalState = true) {
-        private val checkInputColor = { value: String ->
-            value.isEmpty() || runCatching { Color.parseColor(value) }.isSuccess
-        }
-        val textColor = string("text_color") { inputCheck = checkInputColor }
-        val sendAndReceivedTextColor = string("send_and_received_text_color") { inputCheck = checkInputColor }
-        val backgroundColor = string("background_color") { inputCheck = checkInputColor }
-        val backgroundColorSurface = string("background_color_surface") { inputCheck = checkInputColor }
-        val actionMenuBackgroundColor = string("action_menu_background_color") { inputCheck = checkInputColor }
-        val actionMenuRoundBackgroundColor = string("action_menu_round_background_color") { inputCheck = checkInputColor }
-        val cameraGridLines = string("camera_grid_lines") { inputCheck = checkInputColor }
+        val textColor = color("text_color")
+        val sendAndReceivedTextColor = color("send_and_received_text_color")
+        val backgroundColor = color("background_color")
+        val backgroundColorSurface = color("background_color_surface")
+        val actionMenuBackgroundColor = color("action_menu_background_color")
+        val actionMenuRoundBackgroundColor = color("action_menu_round_background_color")
+        val cameraGridLines = color("camera_grid_lines")
     }
 
     val friendFeedMenuButtons = multiple(
