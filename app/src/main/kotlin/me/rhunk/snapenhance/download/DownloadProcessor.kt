@@ -131,6 +131,11 @@ class DownloadProcessor (
             // checks if the file already exists and if it does, compares its contents with the input file, if contents differ, deletes existing file.
             outputFileFolder.findFile(fileName)?.let { existingFile ->
                 pendingTask.updateProgress("Comparing existing media")
+                if (existingFile.length() != inputFile.length()) {
+                    existingFile.delete()
+                    return@let
+                }
+
                 remoteSideContext.androidContext.contentResolver.openInputStream(existingFile.uri)?.use { existingInputStream ->
                     val buffer1 = ByteArray(1024 * 1024)
                     val buffer2 = ByteArray(1024 * 1024)
