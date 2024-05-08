@@ -15,6 +15,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    defaultConfig {
+        minSdk = 28
+    }
 }
 
 dependencies {

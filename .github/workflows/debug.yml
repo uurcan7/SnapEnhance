@@ -193,4 +193,3 @@ jobs:
         with:
           name: core
           path: app/build/outputs/apk/core/debug/*.apk
-  

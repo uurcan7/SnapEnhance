@@ -226,5 +226,3 @@ jobs:
           prerelease: ${{ inputs.prerelease }}
           files: bins/*.apk
           automatic_release_tag: v${{ env.version }}
-
-

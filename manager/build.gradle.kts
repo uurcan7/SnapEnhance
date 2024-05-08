@@ -21,19 +21,16 @@ android {
 
     defaultConfig {
         buildConfigField("String", "APPLICATION_ID", "\"${rootProject.ext["applicationId"]}\"")
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
-    defaultConfig {
         applicationId = rootProject.ext["applicationId"].toString() + ".manager"
         versionCode = 1
         versionName = "1.0.0"
         minSdk = 28
         targetSdk = 34
         multiDexEnabled = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     buildTypes {
